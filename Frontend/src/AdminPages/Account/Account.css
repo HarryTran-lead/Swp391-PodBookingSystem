@@ -83,4 +83,42 @@
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
+  /* ./AdminPages/Account.css */
+
+/* General styling for the update account page */
+.update-account-page {
+    padding: 20px; /* Add padding around the content */
+    background-color: #f8f9fa; /* Light background color for better readability */
+    border-radius: 5px; /* Slight rounding of corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  /* Styling for the form */
+  .update-account-page form {
+    display: flex;
+    flex-direction: column; /* Stack form elements vertically */
+  }
+  
+  /* Input styling */
+  .update-account-page input {
+    margin: 10px 0; /* Add space between inputs */
+    padding: 10px; /* Padding inside inputs */
+    border: 1px solid #ced4da; /* Light border color */
+    border-radius: 5px; /* Rounded corners */
+  }
+  
+  /* Button styling */
+  .update-account-page button {
+    padding: 10px;
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white; /* White text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+  }
+  
+  .update-account-page button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+  }
   

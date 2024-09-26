@@ -1,36 +1,30 @@
 .sidebar {
-    width: 250px;
-    height: 100vh;
-    background-color: #232324;
-    color: white;
-    padding: 20px;
-    position: fixed;
-  }
-  
-  .sidebar h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .sidebar-menu {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .sidebar-menu li {
-    margin: 15px 0;
-  }
-  
-  .sidebar-menu li a {
-    color: white;
-    text-decoration: none;
-    padding: 10px 15px;
-    display: block;
-    border-radius: 4px;
-    transition: background 0.3s;
-  }
-  
-  .sidebar-menu li a:hover {
-    background-color: #495057;
-  }
-  
+  background-color: #343a40; /* Dark background for sidebar */
+  height: 100vh; /* Full height of the viewport */
+  padding: 20px;
+  position: fixed; /* Fixes the sidebar in place */
+}
+
+.sidebar-menu {
+  padding: 0; /* Removes default padding */
+}
+
+.sidebar-menu .list-group-item {
+  color: white;
+  background-color: transparent; /* Keeps the background transparent */
+  border: none; /* Removes borders between items */
+  margin: 5px 0;
+  padding: 10px;
+}
+
+.sidebar-menu .list-group-item:hover {
+  background-color: #495057; /* Adds a hover effect */
+  color: #fff;
+  cursor: pointer;
+}
+
+.sidebar-menu .list-group-item a {
+  text-decoration: none;
+  color: inherit; /* Keeps text color consistent */
+  display: block;
+}

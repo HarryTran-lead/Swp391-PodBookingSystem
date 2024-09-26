@@ -1,3 +1,4 @@
+// ./App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import UserLayout from './UserPages/UserLayout'; // Import UserLayout
@@ -7,7 +8,8 @@ import LoginPage from './UserPages/LoginPage/LoginPage';
 import SignUpPage from './UserPages/SignUpPage/SignUpPage';
 import Contact from './UserPages/Contact/Contact';
 import AdminLayout from './AdminPages/AdminLayout/AdminLayout'; // Import AdminLayout
-import Account from './AdminPages/Account/Account';
+import Account from './AdminPages/Account/Account'; // Import Account component
+import UpdateAccount from './AdminPages/Account/UpdateAccount'; // Import UpdateAccount component
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -26,7 +28,8 @@ function App() {
 
         {/* Admin section routes */}
         <Route path="/SWP391-PodSystemBooking/admin" element={<AdminLayout><Account /></AdminLayout>} />
-        {/* You can add more admin routes here */}
+        <Route path="/SWP391-PodSystemBooking/admin/update-account" element={<AdminLayout><UpdateAccount /></AdminLayout>} />
+        {/* Add more admin routes here as needed */}
       </Routes>
     </Router>
   );
