@@ -1,0 +1,210 @@
+/* HomePage.css */
+
+/* Main Banner Styling */
+.main-banner {
+  position: relative;
+  width: 100%;
+  height: 78vh;
+  overflow: hidden;
+}
+
+.main-banner img.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.main-banner .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Adds a dark overlay */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding-top: 100px;
+}
+
+.main-banner .overlay h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.main-banner .search-bar {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.main-banner .search-bar .form-control {
+  width: 300px;
+  padding: 10px;
+  margin: 0 10px;
+  border-radius: 20px;
+  border: 2px solid #ccc;
+}
+
+.main-banner .search-bar .btn {
+  padding: 10px 30px;
+  font-size: 1rem;
+  border-radius: 20px;
+  background-color: black;
+}
+
+/* Trusted Companies Section */
+.trusted-companies {
+  padding-top: 10px;
+  padding-bottom: 30px;
+  background-color: #3B3B3B;
+}
+
+.trusted-companies p {
+  font-size: 1rem;
+  margin-bottom: 30px;
+  color: white;
+  font-weight: 500;
+}
+
+.trusted-companies .companies-logos {
+  display: flex;
+  justify-content: center;
+  gap: 90px;
+  flex-wrap: wrap;
+}
+
+.trusted-companies .companies-logos img {
+  width: 100px;
+  height: auto;
+  filter: grayscale(100%);
+  transition: filter 0.3s;
+}
+
+.trusted-companies .companies-logos img:hover {
+  filter: grayscale(0%);
+}
+
+/* Main Banner */
+.main-banner {
+  position: relative;
+}
+
+.banner-image {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay h1 {
+  color: #fff;
+  font-size: 48px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.search-bar {
+  margin-top: 20px;
+  display: flex;
+}
+
+.search-bar input {
+  margin-right: 10px;
+  flex: 1;
+}
+
+.trusted-companies {
+  padding: 40px 0;
+}
+
+.companies-logos img {
+  width: 120px;
+  margin: 0 10px;
+}
+
+/* Prime Locations & Office Space Sections */
+.prime-locations-section,
+.office-space-section {
+  display: flex;
+  align-items: center;
+  padding: 40px;
+  background-color: #1e1d1d;
+}
+
+.prime-locations-section img,
+.office-space-section img {
+  width: 38%;
+  height: auto;
+  object-fit: cover;
+  margin: 10px 120px;
+}
+
+.location {
+  padding: 20px 50px;
+}
+.location h3 {
+  color: rgb(164, 111, 5);
+  font-size: 26px;
+  font-weight: bold;
+}
+.location h2 {
+  font-size: 36px;
+  color: white;
+}
+.location p {
+  color: white;
+}
+.location a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Peace of Mind Section */
+.peace-of-mind-section {
+  padding: 60px 0;
+  background-color: #333;
+  color: #fff;
+}
+
+.peace-of-mind-section h2 {
+  font-size: 40px;
+  font-weight: bold;;
+  margin-bottom: 60px;
+}
+
+.services-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 10px 100px;
+}
+
+.service-card {
+  width: 30%;
+  background-color: #444;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.service-card h4 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}

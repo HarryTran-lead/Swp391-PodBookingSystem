@@ -1,0 +1,66 @@
+/* Styling for the login page */
+.login-page {
+    height: 90vh;
+  
+  }
+  
+  .login-image-container {
+    background-color: #ffffff;
+   
+   
+  }
+  
+  .login-image {
+    width: 500px;
+    height: 90vh;
+    object-fit:cover ;
+    padding: 10px;
+    border-radius: 30px;
+    margin-left: 60px;
+    
+  }
+  
+  .login-form-container {
+    background-color: #ffffff;
+  
+
+  }
+  
+  .login-form {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+   
+  }
+  
+  .login-form h2 {
+    margin-bottom: 20px;
+  }
+  
+  .login-form .form-control {
+    margin-bottom: 15px;
+  }
+  
+  .login-links {
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .forgot-password-link {
+    color: #6f7070;
+    text-decoration: none;
+  }
+  
+  .forgot-password-link:hover {
+    text-decoration: underline;
+  }
+  
+  .signup-link {
+    color: #9e9e9e;
+    text-decoration: none;
+  }
+  
+  .signup-link:hover {
+    text-decoration: underline;
+  }
+  
