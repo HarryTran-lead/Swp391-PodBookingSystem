@@ -1,12 +1,14 @@
 // ./AdminPages/Account.jsx
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Account.css'; // Import your CSS for styling
+import { ToastContainer, toast } from 'react-toastify'; // Import react-toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import react-toastify CSS
+import './Account.css';
 
 export default function Account() {
   const [accounts, setAccounts] = useState([]);
-  const navigate = useNavigate(); // Initialize useNavigate for navigation
+  const navigate = useNavigate();
 
   const API_URL = 'https://667f687ff2cb59c38dc8cee6.mockapi.io/api/v1/Account';
 
@@ -27,19 +29,28 @@ export default function Account() {
     try {
       await axios.delete(`${API_URL}/${id}`);
       fetchAccounts();
+      toast.success('Account deleted successfully!'); // Show success notification
     } catch (error) {
       console.error('Error deleting account:', error);
+      toast.error('Error deleting account.'); // Show error notification
     }
   };
 
   const handleUpdate = (account) => {
-    // Navigate to UpdateAccount with account data
     navigate('/SWP391-PodSystemBooking/admin/update-account', { state: { account } });
+  };
+
+  const handleCreate = () => {
+    navigate('/SWP391-PodSystemBooking/admin/create-account');
   };
 
   return (
     <div className="account-page">
       <h1>Account Management</h1>
+      
+      <button className="create-button" onClick={handleCreate}>
+        Create New Account
+      </button>
 
       <table>
         <thead>
@@ -68,6 +79,9 @@ export default function Account() {
           ))}
         </tbody>
       </table>
+
+      {/* ToastContainer for displaying notifications */}
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     </div>
   );
 }
