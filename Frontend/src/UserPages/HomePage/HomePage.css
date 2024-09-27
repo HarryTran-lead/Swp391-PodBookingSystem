@@ -206,3 +206,37 @@
   font-size: 20px;
   margin-bottom: 10px;
 }
+.pods-section{
+  background-color: #252424;
+}
+
+.pods-section h2{
+  color: #ffffff;
+}
+
+.pods-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Two columns layout */
+  gap: 20px; /* Space between the cards */
+  padding: 20px;
+}
+
+.pod-card {
+  background-color: #252424;
+border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+
+  color:white;
+}
+
+.pod-image {
+  max-width: 90%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.btn-primary {
+  margin-top: 10px;
+}

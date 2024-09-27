@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './HomePage.css';
 import bannerImage from '../../assets/BannerHomePage.jpg';
 
-import PrimeLocationImage from '../../assets/PrimeLocation.jpg'
-import OfficeSpace from '../../assets/OfficeSpace.png'
+import PrimeLocationImage from '../../assets/PrimeLocation.jpg';
+import OfficeSpace from '../../assets/OfficeSpace.png';
 
 // Trusted companies logos (replace with your assets)
 import GoogleLogo from '../../assets/BrandLogo/GoogleLogo.png';
@@ -14,6 +15,22 @@ import SamsungLogo from '../../assets/BrandLogo/SamsungLogo.png';
 import NetflixLogo from '../../assets/BrandLogo/NetflixLogo.png';
 
 export default function HomePage() {
+  const [pods, setPods] = useState([]);
+
+  // Fetch Pods data from API
+  useEffect(() => {
+    const fetchPods = async () => {
+      try {
+        const response = await axios.get('https://667f687ff2cb59c38dc8cee6.mockapi.io/api/v1/Pod');
+        setPods(response.data);
+      } catch (error) {
+        console.error('Error fetching Pods:', error);
+      }
+    };
+
+    fetchPods();
+  }, []);
+
   return (
     <>
       {/* Main Banner */}
@@ -43,9 +60,27 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* List of Pods Section */}
+        <div className="pods-section">
+          <h2 className="text-center">Available Pods</h2>
+          <div className="pods-grid">
+            {pods.map((pod) => (
+              <div key={pod.PodID} className="pod-card">
+                <img src={pod.ImgPod} alt={pod.Name} className="pod-image" />
+                <h3>{pod.Name}</h3>
+                <p>{pod.Description}</p>
+                <p>Price per Hour: ${pod.PricePerHour}</p>
+                <a href={`/pod/${pod.PodID}`} className="btn btn-primary">
+                  Book Now
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Prime Locations and Office Space Section */}
         <div className="prime-locations-section">
-        <img src={PrimeLocationImage} alt="Prime Locations" />
+          <img src={PrimeLocationImage} alt="Prime Locations" />
           <div className="location">
             <h3>CHECKOUT OUR</h3>
             <h2>Prime Locations</h2>
@@ -55,7 +90,6 @@ export default function HomePage() {
             </p>
             <a href="/locations">See More</a>
           </div>
-          
         </div>
 
         <div className="office-space-section">
