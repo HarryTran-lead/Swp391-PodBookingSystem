@@ -1,33 +1,19 @@
 .container {
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
-
-.navbar {
-
-  position: fixed !important; /* Fixes the navbar at the top of the viewport */
-  top: 0; /* Positions the navbar at the very top */
-  left: 0; /* Ensures the navbar starts at the left of the viewport */
-  width: 100%; /* Stretches the navbar to cover the full width */
-  z-index: 1000; /* Keeps the navbar above other content */
-  background-color: rgb(197, 70, 70); /* Ensures the background remains visible */
-}
-
 .navbar-brand {
   font-size: 25px !important;
-  color: white !important;
+  font-weight: 600;
 }
-
 .navbar-nav {
   margin-right: 20px;
   font-size: 18px;
   color: white !important;
 }
 
-.login-btn {
-  margin-right: 20px; /* Adjust margin as needed */
-}
-
-.body-content {
-  padding-top: 70px; /* Adds padding to prevent content from hiding under the fixed navbar */
+.navbar-nav a {
+  color: white;
+  margin: 0 30px;
+  font-weight: 400;
 }

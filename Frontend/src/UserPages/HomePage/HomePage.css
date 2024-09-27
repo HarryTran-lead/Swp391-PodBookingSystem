@@ -2,94 +2,94 @@
 
 /* Main Banner Styling */
 .main-banner {
-    position: relative;
-    width: 100%;
-    height: 78vh;
-    overflow: hidden;
-  }
-  
-  .main-banner img.banner-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .main-banner .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(5, 5, 5, 0.5); /* Adds a dark overlay */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-    padding-top: 100px;
-  }
-  
-  .main-banner .overlay h1 {
-    font-size: 2.6rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .main-banner .search-bar {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .main-banner .search-bar .form-control {
-    width: 250px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  .main-banner .search-bar .btn {
-    padding: 10px 25px;
-    font-size: 1rem;
-    border-radius: 5px;
-    background-color: black;
-  }
-  
-  /* Trusted Companies Section */
-  .trusted-companies {
-    padding-top: 10px;
-    padding-bottom: 30px;
-    background-color: #383838;
- 
+  position: relative;
+  width: 100%;
+  height: 78vh;
+  overflow: hidden;
+}
 
-  }
-  
-  .trusted-companies p {
-    font-size: 1rem;
-    margin-bottom: 20px;
-    color: white;
-  }
-  
-  .trusted-companies .companies-logos {
-    display: flex;
-    justify-content: center;
-    gap: 70px;
-    flex-wrap: wrap;
-  }
-  
-  .trusted-companies .companies-logos img {
-    width: 100px;
-    height: auto;
-    filter: grayscale(100%);
-    transition: filter 0.3s;
-  }
-  
-  .trusted-companies .companies-logos img:hover {
-    filter: grayscale(0%);
-  }
+.main-banner img.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-  /* Main Banner */
+.main-banner .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Adds a dark overlay */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding-top: 100px;
+}
+
+.main-banner .overlay h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.main-banner .search-bar {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.main-banner .search-bar .form-control {
+  width: 300px;
+  padding: 10px;
+  margin: 0 10px;
+  border-radius: 20px;
+  border: 2px solid #ccc;
+}
+
+.main-banner .search-bar .btn {
+  padding: 10px 30px;
+  font-size: 1rem;
+  border-radius: 20px;
+  background-color: black;
+}
+
+/* Trusted Companies Section */
+.trusted-companies {
+  padding-top: 10px;
+  padding-bottom: 30px;
+  background-color: #3B3B3B;
+}
+
+.trusted-companies p {
+  font-size: 1rem;
+  margin-bottom: 30px;
+  color: white;
+  font-weight: 500;
+}
+
+.trusted-companies .companies-logos {
+  display: flex;
+  justify-content: center;
+  gap: 90px;
+  flex-wrap: wrap;
+}
+
+.trusted-companies .companies-logos img {
+  width: 100px;
+  height: auto;
+  filter: grayscale(100%);
+  transition: filter 0.3s;
+}
+
+.trusted-companies .companies-logos img:hover {
+  filter: grayscale(0%);
+}
+
+/* Main Banner */
 .main-banner {
   position: relative;
 }
@@ -139,15 +139,17 @@
 }
 
 /* Prime Locations & Office Space Sections */
-.prime-locations-section, .office-space-section {
+.prime-locations-section,
+.office-space-section {
   display: flex;
   align-items: center;
   padding: 40px;
-  background-color: #383838;
+  background-color: #1e1d1d;
 }
 
-.prime-locations-section img, .office-space-section img {
-  width: 35%;
+.prime-locations-section img,
+.office-space-section img {
+  width: 38%;
   height: auto;
   object-fit: cover;
   margin: 10px 120px;
@@ -155,18 +157,17 @@
 
 .location {
   padding: 20px 50px;
-  
-
 }
-.location h3{
+.location h3 {
   color: rgb(164, 111, 5);
   font-size: 26px;
+  font-weight: bold;
 }
 .location h2 {
   font-size: 36px;
   color: white;
 }
-.location p{
+.location p {
   color: white;
 }
 .location a {
@@ -182,7 +183,9 @@
 }
 
 .peace-of-mind-section h2 {
-  margin-bottom: 40px;
+  font-size: 40px;
+  font-weight: bold;;
+  margin-bottom: 60px;
 }
 
 .services-grid {
@@ -190,7 +193,6 @@
   flex-wrap: wrap;
   justify-content: space-between;
   margin: 10px 100px;
-  
 }
 
 .service-card {
@@ -205,38 +207,4 @@
 .service-card h4 {
   font-size: 20px;
   margin-bottom: 10px;
-}
-.pods-section{
-  background-color: #252424;
-}
-
-.pods-section h2{
-  color: #ffffff;
-}
-
-.pods-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Two columns layout */
-  gap: 20px; /* Space between the cards */
-  padding: 20px;
-}
-
-.pod-card {
-  background-color: #252424;
-border-radius: 8px;
-  padding: 16px;
-  text-align: center;
-
-  color:white;
-}
-
-.pod-image {
-  max-width: 90%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.btn-primary {
-  margin-top: 10px;
 }
