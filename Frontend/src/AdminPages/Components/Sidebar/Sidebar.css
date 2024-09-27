@@ -1,0 +1,30 @@
+.sidebar {
+  background-color: #343a40; /* Dark background for sidebar */
+  height: 100vh; /* Full height of the viewport */
+  padding: 20px;
+  position: fixed; /* Fixes the sidebar in place */
+}
+
+.sidebar-menu {
+  padding: 0; /* Removes default padding */
+}
+
+.sidebar-menu .list-group-item {
+  color: white;
+  background-color: transparent; /* Keeps the background transparent */
+  border: none; /* Removes borders between items */
+  margin: 5px 0;
+  padding: 10px;
+}
+
+.sidebar-menu .list-group-item:hover {
+  background-color: #495057; /* Adds a hover effect */
+  color: #fff;
+  cursor: pointer;
+}
+
+.sidebar-menu .list-group-item a {
+  text-decoration: none;
+  color: inherit; /* Keeps text color consistent */
+  display: block;
+}

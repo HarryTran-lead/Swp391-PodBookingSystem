@@ -1,0 +1,19 @@
+.container {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.navbar-brand {
+  font-size: 25px !important;
+  font-weight: 600;
+}
+.navbar-nav {
+  margin-right: 20px;
+  font-size: 18px;
+  color: white !important;
+}
+
+.navbar-nav a {
+  color: white;
+  margin: 0 30px;
+  font-weight: 400;
+}
