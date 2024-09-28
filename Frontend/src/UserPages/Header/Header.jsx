@@ -16,7 +16,7 @@ export default function Header() {
       <Nav className="mx-auto">
       
         <Nav.Link href="/SWP391-PodSystemBooking">Home</Nav.Link>
-        <Nav.Link href="#features">Offices</Nav.Link>
+        <Nav.Link href="/SWP391-PodSystemBooking/pod">Pod</Nav.Link>
         <Nav.Link href="/SWP391-PodSystemBooking/about">About</Nav.Link>
         <Nav.Link href="/SWP391-PodSystemBooking/contact">Contact</Nav.Link>
       </Nav>

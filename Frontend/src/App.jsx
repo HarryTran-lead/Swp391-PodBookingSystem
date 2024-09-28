@@ -15,6 +15,7 @@ import DetailPodBooking from './UserPages/DetailPodBooking/DetailPodBooking';
 import Pod from './AdminPages/Pod/Pod'
 import CreatePod from './AdminPages/Pod/CreatePod';
 import UpdatePod from './AdminPages/Pod/UpdatePod';
+import Podlist from './UserPages/Pod/Pod';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -31,6 +32,8 @@ function App() {
         <Route path="/SWP391-PodSystemBooking/signup" element={<UserLayout><SignUpPage /></UserLayout>} />
         <Route path="/SWP391-PodSystemBooking/contact" element={<UserLayout><Contact /></UserLayout>} />
         <Route path="/SWP391-PodSystemBooking/pod/:id" element={<UserLayout><DetailPodBooking /></UserLayout>} />
+        <Route path="/SWP391-PodSystemBooking/pod" element={<UserLayout>< Podlist/></UserLayout>} />
+
 
         {/* Admin section routes */}
         <Route path="/SWP391-PodSystemBooking/admin/account" element={<AdminLayout><Account /></AdminLayout>} />
