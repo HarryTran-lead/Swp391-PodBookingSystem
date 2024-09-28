@@ -66,7 +66,7 @@ export default function HomePage() {
           <div className="pods-grid">
             {pods.map((pod) => (
               <div key={pod.id} className="pod-card"> {/* Updated PodID to id */}
-                <img src={pod.ImgPod} alt={pod.Name} className="pod-image" />
+                <img src={pod.ImgPod} alt={pod.Name} className="pod-image-homepage" />
                 <h3>{pod.Name}</h3>
                 <p>{pod.Description}</p>
                 <p>Price per Hour: ${pod.PricePerHour}</p>

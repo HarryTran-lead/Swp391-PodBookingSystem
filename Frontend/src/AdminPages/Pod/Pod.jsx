@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify'; // Import react-toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import react-toastify CSS
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Pod.css'; // Ensure to create a Pod.css file for styling
 
 export default function Pod() {
@@ -61,6 +61,7 @@ export default function Pod() {
         <thead>
           <tr>
             <th>ID</th>
+            <th>Image</th>
             <th>Name</th>
             <th>LocationID</th>
             <th>Price Per Hour</th>
@@ -71,6 +72,9 @@ export default function Pod() {
           {pods.map((pod) => (
             <tr key={pod.id}>
               <td>{pod.id}</td>
+              <td>
+                <img src={pod.ImgPod} alt={pod.Name} className="pod-image" />
+              </td>
               <td>{pod.Name}</td>
               <td>{pod.LocationID}</td>
               <td>${pod.PricePerHour}</td>
@@ -83,7 +87,6 @@ export default function Pod() {
         </tbody>
       </table>
 
-      {/* ToastContainer for displaying notifications */}
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     </div>
   );

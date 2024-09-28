@@ -13,6 +13,8 @@ import UpdateAccount from './AdminPages/Account/UpdateAccount'; // Import Update
 import CreateAccount from './AdminPages/Account/CreateAccount'; 
 import DetailPodBooking from './UserPages/DetailPodBooking/DetailPodBooking';
 import Pod from './AdminPages/Pod/Pod'
+import CreatePod from './AdminPages/Pod/CreatePod';
+import UpdatePod from './AdminPages/Pod/UpdatePod';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -34,7 +36,11 @@ function App() {
         <Route path="/SWP391-PodSystemBooking/admin/account" element={<AdminLayout><Account /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/update-account" element={<AdminLayout><UpdateAccount /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/create-account" element={<AdminLayout><CreateAccount /></AdminLayout>} />
+      
         <Route path="/SWP391-PodSystemBooking/admin/pod" element={<AdminLayout><Pod /></AdminLayout>} />
+        <Route path="/SWP391-PodSystemBooking/admin/create-pod" element={<AdminLayout><CreatePod /></AdminLayout>} />
+        <Route path="/SWP391-PodSystemBooking/admin/update-pod" element={<AdminLayout><UpdatePod /></AdminLayout>} />
+
         {/* Add more admin routes here as needed */}
       </Routes>
     </Router>
