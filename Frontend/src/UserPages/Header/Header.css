@@ -31,3 +31,49 @@
 .body-content {
   padding-top: 70px; /* Adds padding to prevent content from hiding under the fixed navbar */
 }
+
+/* Header.css */
+
+/* Styling cho dropdown container */
+/* Header.css */
+
+/* Styling cho dropdown container */
+.login-icon-container .dropdown-toggle {
+  margin-right: 60px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-icon-container .dropdown-toggle::after {
+  display: none; /* Ẩn mũi tên mặc định của dropdown */
+}
+
+.user-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Điều chỉnh menu dropdown để nằm giữa icon */
+.dropdown-menu-custom {
+  left: 50%; /* Đặt menu sang giữa */
+  transform: translateX(-50%); /* Căn chỉnh theo trục ngang */
+  padding: 0;
+  min-width: auto; /* Điều chỉnh chiều rộng */
+}
+
+/* Định dạng cho các mục trong dropdown */
+.dropdown-item {
+  padding: 10px 15px;
+  color: #000;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
