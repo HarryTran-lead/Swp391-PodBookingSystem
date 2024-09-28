@@ -11,7 +11,7 @@ function AdminLayout({ children }) {
       <div className="container-fluid">
         <div className="row">
           {/* Sidebar - occupies 2 columns */}
-          <div className="col-md-2 p-0">
+          <div className="col-md-2 p-0 mt-5">
             <Sidebar />
           </div>
           {/* Main content - occupies 10 columns */}

@@ -8,22 +8,10 @@ export default function Sidebar() {
     <div className="col-md-2 sidebar"> {/* Apply Bootstrap's col-md-4 class */}
       <ul className="sidebar-menu list-group"> {/* Use list-group for consistent Bootstrap styling */}
         <li className="list-group-item">
-          <Link to="/admin/dashboard">Dashboard</Link>
+          <Link to="/SWP391-PodSystemBooking/admin/account">Account</Link>
         </li>
         <li className="list-group-item">
-          <Link to="/admin/users">User Management</Link>
-        </li>
-        <li className="list-group-item">
-          <Link to="/admin/bookings">Manage Bookings</Link>
-        </li>
-        <li className="list-group-item">
-          <Link to="/admin/reports">Reports</Link>
-        </li>
-        <li className="list-group-item">
-          <Link to="/admin/settings">Settings</Link>
-        </li>
-        <li className="list-group-item">
-          <Link to="/admin/logout">Logout</Link>
+          <Link to="/SWP391-PodSystemBooking/admin/pod">Pod</Link>
         </li>
       </ul>
     </div>
