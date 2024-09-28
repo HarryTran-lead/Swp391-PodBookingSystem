@@ -6,7 +6,15 @@ export default function UserLayout({children}) {
   return (
     <div>
        <Header />
-      <main>{children}</main>
+    
+
+       
+      
+          <div className=" col-md-14 mt-5">
+            <main>{children}</main>
+          </div>
+        
+      
       <Footer />
     </div>
   )

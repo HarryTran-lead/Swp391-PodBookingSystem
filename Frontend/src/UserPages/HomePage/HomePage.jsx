@@ -65,12 +65,12 @@ export default function HomePage() {
           <h2 className="text-center">Available Pods</h2>
           <div className="pods-grid">
             {pods.map((pod) => (
-              <div key={pod.PodID} className="pod-card">
+              <div key={pod.id} className="pod-card"> {/* Updated PodID to id */}
                 <img src={pod.ImgPod} alt={pod.Name} className="pod-image" />
                 <h3>{pod.Name}</h3>
                 <p>{pod.Description}</p>
                 <p>Price per Hour: ${pod.PricePerHour}</p>
-                <a href={`/pod/${pod.PodID}`} className="btn btn-primary">
+                <a href={`/SWP391-PodSystemBooking/pod/${pod.id}`} className="btn btn-primary"> {/* Updated PodID to id */}
                   Book Now
                 </a>
               </div>

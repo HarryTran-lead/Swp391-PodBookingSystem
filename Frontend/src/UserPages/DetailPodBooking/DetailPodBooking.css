@@ -1,0 +1,108 @@
+/* DetailPodBooking.css */
+
+.booking-details-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background-color: #1c1c1e;
+    color: white;
+  }
+  
+  .left-section {
+    flex: 2;
+  }
+  
+  .pod-title {
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .pod-address {
+    font-size: 16px;
+    color: #888;
+  }
+  
+  .pod-info {
+    margin: 10px 0;
+    font-size: 14px;
+  }
+  
+  .pod-description {
+    margin: 20px 0;
+  }
+  
+  .pod-images {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .main-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+  
+  .additional-images {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .additional-images img {
+    width: 33%;
+    height: 100px;
+    object-fit: cover;
+  }
+  
+  .map-section {
+    margin-top: 20px;
+  }
+  
+  .map-address {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .amenities-section {
+    margin-top: 30px;
+  }
+  
+  .space-amenities,
+  .building-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .right-section {
+    flex: 1;
+    background: #2c2c2e;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .booking-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .addons-section {
+    margin-top: 20px;
+  }
+  
+  .addon-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .pricing-details {
+    margin-top: 20px;
+  }
+  
+  .book-btn {
+    margin-top: 20px;
+    width: 100%;
+  }
+  

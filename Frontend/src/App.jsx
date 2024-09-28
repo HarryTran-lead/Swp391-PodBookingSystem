@@ -11,6 +11,7 @@ import AdminLayout from './AdminPages/AdminLayout/AdminLayout'; // Import AdminL
 import Account from './AdminPages/Account/Account'; // Import Account component
 import UpdateAccount from './AdminPages/Account/UpdateAccount'; // Import UpdateAccount component
 import CreateAccount from './AdminPages/Account/CreateAccount'; 
+import DetailPodBooking from './UserPages/DetailPodBooking/DetailPodBooking';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/SWP391-PodSystemBooking/login" element={<UserLayout><LoginPage /></UserLayout>} />
         <Route path="/SWP391-PodSystemBooking/signup" element={<UserLayout><SignUpPage /></UserLayout>} />
         <Route path="/SWP391-PodSystemBooking/contact" element={<UserLayout><Contact /></UserLayout>} />
+        <Route path="/SWP391-PodSystemBooking/pod/:id" element={<UserLayout><DetailPodBooking /></UserLayout>} />
 
         {/* Admin section routes */}
         <Route path="/SWP391-PodSystemBooking/admin/account" element={<AdminLayout><Account /></AdminLayout>} />
