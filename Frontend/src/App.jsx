@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import UserLayout from './UserPages/UserLayout'; 
 import HomePage from './UserPages/HomePage/HomePage';
@@ -21,18 +21,27 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
 
+  // Load login state from localStorage when the component mounts
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   const handleLogin = (user) => {
     setUsername(user);
     setIsLoggedIn(true);
+    localStorage.setItem('username', user); // Save the username to localStorage
   };
-
 
   const handleLogout = () => {
-    localStorage.removeItem('username'); // Xóa tên người dùng từ localStorage
-    setUsername(''); // Đặt tên người dùng thành rỗng
-    setIsLoggedIn(false); // Đặt trạng thái đăng nhập thành false
+    localStorage.removeItem('username'); // Remove username from localStorage
+    setUsername(''); // Clear username state
+    setIsLoggedIn(false); // Set login state to false
   };
-  
+
   return (
     <Router>
       <Routes>
@@ -40,9 +49,13 @@ function App() {
         
         {/* User section routes */}
         <Route 
-  path="/SWP391-PodSystemBooking/" 
-  element={<UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}><HomePage /></UserLayout>} 
-/>
+          path="/SWP391-PodSystemBooking/" 
+          element={
+            <UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}>
+              <HomePage />
+            </UserLayout>
+          } 
+        />
         <Route path="/SWP391-PodSystemBooking/about" element={<UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}><About /></UserLayout>} />
         <Route path="/SWP391-PodSystemBooking/login" element={<LoginPage onLogin={handleLogin} />} />
         <Route path="/SWP391-PodSystemBooking/signup" element={<UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}><SignUpPage /></UserLayout>} />

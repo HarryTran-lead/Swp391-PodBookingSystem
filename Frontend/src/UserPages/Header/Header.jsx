@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { FaUser } from 'react-icons/fa';
 import './Header.css';
@@ -23,11 +22,12 @@ export default function Header({ isLoggedIn, username, handleLogout }) {
 
       <Nav className="login-btn">
         {isLoggedIn ? (
-          <Dropdown alignRight>
+          <Dropdown className="login-icon-container">
             <Dropdown.Toggle variant="link" id="dropdown-basic">
-              {username}
+              <span>{username}</span>
+              <FaUser className="user-icon" />
             </Dropdown.Toggle>
-            <Dropdown.Menu>
+            <Dropdown.Menu className="dropdown-menu-custom">
               <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -36,9 +36,13 @@ export default function Header({ isLoggedIn, username, handleLogout }) {
             <Dropdown.Toggle variant="link" id="dropdown-basic">
               <FaUser className="user-icon" />
             </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item href="/SWP391-PodSystemBooking/login">Login</Dropdown.Item>
-              <Dropdown.Item href="/SWP391-PodSystemBooking/signup">Sign Up</Dropdown.Item>
+            <Dropdown.Menu className="dropdown-menu-custom">
+              <Dropdown.Item as={Link} to="/SWP391-PodSystemBooking/login">
+                Login
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to="/SWP391-PodSystemBooking/signup">
+                Sign Up
+              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         )}
