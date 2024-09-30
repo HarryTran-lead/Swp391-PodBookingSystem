@@ -15,6 +15,7 @@ export default function Header({ isLoggedIn, username, handleLogout }) {
         <Nav className="mx-auto">
           <Nav.Link href="/SWP391-PodSystemBooking/">Home</Nav.Link>
           <Nav.Link href="/SWP391-PodSystemBooking/pod">Pod</Nav.Link>
+          <Nav.Link href="/SWP391-PodSystemBooking/blog">Blog</Nav.Link>
           <Nav.Link href="/SWP391-PodSystemBooking/about">About</Nav.Link>
           <Nav.Link href="/SWP391-PodSystemBooking/contact">Contact</Nav.Link>
         </Nav>

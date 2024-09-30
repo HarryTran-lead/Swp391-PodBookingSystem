@@ -15,6 +15,7 @@ import Pod from './AdminPages/Pod/Pod';
 import CreatePod from './AdminPages/Pod/CreatePod';
 import UpdatePod from './AdminPages/Pod/UpdatePod';
 import Podlist from './UserPages/Pod/Pod';
+import BlogPage from './UserPages/BlogPage/BlogPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
         <Route path="/SWP391-PodSystemBooking/contact" element={<UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}><Contact /></UserLayout>} />
         <Route path="/SWP391-PodSystemBooking/pod/:id" element={<UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}><DetailPodBooking /></UserLayout>} />
         <Route path="/SWP391-PodSystemBooking/pod" element={<UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}><Podlist /></UserLayout>} />
+        <Route path="/SWP391-PodSystemBooking/blog" element={<BlogPage />} />
         
         {/* Admin section routes */}
         <Route path="/SWP391-PodSystemBooking/admin/account" element={<AdminLayout><Account /></AdminLayout>} />
