@@ -32,17 +32,18 @@ builder.Services.AddScoped(typeof(AccountRepository));
 builder.Services.AddScoped(typeof(AuthenService));
 
 //add cors
+//add cors
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(MyAllowSpecificOrigins,
-                          policy =>
-                          {
-                              policy.WithOrigins()
-                                                  .AllowAnyHeader()
-                                                  .AllowAnyMethod();
-                          });
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:5173") // Add your frontend origin here
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
 });
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
