@@ -11,5 +11,9 @@ public partial class Blog
 
     public string? Img { get; set; }
 
-    public string? Context { get; set; }
+    public string? ShortDes { get; set; }
+
+    public string? MainDes { get; set; }
+
+    public string? Title { get; set; }
 }
