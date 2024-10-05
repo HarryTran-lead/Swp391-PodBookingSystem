@@ -13,7 +13,7 @@ public partial class Pod
 
     public int? PodModelId { get; set; }
 
-    public string? ImgPod { get; set; }
+    public byte[]? ImgPod { get; set; }
 
     public decimal? PricePerHour { get; set; }
 

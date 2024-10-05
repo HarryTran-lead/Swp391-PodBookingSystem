@@ -19,7 +19,7 @@ public partial class Account
 
     public int? LoyaltyPoints { get; set; }
 
-    public string? ProfilePicture { get; set; }
+    public byte[]? ProfilePicture { get; set; }
 
     public string? Status { get; set; }
 

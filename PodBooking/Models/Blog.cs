@@ -9,7 +9,7 @@ public partial class Blog
 
     public int? AdminId { get; set; }
 
-    public string? Img { get; set; }
+    public byte[]? Img { get; set; }
 
     public string? ShortDes { get; set; }
 

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PodBooking.Models;
+using PodBooking.DTOs;
 
 namespace PodBooking.Controllers
 {
@@ -22,12 +21,41 @@ namespace PodBooking.Controllers
 
         // GET: api/Pods
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pod>>> GetPods()
+        public async Task<ActionResult<IEnumerable<PodDTO>>> GetPods()
         {
-            return await _context.Pods.ToListAsync();
+            var pods = await _context.Pods.ToListAsync();
+
+            // Map pods to DTOs including image URL
+            var podDtos = pods.Select(pod => new PodDTO
+            {
+                PodId = pod.PodId,
+                Name = pod.Name,
+                LocationId = pod.LocationId,
+                PodModelId = pod.PodModelId,
+                ImgPod = Url.Action(nameof(GetPodImage), new { id = pod.PodId }), // Generate URL for the image
+                PricePerHour = pod.PricePerHour,
+                Description = pod.Description
+            });
+
+            return Ok(podDtos);
         }
 
-        // GET: api/Pods/5
+        // GET: api/Pods/{id}/image
+        [HttpGet("{id}/image")]
+        public async Task<IActionResult> GetPodImage(int id)
+        {
+            var pod = await _context.Pods.FindAsync(id);
+
+            if (pod == null || pod.ImgPod == null)
+            {
+                return NotFound();
+            }
+
+            // Return the image data as a file
+            return File(pod.ImgPod, "image/jpeg"); // Use "image/jpeg" for JPG images
+        }
+
+        // GET: api/Pods/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Pod>> GetPod(int id)
         {
@@ -38,11 +66,10 @@ namespace PodBooking.Controllers
                 return NotFound();
             }
 
-            return pod;
+            return pod; // Optionally, return a DTO instead of the model
         }
 
-        // PUT: api/Pods/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/Pods/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPod(int id, Pod pod)
         {
@@ -72,32 +99,7 @@ namespace PodBooking.Controllers
             return NoContent();
         }
 
-        // POST: api/Pods
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Pod>> PostPod(Pod pod)
-        {
-            _context.Pods.Add(pod);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (PodExists(pod.PodId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetPod", new { id = pod.PodId }, pod);
-        }
-
-        // DELETE: api/Pods/5
+        // DELETE: api/Pods/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePod(int id)
         {

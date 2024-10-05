@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PodBooking.Models;
+using PodBooking.DTOs; // Ensure this namespace is included
 
 namespace PodBooking.Controllers
 {
@@ -22,9 +23,37 @@ namespace PodBooking.Controllers
 
         // GET: api/Blogs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs()
+        public async Task<ActionResult<IEnumerable<BlogDTO>>> GetBlogs()
         {
-            return await _context.Blogs.ToListAsync();
+            var blogs = await _context.Blogs.ToListAsync();
+
+            // Map blogs to DTOs including image URL
+            var blogDtos = blogs.Select(blog => new BlogDTO
+            {
+                Id = blog.Id,
+                AdminId = blog.AdminId,
+                ShortDes = blog.ShortDes,
+                MainDes = blog.MainDes,
+                Title = blog.Title,
+                Img = Url.Action(nameof(GetBlogImage), new { id = blog.Id }) // Generate URL for the image
+            });
+
+            return Ok(blogDtos);
+        }
+
+        // GET: api/Blogs/{id}/image
+        [HttpGet("{id}/image")]
+        public async Task<IActionResult> GetBlogImage(int id)
+        {
+            var blog = await _context.Blogs.FindAsync(id);
+
+            if (blog == null || blog.Img == null)
+            {
+                return NotFound();
+            }
+
+            // Return the image data as a file
+            return File(blog.Img, "image/jpeg"); // Use "image/jpeg" for JPG images
         }
 
         // GET: api/Blogs/5
@@ -42,7 +71,6 @@ namespace PodBooking.Controllers
         }
 
         // PUT: api/Blogs/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBlog(int id, Blog blog)
         {
@@ -70,31 +98,6 @@ namespace PodBooking.Controllers
             }
 
             return NoContent();
-        }
-
-        // POST: api/Blogs
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Blog>> PostBlog(Blog blog)
-        {
-            _context.Blogs.Add(blog);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (BlogExists(blog.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetBlog", new { id = blog.Id }, blog);
         }
 
         // DELETE: api/Blogs/5
