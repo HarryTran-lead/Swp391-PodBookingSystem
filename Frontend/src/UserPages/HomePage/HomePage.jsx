@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './HomePage.css';
 import bannerImage from '../../assets/BannerHomePage.jpg';
-
 import PrimeLocationImage from '../../assets/PrimeLocation.jpg';
 import OfficeSpace from '../../assets/OfficeSpace.png';
 
-// Trusted companies logos (replace with your assets)
+// Trusted companies logos
 import GoogleLogo from '../../assets/BrandLogo/GoogleLogo.png';
 import AmazonLogo from '../../assets/BrandLogo/AmazonLogo.png';
 import LogitechLogo from '../../assets/BrandLogo/LogitechLogo.png';
@@ -16,12 +15,13 @@ import NetflixLogo from '../../assets/BrandLogo/NetflixLogo.png';
 
 export default function HomePage() {
   const [pods, setPods] = useState([]);
+  const API_URL = 'https://localhost:7257/api/Pods'; // Đường dẫn đến API của bạn
 
   // Fetch Pods data from API
   useEffect(() => {
     const fetchPods = async () => {
       try {
-        const response = await axios.get('https://667f687ff2cb59c38dc8cee6.mockapi.io/api/v1/Pod');
+        const response = await axios.get(API_URL);
         setPods(response.data);
       } catch (error) {
         console.error('Error fetching Pods:', error);
@@ -65,12 +65,12 @@ export default function HomePage() {
           <h2 className="text-center">Available Pods</h2>
           <div className="pods-grid">
             {pods.map((pod) => (
-              <div key={pod.id} className="pod-card">
-                <img src={pod.ImgPod} alt={pod.Name} className="pod-image-homepage" />
-                <h3>{pod.Name}</h3>
-                <p>{pod.Description}</p>
-                <p>Price per Hour: ${pod.PricePerHour}</p>
-                <a href={`/SWP391-PodSystemBooking/pod/${pod.id}`} className="btn btn-primary">
+              <div key={pod.podId} className="pod-card"> {/* Đảm bảo sử dụng podId là duy nhất */}
+                <img src={`https://localhost:7257/api/Pods/${pod.podId}/image`} alt={pod.name} className="pod-image-homepage" />
+                <h3>{pod.name}</h3>
+                <p>{pod.description}</p>
+                <p>Price per Hour: ${pod.pricePerHour}</p>
+                <a href={`/SWP391-PodSystemBooking/pod/${pod.podId}`} className="btn btn-primary">
                   Book Now
                 </a>
               </div>

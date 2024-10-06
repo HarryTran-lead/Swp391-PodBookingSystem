@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Pod.css'; // Ensure to create a Pod.css file for styling
+import './Pod.css'; // Đảm bảo bạn đã tạo tệp Pod.css cho styling
 
 export default function Pod() {
   const [pods, setPods] = useState([]);
   const navigate = useNavigate();
 
-  const API_URL = 'https://667f687ff2cb59c38dc8cee6.mockapi.io/api/v1/Pod';
+  const API_URL = 'https://localhost:7257/api/Pods';
 
   useEffect(() => {
     fetchPods();
@@ -70,17 +70,17 @@ export default function Pod() {
         </thead>
         <tbody>
           {pods.map((pod) => (
-            <tr key={pod.id}>
-              <td>{pod.id}</td>
+            <tr key={pod.podId}>  {/* Đảm bảo pod.podId là duy nhất */}
+              <td>{pod.podId}</td>
               <td>
-                <img src={pod.ImgPod} alt={pod.Name} className="pod-image" />
+                <img src={`https://localhost:7257/api/Pods/${pod.podId}/image`} alt={pod.name} className="pod-image" />
               </td>
-              <td>{pod.Name}</td>
-              <td>{pod.LocationID}</td>
-              <td>${pod.PricePerHour}</td>
+              <td>{pod.name}</td>
+              <td>{pod.locationId}</td>
+              <td>${pod.pricePerHour}</td>
               <td>
                 <button onClick={() => handleUpdate(pod)}>Update</button>
-                <button onClick={() => handleDelete(pod.id)}>Delete</button>
+                <button onClick={() => handleDelete(pod.podId)}>Delete</button>
               </td>
             </tr>
           ))}

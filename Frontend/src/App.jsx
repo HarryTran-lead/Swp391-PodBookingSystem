@@ -16,56 +16,53 @@ import CreatePod from './AdminPages/Pod/CreatePod';
 import UpdatePod from './AdminPages/Pod/UpdatePod';
 import Podlist from './UserPages/Pod/Pod';
 import BlogPage from './UserPages/BlogPage/BlogPage';
+import ProfilePage from './UserPages/ProfilePage/ProfilePage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function App() {
+const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
+  const [userId, setUserId] = useState('');
 
-  // Load login state from localStorage when the component mounts
   useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(storedUserId);
       setIsLoggedIn(true);
     }
   }, []);
 
-  const handleLogin = (user) => {
-    setUsername(user);
+  const handleLogin = (id) => {
+    setUserId(id);
+    localStorage.setItem('userId', id);
     setIsLoggedIn(true);
-    localStorage.setItem('username', user); // Save the username to localStorage
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('username'); // Remove username from localStorage
-    setUsername(''); // Clear username state
-    setIsLoggedIn(false); // Set login state to false
+    localStorage.removeItem('userId');
+    setUserId('');
+    setIsLoggedIn(false);
   };
+
+  const renderUserLayout = (element) => (
+    <UserLayout isLoggedIn={isLoggedIn} handleLogout={handleLogout}>
+      {element}
+    </UserLayout>
+  );
 
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/SWP391-PodSystemBooking/" />} />
-        
-        {/* User section routes */}
-        <Route 
-          path="/SWP391-PodSystemBooking/" 
-          element={
-            <UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}>
-              <HomePage />
-            </UserLayout>
-          } 
-        />
-        <Route path="/SWP391-PodSystemBooking/about" element={<UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}><About /></UserLayout>} />
+        <Route path="/SWP391-PodSystemBooking/" element={renderUserLayout(<HomePage />)} />
+        <Route path="/SWP391-PodSystemBooking/about" element={renderUserLayout(<About />)} />
         <Route path="/SWP391-PodSystemBooking/login" element={<LoginPage onLogin={handleLogin} />} />
-        <Route path="/SWP391-PodSystemBooking/signup" element={<UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}><SignUpPage /></UserLayout>} />
-        <Route path="/SWP391-PodSystemBooking/contact" element={<UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}><Contact /></UserLayout>} />
-        <Route path="/SWP391-PodSystemBooking/pod/:id" element={<UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}><DetailPodBooking /></UserLayout>} />
-        <Route path="/SWP391-PodSystemBooking/pod" element={<UserLayout isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout}><Podlist /></UserLayout>} />
-        <Route path="/SWP391-PodSystemBooking/blog" element={<BlogPage />} />
-        
-        {/* Admin section routes */}
+        <Route path="/SWP391-PodSystemBooking/signup" element={renderUserLayout(<SignUpPage />)} />
+        <Route path="/SWP391-PodSystemBooking/contact" element={renderUserLayout(<Contact />)} />
+        <Route path="/SWP391-PodSystemBooking/pod/:id" element={renderUserLayout(<DetailPodBooking />)} />
+        <Route path="/SWP391-PodSystemBooking/pod" element={renderUserLayout(<Podlist />)} />
+        <Route path="/SWP391-PodSystemBooking/blog" element={renderUserLayout(<BlogPage />)} />
+        <Route path="/SWP391-PodSystemBooking/profile" element={renderUserLayout(<ProfilePage />)} />
+
         <Route path="/SWP391-PodSystemBooking/admin/account" element={<AdminLayout><Account /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/update-account" element={<AdminLayout><UpdateAccount /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/create-account" element={<AdminLayout><CreateAccount /></AdminLayout>} />

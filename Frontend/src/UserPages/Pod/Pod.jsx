@@ -6,7 +6,7 @@ import './Pod.css'; // Ensure you have this CSS file for styling
 
 export default function Pod() {
   const [pods, setPods] = useState([]);
-  const API_URL = 'https://667f687ff2cb59c38dc8cee6.mockapi.io/api/v1/Pod';
+  const API_URL = 'https://localhost:7257/api/Pods'; // Your .NET API endpoint
   const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export default function Pod() {
   const fetchPods = async () => {
     try {
       const response = await axios.get(API_URL);
-      setPods(response.data);
+      setPods(response.data); // Assuming response.data is an array of pods
     } catch (error) {
       console.error('Error fetching pods:', error);
     }
@@ -43,15 +43,20 @@ export default function Pod() {
         <div className="pod-list">
           {pods.map((pod) => (
             <div 
-              key={pod.id} 
+              key={pod.podId} // Change to pod.podId for consistency with your data structure
               className="pod-card" 
-              onClick={() => handleCardClick(pod.id)} // Add onClick handler
+              onClick={() => handleCardClick(pod.podId)} // Add onClick handler
             >
-              <img src={pod.ImgPod} alt={pod.Name} className="pod-image" />
+              {/* Dynamically set the image source using the imgPod field */}
+              <img 
+                src={`https://localhost:7257${pod.imgPod}`} // Concatenate base URL with image path
+                alt={pod.name} 
+                className="pod-image" 
+              />
               <div className="pod-details">
-                <div className="price-tag">${pod.PricePerHour} / hour</div>
-                <h3 className="pod-name">{pod.Name}, {pod.LocationID}</h3>
-                <p className="pod-address">{pod.Address}</p>
+                <div className="price-tag">${pod.pricePerHour} / hour</div>
+                <h3 className="pod-name">{pod.name}, {pod.locationId}</h3>
+                <p className="pod-address">{pod.description}</p> {/* Changed to display description */}
                 <div className="pod-info">
                   <span>👥 2-8 people</span> • <span>📏 5,215 sf</span>
                 </div>

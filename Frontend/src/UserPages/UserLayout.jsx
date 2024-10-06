@@ -13,19 +13,18 @@ export default function UserLayout({ children, isLoggedIn, username, handleLogou
       </div>
       <Footer />
       <div
-     style={{
-      position: "fixed",
-      bottom: "20px",
-      right: "20px",
-      backgroundColor: "#2a2829",
-      color: "#fff",
-      padding: "20px 40px",
-      borderRadius: "30px",
-      zIndex: "1000",
-      cursor: "pointer",
-      border: "2px solid white",  // Thêm thuộc tính border
-    }}
-    
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          backgroundColor: "#2a2829",
+          color: "#fff",
+          padding: "20px 40px",
+          borderRadius: "30px",
+          zIndex: "1000",
+          cursor: "pointer",
+          border: "2px solid white",
+        }}
       >
         <a
           href="https://m.me/343721882163379"
@@ -46,6 +45,5 @@ export default function UserLayout({ children, isLoggedIn, username, handleLogou
         </a>
       </div>
     </div>
-    
   );
 }

@@ -10,7 +10,7 @@ export default function Account() {
   const [accounts, setAccounts] = useState([]);
   const navigate = useNavigate();
 
-  const API_URL = 'https://667f687ff2cb59c38dc8cee6.mockapi.io/api/v1/Account';
+  const API_URL = 'https://localhost:7257/api/Accounts'; // Updated URL
 
   useEffect(() => {
     fetchAccounts();

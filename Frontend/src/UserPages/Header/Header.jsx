@@ -7,7 +7,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { FaUser } from 'react-icons/fa';
 import './Header.css';
 
-export default function Header({ isLoggedIn, username, handleLogout }) {
+export default function Header({ isLoggedIn, handleLogout }) {
   return (
     <Navbar bg="black" data-bs-theme="dark">
       <Container>
@@ -25,10 +25,14 @@ export default function Header({ isLoggedIn, username, handleLogout }) {
         {isLoggedIn ? (
           <Dropdown className="login-icon-container">
             <Dropdown.Toggle variant="link" id="dropdown-basic">
-              <span>{username}</span>
               <FaUser className="user-icon" />
             </Dropdown.Toggle>
             <Dropdown.Menu className="dropdown-menu-custom">
+              {/* Profile Option */}
+              <Dropdown.Item as={Link} to="/SWP391-PodSystemBooking/profile">
+                Profile
+              </Dropdown.Item>
+              {/* Logout Option */}
               <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
