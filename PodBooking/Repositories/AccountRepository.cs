@@ -11,7 +11,7 @@ namespace PodBooking.Repositories
 
         public async Task<Account> getAccountByUsername(string? username)
         {
-            var account = await _context.Accounts.FirstOrDefaultAsync(account => account.Username == username);
+            var account = await _context.Accounts.SingleOrDefaultAsync(account => account.Username == username);
             return account;
         }
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using PodBooking.AutoMapper;
 using PodBooking.Config;
 using PodBooking.DTO;
@@ -18,13 +19,14 @@ namespace PodBooking.Services
             _mapper = mapper;
             _jwtConfig = jwtConfiguration;
         }
-
+        [AllowAnonymous]
+        //check lại api đi em
         public async Task<BaseResponse<AccountDTO>> SignUp(AccountDTO accEntity)
         {
             var response = new BaseResponse<AccountDTO>();
 
             var account = await _accRepo.getAccountByUsername(accEntity.Username);
-            if(account != null)
+            if (account != null)
             {
                 var error = new Error
                 {

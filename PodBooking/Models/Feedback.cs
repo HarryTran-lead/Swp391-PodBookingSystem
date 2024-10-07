@@ -17,7 +17,5 @@ public partial class Feedback
 
     public DateOnly? FeedbackDate { get; set; }
 
-    public virtual Account? Account { get; set; }
-
     public virtual Booking? Booking { get; set; }
 }

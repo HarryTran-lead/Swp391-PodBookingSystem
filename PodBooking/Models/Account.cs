@@ -19,15 +19,11 @@ public partial class Account
 
     public int? LoyaltyPoints { get; set; }
 
-    public byte[]? ProfilePicture { get; set; }
-
     public string? Status { get; set; }
 
     public int? LocationId { get; set; }
 
     public string? Role { get; set; }
-
-    public string? Gender { get; set; }
 
     public byte? Confirm { get; set; }
 

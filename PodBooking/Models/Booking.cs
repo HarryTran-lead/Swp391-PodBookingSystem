@@ -17,7 +17,13 @@ public partial class Booking
 
     public DateTime? EndTime { get; set; }
 
-    public string? Status { get; set; }
+    public bool? Status { get; set; }
+
+    public decimal? Total { get; set; }
+
+    public int? PaymentId { get; set; }
+
+    public int? NotificationId { get; set; }
 
     public virtual Account? Account { get; set; }
 
@@ -32,6 +38,4 @@ public partial class Booking
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     public virtual ServicePackage? Package { get; set; }
-
-    public virtual Pod? Pod { get; set; }
 }

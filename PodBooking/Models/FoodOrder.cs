@@ -15,8 +15,6 @@ public partial class FoodOrder
 
     public string? Status { get; set; }
 
-    public virtual Account Account { get; set; } = null!;
-
     public virtual Booking Booking { get; set; } = null!;
 
     public virtual ICollection<FoodOrderDetail> FoodOrderDetails { get; set; } = new List<FoodOrderDetail>();
