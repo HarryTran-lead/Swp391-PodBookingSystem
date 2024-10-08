@@ -13,7 +13,9 @@ public partial class FoodOrder
 
     public int? PayMethodId { get; set; }
 
-    public string? Status { get; set; }
+    public bool? Status { get; set; }
+
+    public virtual Account Account { get; set; } = null!;
 
     public virtual Booking Booking { get; set; } = null!;
 

@@ -11,5 +11,7 @@ public partial class NotificationType
 
     public string? Name { get; set; }
 
+    public virtual Account? Account { get; set; }
+
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 }

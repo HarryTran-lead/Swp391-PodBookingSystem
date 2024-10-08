@@ -41,7 +41,7 @@ namespace PodBooking.Services
 
             account = _mapper.Map<Account>(accEntity);
             account.Role = Enums.Roles.Customer;
-            account.Status = Enums.Account.Active;
+            account.Status = accEntity.Status == "Active" ? (bool?)true : (bool?)false;
             await _accRepo.AddAsync(account);
 
             response.Message = Enums.Successes.SignUpsuccessfull;

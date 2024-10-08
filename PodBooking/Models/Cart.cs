@@ -11,5 +11,7 @@ public partial class Cart
 
     public decimal? TotalAmount { get; set; }
 
+    public virtual Account Account { get; set; } = null!;
+
     public virtual Booking Booking { get; set; } = null!;
 }
