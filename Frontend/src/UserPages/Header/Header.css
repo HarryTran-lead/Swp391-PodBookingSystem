@@ -57,6 +57,7 @@
   background: none;
   color: white;
   margin-right: 0; /* Đặt margin để menu nằm đúng vị trí */
+ 
 }
 
 /* Đặt icon ở bên phải của dropdown */
@@ -69,7 +70,7 @@
 
 /* Định vị dropdown menu nằm bên trái của icon */
 .dropdown-menu-custom {
-  left: -50px; /* Điều chỉnh vị trí của menu so với icon */
+  left: -40px; /* Điều chỉnh vị trí của menu so với icon */
   top: 100%; /* Đặt menu nằm ngay dưới icon */
   transform: none; /* Xóa căn giữa */
   padding: 0;
@@ -90,4 +91,24 @@
 
 .dropdown-toggle::after {
   display: none; /* Ẩn mũi tên mặc định của dropdown */
+}
+.your-booking-btn {
+  color: white;          /* Set the text color */
+  margin-right: 15px;    /* Space between "Your Booking" and the user icon */
+  padding: 5px 10px;     /* Adjust padding to make the button look good */
+  text-transform: none;  /* Ensure text case stays the same */
+  white-space: nowrap;   /* Prevent text from wrapping to the next line */
+  display: inline-block;
+  font-size: 16px;       /* Adjust font size if needed */
+  text-decoration: underline; /* Add underline to the text */
+}
+
+.your-booking-btn:hover {
+  color: #f0a500;        /* Change hover color */
+  text-decoration: underline; /* Keep underline on hover */
+}
+
+.login-icon-container {
+  display: inline-block;
+  vertical-align: middle; /* Align the user icon with the "Your Booking" button */
 }

@@ -1,214 +1,282 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import './DetailPodBooking.css'; // Add styles to match the design
+import './DetailPodBooking.css';
 
 export default function DetailPodBooking() {
-  const { id } = useParams();
+  const { id } = useParams(); // Extract PodID from the URL
   const [pod, setPod] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedAddOns, setSelectedAddOns] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [username, setUsername] = useState('');
+  const [bookingId, setBookingId] = useState(null); // Track booking ID for payment
 
+  // Booking details state
+  const [bookingDetails, setBookingDetails] = useState({
+    accountId: localStorage.getItem('accountId'), // Get accountId from localStorage
+    username: '', // Use username instead of accountId
+    podId: id, // Pre-populate with the pod ID
+    bookingDate: '', // Add booking date
+    startTime: '', // Add start time
+    endTime: '',
+    totalPrice: 0 // Add total price field
+  });
+
+  const API_URL = `https://localhost:7257/api/Pods/${id}`;
+  const BOOKING_API_URL = `https://localhost:7257/api/Bookings`;
+  const USER_API_URL = `https://localhost:7257/api/Accounts/`; // For fetching user details
+
+  // Fetch pod details based on podId
   useEffect(() => {
     const fetchPodDetails = async () => {
       try {
-        // Fetch pod details from the new API
-        const response = await axios.get(`https://localhost:7257/api/Pods/${id}`);
+        const response = await axios.get(API_URL);
         setPod(response.data);
+        setLoading(false);
       } catch (error) {
-        setError('Failed to load pod details. Please try again later.');
+        console.error('Error fetching pod details:', error);
+        setError('Failed to load pod details.');
+        setLoading(false);
       }
     };
 
     fetchPodDetails();
   }, [id]);
 
-  const handleAddOnChange = (addOn, price) => {
-    if (selectedAddOns.includes(addOn)) {
-      setSelectedAddOns(selectedAddOns.filter((item) => item !== addOn));
-      setTotalPrice(totalPrice - price);
-    } else {
-      setSelectedAddOns([...selectedAddOns, addOn]);
-      setTotalPrice(totalPrice + price);
+  // Fetch username based on AccountID from localStorage
+  useEffect(() => {
+    const fetchAccountDetails = async () => {
+      const accountId = localStorage.getItem('accountId'); // Get the account ID from localStorage
+      if (!accountId) {
+        setErrorMessage('No account ID found. Please log in again.');
+        return;
+      }
+
+      try {
+        const response = await axios.get(`${USER_API_URL}${accountId}`); // Fetch user details
+        setUsername(response.data.username); // Set the username
+        setBookingDetails((prevDetails) => ({
+          ...prevDetails,
+          username: response.data.username, // Set the username in the booking details
+        }));
+      } catch (error) {
+        console.error('Error fetching account details:', error);
+        setErrorMessage('Failed to load account details.');
+      }
+    };
+
+    fetchAccountDetails();
+  }, []);
+
+  // Handle form inputs for booking details
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setBookingDetails((prevDetails) => {
+      const newDetails = {
+        ...prevDetails,
+        [name]: value,
+      };
+
+      // Calculate total price after updating the state
+      calculateTotalPrice(newDetails);
+
+      return newDetails;
+    });
+  };
+
+  // Calculate total price based on hours booked
+  const calculateTotalPrice = (details) => {
+    const { bookingDate, startTime, endTime } = details;
+  
+    if (bookingDate && startTime && endTime) {
+      const startDateTime = new Date(`${bookingDate}T${startTime}`);
+      const endDateTime = new Date(`${bookingDate}T${endTime}`);
+  
+      // Calculate hours booked
+      const hoursBooked = (endDateTime - startDateTime) / (1000 * 60 * 60); // Convert milliseconds to hours
+  
+      if (hoursBooked > 0) {
+        let totalPrice = hoursBooked * pod.pricePerHour; // Calculate total price
+  
+        // Round price using if-else logic
+        if (totalPrice % 1 < 0.5) {
+          totalPrice = Math.floor(totalPrice); // Round down
+        } else {
+          totalPrice = Math.ceil(totalPrice); // Round up
+        }
+  
+        // Set the total price to the booking details
+        setBookingDetails((prevDetails) => ({
+          ...prevDetails,
+          totalPrice: totalPrice
+        }));
+      } else {
+        setBookingDetails((prevDetails) => ({
+          ...prevDetails,
+          totalPrice: 0
+        }));
+      }
     }
   };
 
-  const handleStartTimeChange = (time) => {
-    setStartTime(time);
-  };
-
-  const handleEndTimeChange = (time) => {
-    if (startTime && time <= startTime) {
-      alert("End time must be later than start time.");
-    } else {
-      setEndTime(time);
+  // Handle payment initiation
+  const handlePayment = async (bookingId, total) => {
+    try {
+      const response = await fetch('https://localhost:7257/VNPay/api/payment/vnpay', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          BookingID: bookingId,
+          Total: total,
+          vnp_ReturnUrl: 'http://localhost:5173/SWP391-PodSystemBooking/successfullpayment', // Update to your return URL
+        }),
+      });
+  
+      const data = await response.json();
+      if (data.paymentUrl) {
+        window.location.href = data.paymentUrl; // Redirect to VNPay payment page
+      } else {
+        console.error('Payment initiation failed', data);
+        alert('Payment initiation failed. Please try again.');
+      }
+  
+    } catch (error) {
+      console.error('Error during payment:', error);
+      alert('Payment initiation failed.');
     }
   };
 
-  const calculateDuration = () => {
-    if (startTime && endTime) {
-      const start = new Date(`1970-01-01T${startTime}:00`);
-      const end = new Date(`1970-01-01T${endTime}:00`);
-      const diffMs = end - start;
-      const diffHours = diffMs / (1000 * 60 * 60); // Convert from milliseconds to hours
-      return diffHours;
-    }
-    return 0;
-  };
+  // Handle booking submission
+  const handleBookingSubmit = async (e) => {
+    e.preventDefault();
 
-  const handleBooking = () => {
-    const duration = calculateDuration();
-    if (duration <= 0) {
-      alert("Please select a valid time range.");
+    if (!bookingDetails.username) {
+      alert('Please log in to book a pod.');
       return;
     }
 
-    const hourlyRate = 27;
-    const bookingCost = hourlyRate * duration;
+    try {
+      const response = await axios.post(BOOKING_API_URL, {
+        AccountID: bookingDetails.accountId, // Use the actual account ID
+        PodID: bookingDetails.podId, // Pod ID
+        PackageID: null, // Assuming you don't have a PackageID yet
+        PaymentID: null, // Handle payment later if needed
+        NotificationID: null, // Assuming no notification ID
+        StartTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.startTime}`),
+        EndTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.endTime}`),
+        Total: bookingDetails.totalPrice // Total price
+      });
 
-    alert(`Booking duration: ${duration} hours. Total cost: $${bookingCost + totalPrice}`);
+      alert('Booking successful! Proceeding to payment...');
+      console.log('Booking response:', response.data);
+
+      // Store the booking ID and show the payment button
+      setBookingId(response.data.bookingId);
+      
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      alert('Booking failed.');
+    }
   };
 
+  if (loading) {
+    return <p>Loading pod details...</p>;
+  }
+
   if (error) {
-    return <div className="error-message">{error}</div>;
+    return <p>{error}</p>;
   }
 
   if (!pod) {
-    return <div className="loading">Loading...</div>;
+    return <p>No pod details available.</p>;
   }
 
   return (
-    <div className="booking-details-container">
-      {/* Pod Details Section */}
-      <div className="left-section">
-        <h1 className="pod-title">Booking Details</h1>
-        <p className="pod-address">{pod.LocationID}, {pod.LocationID}</p>
-        <div className="pod-info">
-          <p>📏 {pod.Size || 'N/A'} sqft · 👥 {pod.Capacity || 'N/A'} people</p>
-        </div>
-        <p className="pod-description">
-          {pod.Description}
-        </p>
-        <div className="pod-images">
-          <img src={`https://localhost:7257/api/Pods/${pod.id}/image`} alt={pod.Name} className="main-image" />
-          <div className="additional-images">
-            {/* Replace with actual additional images if available */}
-            <img src="additional-image1.jpg" alt="Additional 1" />
-            <img src="additional-image2.jpg" alt="Additional 2" />
-            <img src="additional-image3.jpg" alt="Additional 3" />
-          </div>
-        </div>
-        <div className="map-section">
-          <img src="map-image.jpg" alt="Map Location" />
-          <p className="map-address">📍 {pod.Address}</p>
-        </div>
+    <div className="pod-detail-container">
+      <h1>{pod.name}</h1>
+      <img src={`https://localhost:7257/api/Pods/${pod.podId}/image`} alt={pod.name} className="pod-image" />
+      <p>{pod.description}</p>
+      <p>Price per Hour: {pod.pricePerHour}vnđ</p>
+      <p>Location: {pod.location}</p>
 
-        {/* Amenities */}
-        <div className="amenities-section">
-          <h3>Space Amenities</h3>
-          <div className="space-amenities">
-            <span>📞 Phone</span>
-            <span>🖨️ Printer</span>
-            <span>☕ Coffee</span>
-            <span>🖥️ Flat Screen Monitors</span>
-            <span>🌆 City Views</span>
-            <span>❄️ Air Conditioning</span>
-            <span>🪑 Modern Furniture</span>
-          </div>
-          <h3>Building Amenities</h3>
-          <div className="building-amenities">
-            <span>🍴 Restaurant</span>
-            <span>🚗 Taxi Service</span>
-            <span>📚 Library</span>
-            <span>🏦 ATMs</span>
-            <span>🛍️ Shops Nearby</span>
-            <span>🚌 Bus Line</span>
-          </div>
-        </div>
-      </div>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      {/* Booking Options Section */}
-      <div className="right-section">
-        <h3>One Time Purchase</h3>
-        <div className="booking-options">
-          <label htmlFor="date">Please select</label>
-          <input type="date" id="date" className="form-control" />
+      {/* Booking Form */}
+      <form onSubmit={handleBookingSubmit}>
+        <h3>Book this Pod</h3>
 
-          {/* Start Time Input */}
-          <label htmlFor="start-time">Start Time</label>
+        <div className="form-group">
+          <label htmlFor="username">Username</label>
           <input
-            type="time"
-            id="start-time"
+            type="text"
+            id="username"
+            name="username"
+            value={bookingDetails.username}
+            onChange={handleInputChange}
             className="form-control"
-            min="06:00"
-            max="22:00"
-            value={startTime}
-            onChange={(e) => handleStartTimeChange(e.target.value)}
+            readOnly // Username is read-only since it comes from the logged-in user
           />
+        </div>
 
-          {/* End Time Input */}
-          <label htmlFor="end-time">End Time</label>
+        <div className="form-group">
+          <label htmlFor="bookingDate">Booking Date</label>
           <input
-            type="time"
-            id="end-time"
+            type="date" // Add date input
+            id="bookingDate"
+            name="bookingDate"
+            value={bookingDetails.bookingDate}
+            onChange={handleInputChange}
             className="form-control"
-            min="06:00"
-            max="22:00"
-            value={endTime}
-            onChange={(e) => handleEndTimeChange(e.target.value)}
+            required
           />
-
-          <label htmlFor="guests">Guests</label>
-          <input type="number" id="guests" className="form-control" min="1" max="10" defaultValue="4" />
-
-          <div className="addons-section">
-            <h4>Add-ons (optional)</h4>
-            <div className="addon-item">
-              <input
-                type="checkbox"
-                id="coffee"
-                onChange={() => handleAddOnChange('Coffee Service', 10)}
-              />
-              <label htmlFor="coffee">Coffee Service ($10)</label>
-            </div>
-            <div className="addon-item">
-              <input
-                type="checkbox"
-                id="wifi"
-                onChange={() => handleAddOnChange('Wireless Internet', 20)}
-              />
-              <label htmlFor="wifi">Wireless Internet ($20)</label>
-            </div>
-            <div className="addon-item">
-              <input
-                type="checkbox"
-                id="video-equipment"
-                onChange={() => handleAddOnChange('Video Equipment', 150)}
-              />
-              <label htmlFor="video-equipment">Video Equipment ($150)</label>
-            </div>
-          </div>
         </div>
-        
-        <div>
-          <h2>Payment Method: VnPay QR</h2>
+
+        <div className="form-group">
+          <label htmlFor="startTime">Start Time</label>
+          <input
+            type="time" // Keep time input for selecting only hours
+            id="startTime"
+            name="startTime"
+            value={bookingDetails.startTime}
+            onChange={handleInputChange}
+            className="form-control"
+            required
+          />
         </div>
-        <button className="btn btn-primary book-btn" onClick={handleBooking}>
-          Book It
+
+        <div className="form-group">
+          <label htmlFor="endTime">End Time</label>
+          <input
+            type="time" // Keep time input for selecting only hours
+            id="endTime"
+            name="endTime"
+            value={bookingDetails.endTime}
+            onChange={handleInputChange}
+            className="form-control"
+            required
+          />
+        </div>
+        <p>Total Price: {bookingDetails.totalPrice} vnđ</p>
+
+        <button type="submit" className="btn btn-primary">
+          Confirm Booking
         </button>
+      </form>
 
-        <div className="pricing-details">
-          <h4>Pricing Details</h4>
-          <p>{`$27 x ${calculateDuration()} hours`}</p>
-          {selectedAddOns.map((addOn, index) => (
-            <p key={index}>{addOn}</p>
-          ))}
-          <h3>Total: ${totalPrice + 27 * calculateDuration()}</h3>
+      {/* Show payment button only after booking is successful */}
+      {bookingId && (
+        <div>
+          <button
+            onClick={() => handlePayment(bookingId, bookingDetails.totalPrice)}
+            className="btn btn-success"
+          >
+            Proceed to Payment
+          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }

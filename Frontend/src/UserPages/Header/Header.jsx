@@ -22,6 +22,12 @@ export default function Header({ isLoggedIn, handleLogout }) {
       </Container>
 
       <Nav className="login-btn">
+        {isLoggedIn && (
+          <Nav.Link as={Link} to="/SWP391-PodSystemBooking/yourbooking" className="your-booking-btn">
+            Your Booking
+          </Nav.Link>
+        )}
+
         {isLoggedIn ? (
           <Dropdown className="login-icon-container">
             <Dropdown.Toggle variant="link" id="dropdown-basic">

@@ -13,6 +13,9 @@ export default function Sidebar() {
         <li className="list-group-item">
           <Link to="/SWP391-PodSystemBooking/admin/pod">Pod</Link>
         </li>
+        <li className="list-group-item">
+          <Link to="/SWP391-PodSystemBooking/admin/bookingorder">Booking Order</Link>
+        </li>
       </ul>
     </div>
   );

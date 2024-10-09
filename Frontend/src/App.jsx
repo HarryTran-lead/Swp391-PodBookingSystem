@@ -17,6 +17,10 @@ import UpdatePod from './AdminPages/Pod/UpdatePod';
 import Podlist from './UserPages/Pod/Pod';
 import BlogPage from './UserPages/BlogPage/BlogPage';
 import ProfilePage from './UserPages/ProfilePage/ProfilePage';
+import DetailBlog from './UserPages/DetailBlog/DetailBlog';
+import SuccessfulPayment from './UserPages/SuccessfulPayment/SuccessfullPayment';
+import BookingOrder from './AdminPages/BookingOrder/BookingOrder';
+import YourBooking from './UserPages/YourBooking/YourBooking';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
@@ -61,7 +65,10 @@ const App = () => {
         <Route path="/SWP391-PodSystemBooking/pod/:id" element={renderUserLayout(<DetailPodBooking />)} />
         <Route path="/SWP391-PodSystemBooking/pod" element={renderUserLayout(<Podlist />)} />
         <Route path="/SWP391-PodSystemBooking/blog" element={renderUserLayout(<BlogPage />)} />
+        <Route path="/SWP391-MomAndBaby/detailBlog/:id" element={renderUserLayout(<DetailBlog />)} />
         <Route path="/SWP391-PodSystemBooking/profile" element={renderUserLayout(<ProfilePage />)} />
+        <Route path="/SWP391-PodSystemBooking/successfullpayment" element={renderUserLayout(< SuccessfulPayment/>)} />
+        <Route path="/SWP391-PodSystemBooking/yourbooking" element={renderUserLayout(< YourBooking/>)} />
 
         <Route path="/SWP391-PodSystemBooking/admin/account" element={<AdminLayout><Account /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/update-account" element={<AdminLayout><UpdateAccount /></AdminLayout>} />
@@ -69,6 +76,7 @@ const App = () => {
         <Route path="/SWP391-PodSystemBooking/admin/pod" element={<AdminLayout><Pod /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/create-pod" element={<AdminLayout><CreatePod /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/update-pod" element={<AdminLayout><UpdatePod /></AdminLayout>} />
+        <Route path="/SWP391-PodSystemBooking/admin/bookingorder" element={<AdminLayout><BookingOrder /></AdminLayout>} />
       </Routes>
     </Router>
   );

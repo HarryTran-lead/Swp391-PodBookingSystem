@@ -45,4 +45,24 @@ export const updateAccountDetails = async (accountDetails) => {
     console.error('Update Account Details API Error:', error); // Log the error
     return { success: false, message: 'Failed to update account details' }; // Return an error message
   }
+
 };
+
+  [
+    {
+      "bookingId": 1,  // Optional if auto-generated
+      "accountId": 1,  // Use the ID of the account you are associating this booking with
+      "podId": 2,  // Example PodId
+      "packageId": 3,  // Example PackageId
+      "startTime": "2024-10-06T10:00:00",  // Adjust to current or desired start time
+      "endTime": "2024-10-06T12:00:00",  // Adjust to current or desired end time
+      "status": "Pending",  // Example status
+      "account": {
+        "id": 1,  // Make sure this matches the Account model's Id
+        "name": "Example Account",  // You may want to include more details
+        "username": "exampleUser",
+        "email": "user@example.com",
+        "phone": "1234567890"
+      }
+    }
+  ]

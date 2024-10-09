@@ -54,7 +54,7 @@ export default function Pod() {
                 className="pod-image" 
               />
               <div className="pod-details">
-                <div className="price-tag">${pod.pricePerHour} / hour</div>
+                <div className="price-tag">{pod.pricePerHour} vnđ/h</div>
                 <h3 className="pod-name">{pod.name}, {pod.locationId}</h3>
                 <p className="pod-address">{pod.description}</p> {/* Changed to display description */}
                 <div className="pod-info">

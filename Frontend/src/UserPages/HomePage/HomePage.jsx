@@ -69,7 +69,7 @@ export default function HomePage() {
                 <img src={`https://localhost:7257/api/Pods/${pod.podId}/image`} alt={pod.name} className="pod-image-homepage" />
                 <h3>{pod.name}</h3>
                 <p>{pod.description}</p>
-                <p>Price per Hour: ${pod.pricePerHour}</p>
+                <p>Price per Hour: {pod.pricePerHour}vnđ</p>
                 <a href={`/SWP391-PodSystemBooking/pod/${pod.podId}`} className="btn btn-primary">
                   Book Now
                 </a>

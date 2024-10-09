@@ -1,0 +1,35 @@
+.detail-blog-container {
+    max-width: 800px; /* Giới hạn chiều rộng của container */
+    margin: 20px auto; /* Canh giữa với lề trên và dưới */
+    padding: 20px; /* Thêm khoảng cách bên trong */
+    border: 1px solid #ccc; /* Đường viền xung quanh */
+    border-radius: 8px; /* Bo góc cho đường viền */
+    background-color: #f9f9f9; /* Màu nền nhẹ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng nhẹ */
+  }
+  
+  .detail-blog-container h1 {
+    font-size: 2.5rem; /* Kích thước font cho tiêu đề */
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+    color: #333; /* Màu sắc cho tiêu đề */
+  }
+  
+  .detail-blog-container img {
+    width: 100%; /* Đặt chiều rộng của hình ảnh chiếm 100% chiều rộng của container */
+    height: auto; /* Tự động điều chỉnh chiều cao */
+    border-radius: 5px; /* Bo góc cho hình ảnh */
+    margin-bottom: 20px; /* Khoảng cách dưới hình ảnh */
+  }
+  
+  .detail-blog-container h3 {
+    font-size: 1.5rem; /* Kích thước font cho tiêu đề mô tả chính */
+    margin-top: 20px; /* Khoảng cách trên */
+    color: #444; /* Màu sắc cho tiêu đề mô tả chính */
+  }
+  
+  .detail-blog-container p {
+    font-size: 1rem; /* Kích thước font cho nội dung */
+    line-height: 1.6; /* Khoảng cách giữa các dòng */
+    color: #555; /* Màu sắc cho nội dung */
+  }
+  

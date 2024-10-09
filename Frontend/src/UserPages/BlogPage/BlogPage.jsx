@@ -6,9 +6,7 @@ import { Pagination } from "react-bootstrap";
 
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import "./BlogPage.css";  // Import CSS
-
-import bannerImage from '../../assets/BannerHomePage.jpg';
+import "./BlogPage.css"; // Import CSS
 
 export default function BlogPage() {
   const [blogPosts, setBlogPosts] = useState([]);
@@ -21,16 +19,20 @@ export default function BlogPage() {
 
   const fetchBlogPosts = async () => {
     try {
-      const response = await fetch(
-        "https://6673f53a75872d0e0a947ec9.mockapi.io/api/v1/Blog"
-      );
+      const response = await fetch("https://localhost:7257/api/Blogs"); // Cập nhật URL nếu cần
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      setBlogPosts(data);
+      // Tạo đường dẫn hình ảnh cho từng bài viết
+      const postsWithImages = data.map((post) => ({
+        ...post,
+        img: `https://localhost:7257/api/Blogs/${post.id}/image`
+      }));
+      setBlogPosts(postsWithImages);
     } catch (error) {
       console.error("Error fetching blog posts:", error);
+      alert("Failed to load blog posts. Please try again later."); // Thông báo lỗi cho người dùng
     }
   };
 
@@ -43,9 +45,8 @@ export default function BlogPage() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-   
-    <div className="main-container" >
-     <Header/>
+    <div className="main-container">
+      <Header />
 
       <div className="hero-wrap hero-bread mt-4" style={{
         backgroundImage: `url('https://tse2.mm.bing.net/th?id=OIP.J8x2ZXoCWJvX4S5zMjJWFgHaCO&pid=Api&P=0&h=220')`,
@@ -63,18 +64,18 @@ export default function BlogPage() {
         </div>
       </div>
 
-      <div className="container mt-4 ">
+      <div className="container mt-4">
         <div className="row">
           {currentPosts.map((post) => (
             <div className="col-md-12 mb-4" key={post.id}>
               <div className="row no-gutters">
                 <div className="col-md-4">
-                  <img src={post.Img} alt={post.Title} className="img-fluid mb-3" />
+                  <img src={post.img} alt={post.title} className="img-fluid mb-3" />
                 </div>
                 <div className="col-md-8">
                   <div className="blog-post">
-                    <h2>{post.Title}</h2>
-                    <p>{post.ShortDes}</p>
+                    <h2>{post.title}</h2>
+                    <p>{post.shortDes}</p>
                     <p>
                       <Link to={`/SWP391-MomAndBaby/detailBlog/${post.id}`} className="btn btn-primary">
                         Read more
@@ -86,6 +87,7 @@ export default function BlogPage() {
             </div>
           ))}
         </div>
+        
         <Pagination>
           <Pagination.First onClick={() => paginate(1)} />
           <Pagination.Prev onClick={() => paginate(currentPage > 1 ? currentPage - 1 : 1)} />
@@ -106,8 +108,7 @@ export default function BlogPage() {
         </a>
       </div>
     
-      <Footer/>
+      <Footer />
     </div>
-  
   );
 }

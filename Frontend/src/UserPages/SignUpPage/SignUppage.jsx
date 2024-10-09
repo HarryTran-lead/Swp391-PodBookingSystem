@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 export default function SignUpPage() {
   // State to hold form data
   const [formData, setFormData] = useState({
-    id: 5, 
     name: '',
     username: '',
     phone: '',
