@@ -23,7 +23,7 @@ namespace PodBooking.Models
         public DateTime? EndTime { get; set; }
 
         // Update Status to use the enum from Enums
-        public Enums.BookingStatus Status { get; set; } = Enums.BookingStatus.Default;
+        public int Status { get; set; } = (int)Enums.BookingStatus.Default;
 
         public decimal? Total { get; set; }
 

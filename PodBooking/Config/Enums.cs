@@ -51,10 +51,11 @@
         // Add BookingStatus Enum
         public enum BookingStatus
         {
-            Default,
-            Pending,
-            Cancelled,
-            Successful
+            Default = 0,    // Corresponds to 0
+            Pending = 1,    // Corresponds to 1
+            Cancelled = 2,  // Corresponds to 2
+            Successful = 3   // Corresponds to 3
         }
     }
 }
+
