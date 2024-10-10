@@ -47,15 +47,17 @@ public partial class PodBookingContext : DbContext
 
     public virtual DbSet<ServicePackage> ServicePackages { get; set; }
 
+    public virtual DbSet<StatusLookup> StatusLookups { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=PodBooking;User ID=sa;Password=123;Trust Server Certificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=PodBooking;User ID=sa;Password=123;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Account__3213E83FE4B1CD10");
+            entity.HasKey(e => e.Id).HasName("PK__Account__3213E83FA75D09F5");
 
             entity.ToTable("Account");
 
@@ -88,7 +90,7 @@ public partial class PodBookingContext : DbContext
 
         modelBuilder.Entity<Blog>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Blog__3213E83F6FA5CEB1");
+            entity.HasKey(e => e.Id).HasName("PK__Blog__3213E83F51C85C9D");
 
             entity.ToTable("Blog");
 
@@ -107,7 +109,7 @@ public partial class PodBookingContext : DbContext
 
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951ACD7C686249");
+            entity.HasKey(e => e.BookingId).HasName("PK__Booking__73951ACD688DB0D5");
 
             entity.ToTable("Booking");
 
@@ -119,25 +121,31 @@ public partial class PodBookingContext : DbContext
             entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
             entity.Property(e => e.PodId).HasColumnName("PodID");
             entity.Property(e => e.StartTime).HasColumnType("datetime");
-            entity.Property(e => e.Status).HasDefaultValue(true);
+            entity.Property(e => e.StatusId)
+                .HasDefaultValue(1)
+                .HasColumnName("StatusID");
             entity.Property(e => e.Total).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.AccountId)
-                .HasConstraintName("FK__Booking__Account__44FF419A");
+                .HasConstraintName("FK__Booking__Account__46E78A0C");
 
             entity.HasOne(d => d.Package).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.PackageId)
-                .HasConstraintName("FK__Booking__Package__46E78A0C");
+                .HasConstraintName("FK__Booking__Package__48CFD27E");
 
             entity.HasOne(d => d.Pod).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.PodId)
-                .HasConstraintName("FK__Booking__PodID__45F365D3");
+                .HasConstraintName("FK__Booking__PodID__47DBAE45");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.Bookings)
+                .HasForeignKey(d => d.StatusId)
+                .HasConstraintName("FK__Booking__StatusI__49C3F6B7");
         });
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => new { e.BookingId, e.AccountId }).HasName("PK__Cart__00DCC0958E424F34");
+            entity.HasKey(e => new { e.BookingId, e.AccountId }).HasName("PK__Cart__00DCC095DCC0FB2E");
 
             entity.ToTable("Cart");
 
@@ -148,17 +156,17 @@ public partial class PodBookingContext : DbContext
             entity.HasOne(d => d.Account).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.AccountId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__AccountID__5441852A");
+                .HasConstraintName("FK__Cart__AccountID__571DF1D5");
 
             entity.HasOne(d => d.Booking).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.BookingId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__BookingID__534D60F1");
+                .HasConstraintName("FK__Cart__BookingID__5629CD9C");
         });
 
         modelBuilder.Entity<CartItem>(entity =>
         {
-            entity.HasKey(e => new { e.BookingId, e.FoodId }).HasName("PK__CartItem__DBC3C1F10A287F9E");
+            entity.HasKey(e => new { e.BookingId, e.FoodId }).HasName("PK__CartItem__DBC3C1F107EE1E77");
 
             entity.ToTable("CartItem");
 
@@ -168,17 +176,17 @@ public partial class PodBookingContext : DbContext
             entity.HasOne(d => d.Booking).WithMany(p => p.CartItems)
                 .HasForeignKey(d => d.BookingId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CartItem__Bookin__59063A47");
+                .HasConstraintName("FK__CartItem__Bookin__5BE2A6F2");
 
             entity.HasOne(d => d.Food).WithMany(p => p.CartItems)
                 .HasForeignKey(d => d.FoodId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CartItem__FoodID__59FA5E80");
+                .HasConstraintName("FK__CartItem__FoodID__5CD6CB2B");
         });
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Feedback__3213E83F18CBCD13");
+            entity.HasKey(e => e.Id).HasName("PK__Feedback__3213E83F37BE9B5A");
 
             entity.ToTable("Feedback");
 
@@ -189,16 +197,16 @@ public partial class PodBookingContext : DbContext
 
             entity.HasOne(d => d.Account).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.AccountId)
-                .HasConstraintName("FK__Feedback__Accoun__68487DD7");
+                .HasConstraintName("FK__Feedback__Accoun__6B24EA82");
 
             entity.HasOne(d => d.Booking).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.BookingId)
-                .HasConstraintName("FK__Feedback__Bookin__693CA210");
+                .HasConstraintName("FK__Feedback__Bookin__6C190EBB");
         });
 
         modelBuilder.Entity<FoodMenu>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FoodMenu__3213E83FC9758F50");
+            entity.HasKey(e => e.Id).HasName("PK__FoodMenu__3213E83FD509E981");
 
             entity.ToTable("FoodMenu");
 
@@ -214,7 +222,7 @@ public partial class PodBookingContext : DbContext
 
         modelBuilder.Entity<FoodOrder>(entity =>
         {
-            entity.HasKey(e => new { e.BookingId, e.AccountId }).HasName("PK__FoodOrde__00DCC09560967EC5");
+            entity.HasKey(e => new { e.BookingId, e.AccountId }).HasName("PK__FoodOrde__00DCC0959B89295A");
 
             entity.ToTable("FoodOrder");
 
@@ -226,21 +234,21 @@ public partial class PodBookingContext : DbContext
             entity.HasOne(d => d.Account).WithMany(p => p.FoodOrders)
                 .HasForeignKey(d => d.AccountId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__FoodOrder__Accou__60A75C0F");
+                .HasConstraintName("FK__FoodOrder__Accou__6383C8BA");
 
             entity.HasOne(d => d.Booking).WithMany(p => p.FoodOrders)
                 .HasForeignKey(d => d.BookingId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__FoodOrder__Booki__5FB337D6");
+                .HasConstraintName("FK__FoodOrder__Booki__628FA481");
 
             entity.HasOne(d => d.PayMethod).WithMany(p => p.FoodOrders)
                 .HasForeignKey(d => d.PayMethodId)
-                .HasConstraintName("FK__FoodOrder__PayMe__619B8048");
+                .HasConstraintName("FK__FoodOrder__PayMe__6477ECF3");
         });
 
         modelBuilder.Entity<FoodOrderDetail>(entity =>
         {
-            entity.HasKey(e => new { e.FoodId, e.BookingId, e.AccountId }).HasName("PK__FoodOrde__C5607FC2FE2733D2");
+            entity.HasKey(e => new { e.FoodId, e.BookingId, e.AccountId }).HasName("PK__FoodOrde__C5607FC276C195D4");
 
             entity.ToTable("FoodOrderDetail");
 
@@ -252,17 +260,17 @@ public partial class PodBookingContext : DbContext
             entity.HasOne(d => d.Food).WithMany(p => p.FoodOrderDetails)
                 .HasForeignKey(d => d.FoodId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__FoodOrder__FoodI__6477ECF3");
+                .HasConstraintName("FK__FoodOrder__FoodI__6754599E");
 
             entity.HasOne(d => d.FoodOrder).WithMany(p => p.FoodOrderDetails)
                 .HasForeignKey(d => new { d.BookingId, d.AccountId })
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__FoodOrderDetail__656C112C");
+                .HasConstraintName("FK__FoodOrderDetail__68487DD7");
         });
 
         modelBuilder.Entity<Location>(entity =>
         {
-            entity.HasKey(e => e.LocationId).HasName("PK__Location__E7FEA4773ECDFDFE");
+            entity.HasKey(e => e.LocationId).HasName("PK__Location__E7FEA47700607629");
 
             entity.ToTable("Location");
 
@@ -283,7 +291,7 @@ public partial class PodBookingContext : DbContext
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E32A6D68775");
+            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E32EC4C6B3E");
 
             entity.ToTable("Notification");
 
@@ -299,20 +307,20 @@ public partial class PodBookingContext : DbContext
 
             entity.HasOne(d => d.Account).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.AccountId)
-                .HasConstraintName("FK__Notificat__Accou__4CA06362");
+                .HasConstraintName("FK__Notificat__Accou__4F7CD00D");
 
             entity.HasOne(d => d.Booking).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.BookingId)
-                .HasConstraintName("FK__Notificat__Booki__4D94879B");
+                .HasConstraintName("FK__Notificat__Booki__5070F446");
 
             entity.HasOne(d => d.NotificationTypeNavigation).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.NotificationType)
-                .HasConstraintName("FK__Notificat__Notif__4E88ABD4");
+                .HasConstraintName("FK__Notificat__Notif__5165187F");
         });
 
         modelBuilder.Entity<NotificationType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Notifica__3213E83F1CA096FD");
+            entity.HasKey(e => e.Id).HasName("PK__Notifica__3213E83FC905D7FB");
 
             entity.ToTable("NotificationType");
 
@@ -324,12 +332,12 @@ public partial class PodBookingContext : DbContext
 
             entity.HasOne(d => d.Account).WithMany(p => p.NotificationTypes)
                 .HasForeignKey(d => d.AccountId)
-                .HasConstraintName("FK__Notificat__Accou__49C3F6B7");
+                .HasConstraintName("FK__Notificat__Accou__4CA06362");
         });
 
         modelBuilder.Entity<PayMethod>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PayMetho__3213E83FA4F811C0");
+            entity.HasKey(e => e.Id).HasName("PK__PayMetho__3213E83F2A7D3E52");
 
             entity.ToTable("PayMethod");
 
@@ -341,7 +349,7 @@ public partial class PodBookingContext : DbContext
 
         modelBuilder.Entity<Pod>(entity =>
         {
-            entity.HasKey(e => e.PodId).HasName("PK__Pod__69F90ADE66D4723B");
+            entity.HasKey(e => e.PodId).HasName("PK__Pod__69F90ADE837F5E1F");
 
             entity.ToTable("Pod");
 
@@ -365,7 +373,7 @@ public partial class PodBookingContext : DbContext
 
         modelBuilder.Entity<PodModel>(entity =>
         {
-            entity.HasKey(e => e.PodModelId).HasName("PK__PodModel__3D68294514C99A73");
+            entity.HasKey(e => e.PodModelId).HasName("PK__PodModel__3D6829451799C459");
 
             entity.ToTable("PodModel");
 
@@ -377,7 +385,7 @@ public partial class PodBookingContext : DbContext
 
         modelBuilder.Entity<ServicePackage>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ServiceP__3213E83FE225F520");
+            entity.HasKey(e => e.Id).HasName("PK__ServiceP__3213E83F9E4B3892");
 
             entity.ToTable("ServicePackage");
 
@@ -387,6 +395,20 @@ public partial class PodBookingContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+        });
+
+        modelBuilder.Entity<StatusLookup>(entity =>
+        {
+            entity.HasKey(e => e.StatusId).HasName("PK__status_l__C8EE2043CCAC5757");
+
+            entity.ToTable("status_lookup");
+
+            entity.Property(e => e.StatusId)
+                .ValueGeneratedNever()
+                .HasColumnName("StatusID");
+            entity.Property(e => e.StatusDescription)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         OnModelCreatingPartial(modelBuilder);
