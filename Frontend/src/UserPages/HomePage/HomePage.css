@@ -231,7 +231,7 @@ border-radius: 8px;
 }
 
 .pod-image-homepage{
-  max-width: 90%;
+  width: 300px;
   height: auto;
   border-radius: 8px;
   margin-bottom: 10px;

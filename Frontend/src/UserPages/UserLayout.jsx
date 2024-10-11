@@ -8,7 +8,7 @@ export default function UserLayout({ children, isLoggedIn, username, handleLogou
   return (
     <div>
       <Header isLoggedIn={isLoggedIn} username={username} handleLogout={handleLogout} />
-      <div className="col-md-14 mt-5">
+      <div className="col-md-14 mt-5" >
         <main>{children}</main>
       </div>
       <Footer />

@@ -1,4 +1,3 @@
-// ./AdminPages/BookingOrder.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -8,11 +7,14 @@ import './BookingOrder.css'; // Make sure to create BookingOrder.css for styling
 
 export default function BookingOrder() {
   const [bookings, setBookings] = useState([]);
+  const [statuses, setStatuses] = useState([]); // State to store status descriptions
   const navigate = useNavigate();
   const API_URL = 'https://localhost:7257/api/Bookings';
+  const STATUS_API_URL = 'https://localhost:7257/api/StatusLookups'; // Endpoint for status descriptions
 
   useEffect(() => {
     fetchBookings();
+    fetchStatusDescriptions(); // Fetch status descriptions on component mount
   }, []);
 
   // Fetch all bookings
@@ -26,7 +28,24 @@ export default function BookingOrder() {
     }
   };
 
-  // Navigate to update booking page (if you want to implement it)
+  // Fetch all status descriptions
+  const fetchStatusDescriptions = async () => {
+    try {
+      const response = await axios.get(STATUS_API_URL);
+      setStatuses(response.data); // Store status descriptions in state
+    } catch (error) {
+      console.error('Error fetching status descriptions:', error);
+      toast.error('Failed to fetch status descriptions.');
+    }
+  };
+
+  // Get status description by status ID
+  const getStatusDescription = (statusId) => {
+    const status = statuses.find((s) => s.statusId === statusId);
+    return status ? status.statusDescription : 'Unknown'; // Return 'Unknown' if status not found
+  };
+
+  // Navigate to update booking page
   const handleUpdate = (booking) => {
     navigate('/SWP391-PodSystemBooking/admin/update-booking', { state: { booking } });
   };
@@ -74,8 +93,8 @@ export default function BookingOrder() {
               <td>{booking.notificationID || 'N/A'}</td>
               <td>{new Date(booking.startTime).toLocaleString()}</td>
               <td>{new Date(booking.endTime).toLocaleString()}</td>
-              <td>{booking.status}</td>
-              <td>${booking.total.toLocaleString()}</td>
+              <td>{getStatusDescription(booking.statusId)}</td> {/* Display status description */}
+              <td>${booking.total}</td>
               <td>
                 <button onClick={() => handleUpdate(booking)}>Update</button>
                 <button onClick={() => handleDelete(booking.bookingId)}>Delete</button>

@@ -72,10 +72,32 @@ export default function DetailPodBooking() {
   // Handle form inputs for booking details
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Restrict minutes to :15 or :30 for time inputs
+    let adjustedValue = value;
+    if (name === 'startTime' || name === 'endTime') {
+      const [hour, minute] = value.split(':');
+      let adjustedMinute = minute;
+
+      if (minute < '15') {
+        adjustedMinute = '15';
+      } else if (minute >= '15' && minute < '30') {
+        adjustedMinute = '30';
+      } else if (minute >= '30' && minute < '45') {
+        adjustedMinute = '30';
+      } else {
+        adjustedMinute = '15';
+        const adjustedHour = ('0' + ((parseInt(hour, 10) + 1) % 24)).slice(-2);
+        adjustedValue = `${adjustedHour}:${adjustedMinute}`;
+      }
+
+      adjustedValue = `${hour}:${adjustedMinute}`;
+    }
+
     setBookingDetails((prevDetails) => {
       const newDetails = {
         ...prevDetails,
-        [name]: value,
+        [name]: adjustedValue,
       };
 
       // Calculate total price after updating the state
@@ -88,64 +110,35 @@ export default function DetailPodBooking() {
   // Calculate total price based on hours booked
   const calculateTotalPrice = (details) => {
     const { bookingDate, startTime, endTime } = details;
-  
+
     if (bookingDate && startTime && endTime) {
       const startDateTime = new Date(`${bookingDate}T${startTime}`);
       const endDateTime = new Date(`${bookingDate}T${endTime}`);
-  
+
       // Calculate hours booked
       const hoursBooked = (endDateTime - startDateTime) / (1000 * 60 * 60); // Convert milliseconds to hours
-  
+
       if (hoursBooked > 0) {
         let totalPrice = hoursBooked * pod.pricePerHour; // Calculate total price
-  
+
         // Round price using if-else logic
         if (totalPrice % 1 < 0.5) {
           totalPrice = Math.floor(totalPrice); // Round down
         } else {
           totalPrice = Math.ceil(totalPrice); // Round up
         }
-  
+
         // Set the total price to the booking details
         setBookingDetails((prevDetails) => ({
           ...prevDetails,
-          totalPrice: totalPrice
+          totalPrice: totalPrice,
         }));
       } else {
         setBookingDetails((prevDetails) => ({
           ...prevDetails,
-          totalPrice: 0
+          totalPrice: 0,
         }));
       }
-    }
-  };
-
-  // Handle payment initiation
-  const handlePayment = async (bookingId, total) => {
-    try {
-      const response = await fetch('https://localhost:7257/VNPay/api/payment/vnpay', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          BookingID: bookingId,
-          Total: total,
-          vnp_ReturnUrl: 'http://localhost:5173/SWP391-PodSystemBooking/successfullpayment', // Update to your return URL
-        }),
-      });
-  
-      const data = await response.json();
-      if (data.paymentUrl) {
-        window.location.href = data.paymentUrl; // Redirect to VNPay payment page
-      } else {
-        console.error('Payment initiation failed', data);
-        alert('Payment initiation failed. Please try again.');
-      }
-  
-    } catch (error) {
-      console.error('Error during payment:', error);
-      alert('Payment initiation failed.');
     }
   };
 
@@ -167,7 +160,7 @@ export default function DetailPodBooking() {
         NotificationID: null, // Assuming no notification ID
         StartTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.startTime}`),
         EndTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.endTime}`),
-        Total: bookingDetails.totalPrice // Total price
+        Total: bookingDetails.totalPrice, // Total price
       });
 
       alert('Booking successful! Proceeding to payment...');
@@ -175,10 +168,60 @@ export default function DetailPodBooking() {
 
       // Store the booking ID and show the payment button
       setBookingId(response.data.bookingId);
-      
+
+      // Save booking details in localStorage for SuccessfulPayment component to access
+      localStorage.setItem('bookingId', response.data.bookingId);
+      localStorage.setItem('bookingDetails', JSON.stringify({
+        accountId: bookingDetails.accountId,
+        podId: bookingDetails.podId,
+        bookingDate: bookingDetails.bookingDate,
+        startTime: bookingDetails.startTime,
+        endTime: bookingDetails.endTime,
+        totalPrice: bookingDetails.totalPrice,
+      }));
     } catch (error) {
       console.error('Error creating booking:', error);
       alert('Booking failed.');
+    }
+};
+
+
+  // Handle payment
+  const handlePayment = async (bookingId, total) => {
+    try {
+      // Update booking status before payment
+      const bookingData = {
+        bookingId: bookingId,
+        StatusID: 2, // Update StatusID to 2
+        AccountID: bookingDetails.accountId,
+        PodID: bookingDetails.podId,
+        StartTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.startTime}`),
+        EndTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.endTime}`),
+        Total: bookingDetails.totalPrice,
+      };
+
+      // Update booking status
+      const updateResponse = await axios.put(`${BOOKING_API_URL}/${bookingId}`, bookingData);
+      if (!updateResponse) {
+        alert('Failed to update booking status.');
+        return;
+      }
+
+      // Send payment request to VNPay
+      const paymentResponse = await axios.post('https://localhost:7257/VNPay/api/payment/vnpay', {
+        BookingID: bookingId,
+        Total: total,
+        vnp_ReturnUrl: 'http://localhost:5173/SWP391-PodSystemBooking/successfullpayment',
+      });
+
+      if (paymentResponse.data.paymentUrl) {
+        window.location.href = paymentResponse.data.paymentUrl; // Redirect to VNPay payment page
+      } else {
+        alert('Payment initiation failed.');
+      }
+    } catch (error) {
+      console.error('Error during payment:', error);
+      alert('Payment initiation failed.');
     }
   };
 
@@ -197,7 +240,13 @@ export default function DetailPodBooking() {
   return (
     <div className="pod-detail-container">
       <h1>{pod.name}</h1>
-      <img src={`https://localhost:7257/api/Pods/${pod.podId}/image`} alt={pod.name} className="pod-image" />
+      <img
+  src={`https://localhost:7257/api/Pods/${pod.podId}/image`}
+  alt={pod.name}
+  className="pod-image"
+  style={{ width: '650px', height: '300px' }} // Adjust these values as needed
+/>
+
       <p>{pod.description}</p>
       <p>Price per Hour: {pod.pricePerHour}vnđ</p>
       <p>Location: {pod.location}</p>
@@ -206,76 +255,35 @@ export default function DetailPodBooking() {
 
       {/* Booking Form */}
       <form onSubmit={handleBookingSubmit}>
-        <h3>Book this Pod</h3>
+        <label>
+          Booking Date:
+          <input type="date" name="bookingDate" value={bookingDetails.bookingDate} onChange={handleInputChange} required />
+        </label>
 
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={bookingDetails.username}
-            onChange={handleInputChange}
-            className="form-control"
-            readOnly // Username is read-only since it comes from the logged-in user
-          />
-        </div>
+        <label>
+          Start Time:
+          <input type="time" name="startTime" value={bookingDetails.startTime} onChange={handleInputChange} required />
+        </label>
 
-        <div className="form-group">
-          <label htmlFor="bookingDate">Booking Date</label>
-          <input
-            type="date" // Add date input
-            id="bookingDate"
-            name="bookingDate"
-            value={bookingDetails.bookingDate}
-            onChange={handleInputChange}
-            className="form-control"
-            required
-          />
-        </div>
+        <label>
+          End Time:
+          <input type="time" name="endTime" value={bookingDetails.endTime} onChange={handleInputChange} required />
+        </label>
 
-        <div className="form-group">
-          <label htmlFor="startTime">Start Time</label>
-          <input
-            type="time" // Keep time input for selecting only hours
-            id="startTime"
-            name="startTime"
-            value={bookingDetails.startTime}
-            onChange={handleInputChange}
-            className="form-control"
-            required
-          />
-        </div>
+        <label>
+          Total Price: {bookingDetails.totalPrice}vnđ
+        </label>
 
-        <div className="form-group">
-          <label htmlFor="endTime">End Time</label>
-          <input
-            type="time" // Keep time input for selecting only hours
-            id="endTime"
-            name="endTime"
-            value={bookingDetails.endTime}
-            onChange={handleInputChange}
-            className="form-control"
-            required
-          />
-        </div>
-        <p>Total Price: {bookingDetails.totalPrice} vnđ</p>
-
-        <button type="submit" className="btn btn-primary">
-          Confirm Booking
+        <button type="submit" disabled={!bookingDetails.bookingDate || !bookingDetails.startTime || !bookingDetails.endTime}>
+          Book Pod
         </button>
       </form>
 
-      {/* Show payment button only after booking is successful */}
+      {/* Show payment button after booking */}
       {bookingId && (
-        <div>
-          <button
-            onClick={() => handlePayment(bookingId, bookingDetails.totalPrice)}
-            className="btn btn-success"
-          >
-            Proceed to Payment
-          </button>
-        </div>
+        <button onClick={() => handlePayment(bookingId, bookingDetails.totalPrice)}>
+          Proceed to Payment
+        </button>
       )}
     </div>
   );
