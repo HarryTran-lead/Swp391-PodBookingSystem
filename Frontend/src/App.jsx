@@ -21,6 +21,7 @@ import DetailBlog from './UserPages/DetailBlog/DetailBlog';
 import SuccessfulPayment from './UserPages/SuccessfulPayment/SuccessfullPayment';
 import BookingOrder from './AdminPages/BookingOrder/BookingOrder';
 import YourBooking from './UserPages/YourBooking/YourBooking';
+import UpdateBooking from './AdminPages/BookingOrder/UpdateBooking';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
@@ -77,6 +78,7 @@ const App = () => {
         <Route path="/SWP391-PodSystemBooking/admin/create-pod" element={<AdminLayout><CreatePod /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/update-pod" element={<AdminLayout><UpdatePod /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/bookingorder" element={<AdminLayout><BookingOrder /></AdminLayout>} />
+        <Route path="/SWP391-PodSystemBooking/admin/update-booking" element={<AdminLayout><UpdateBooking /></AdminLayout>} />
       </Routes>
     </Router>
   );

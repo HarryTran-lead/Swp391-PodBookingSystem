@@ -1,0 +1,43 @@
+/* ./AdminPages/UpdateBooking.css */
+
+.update-booking-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .update-booking-page h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .update-booking-page form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .update-booking-page label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .update-booking-page input,
+  .update-booking-page select {
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+  
+  .update-booking-page button {
+    padding: 10px;
+    background-color: #4caf50;
+    color: #fff;
+  }  
