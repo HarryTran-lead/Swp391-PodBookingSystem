@@ -41,8 +41,28 @@ namespace PodBooking.Controllers
             return booking;
         }
 
+        // GET: api/Bookings/AvailableTimeSlots/{podId}?date={bookingDate}
+        [HttpGet("AvailableTimeSlots/{podId}")]
+        public async Task<ActionResult<IEnumerable<Booking>>> GetAvailableTimeSlots(int podId, [FromQuery] DateTime bookingDate)
+        {
+            // Get the start and end of the day for the booking date
+            var startOfDay = bookingDate.Date; // 00:00:00
+            var endOfDay = bookingDate.Date.AddDays(1); // 24:00:00
+
+            // Get all bookings for the specified pod on the specified date with statusId 2 or 4
+            var bookings = await _context.Bookings
+                .Where(b => b.PodId == podId
+                            && b.StartTime >= startOfDay
+                            && b.EndTime <= endOfDay
+                            && (b.StatusId == 2 || b.StatusId == 4)) // Check statusId
+                .ToListAsync();
+
+            // Return the list of bookings for that date
+            return Ok(bookings);
+        }
+
+
         // PUT: api/Bookings/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBooking(int id, Booking booking)
         {
@@ -73,26 +93,24 @@ namespace PodBooking.Controllers
         }
 
         // POST: api/Bookings
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
+            // Check if the booking overlaps with existing bookings
+            var overlaps = _context.Bookings
+     .Any(b => b.PodId == booking.PodId &&
+              b.StartTime < booking.EndTime &&
+              b.EndTime > booking.StartTime &&
+              (b.StatusId == 2 || b.StatusId == 4));
+
+
+            if (overlaps)
+            {
+                return BadRequest("The selected time slot is already booked.");
+            }
+
             _context.Bookings.Add(booking);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (BookingExists(booking.BookingId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetBooking", new { id = booking.BookingId }, booking);
         }

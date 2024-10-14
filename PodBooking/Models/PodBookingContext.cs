@@ -49,6 +49,8 @@ public partial class PodBookingContext : DbContext
 
     public virtual DbSet<StatusLookup> StatusLookups { get; set; }
 
+    public virtual DbSet<UserPurchasedPackage> UserPurchasedPackages { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=PodBooking;User ID=sa;Password=123;Trust Server Certificate=True");
@@ -390,7 +392,9 @@ public partial class PodBookingContext : DbContext
             entity.ToTable("ServicePackage");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Features).HasColumnType("text");
+            entity.Property(e => e.DurationType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.PackageName)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -409,6 +413,26 @@ public partial class PodBookingContext : DbContext
             entity.Property(e => e.StatusDescription)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<UserPurchasedPackage>(entity =>
+        {
+            entity.HasKey(e => e.UserPackageId).HasName("PK__UserPurc__AE9B91FABB5250EA");
+
+            entity.Property(e => e.UserPackageId).HasColumnName("UserPackageID");
+            entity.Property(e => e.AccountId).HasColumnName("AccountID");
+            entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
+            entity.Property(e => e.PackageId).HasColumnName("PackageID");
+            entity.Property(e => e.PurchaseDate).HasColumnType("datetime");
+            entity.Property(e => e.Status).HasDefaultValue(true);
+
+            entity.HasOne(d => d.Account).WithMany(p => p.UserPurchasedPackages)
+                .HasForeignKey(d => d.AccountId)
+                .HasConstraintName("FK__UserPurch__Accou__70DDC3D8");
+
+            entity.HasOne(d => d.Package).WithMany(p => p.UserPurchasedPackages)
+                .HasForeignKey(d => d.PackageId)
+                .HasConstraintName("FK__UserPurch__Packa__71D1E811");
         });
 
         OnModelCreatingPartial(modelBuilder);

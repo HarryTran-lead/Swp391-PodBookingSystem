@@ -15,5 +15,9 @@ public partial class ServicePackage
 
     public string? Features { get; set; }
 
+    public string? DurationType { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    public virtual ICollection<UserPurchasedPackage> UserPurchasedPackages { get; set; } = new List<UserPurchasedPackage>();
 }
