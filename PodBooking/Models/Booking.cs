@@ -27,13 +27,9 @@ public partial class Booking
 
     public virtual Account? Account { get; set; }
 
-    public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
-
-    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
-
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
-    public virtual ICollection<FoodOrder> FoodOrders { get; set; } = new List<FoodOrder>();
+    public virtual ICollection<FoodOrderDetail> FoodOrderDetails { get; set; } = new List<FoodOrderDetail>();
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 

@@ -19,6 +19,8 @@ public partial class UserPurchasedPackage
 
     public bool? Status { get; set; }
 
+    public string? TransactionReference { get; set; }
+
     public virtual Account? Account { get; set; }
 
     public virtual ServicePackage? Package { get; set; }

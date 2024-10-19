@@ -91,18 +91,26 @@ namespace PodBooking.Controllers
 
             return NoContent();
         }
-
         // POST: api/Bookings
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
+            // Subtract 5 hours from StartTime and EndTime if they are not null
+            if (booking.StartTime.HasValue)
+            {
+                booking.StartTime = booking.StartTime.Value.AddHours(+7);
+            }
+            if (booking.EndTime.HasValue)
+            {
+                booking.EndTime = booking.EndTime.Value.AddHours(+7);
+            }
+
             // Check if the booking overlaps with existing bookings
             var overlaps = _context.Bookings
-     .Any(b => b.PodId == booking.PodId &&
-              b.StartTime < booking.EndTime &&
-              b.EndTime > booking.StartTime &&
-              (b.StatusId == 2 || b.StatusId == 4));
-
+                .Any(b => b.PodId == booking.PodId &&
+                          b.StartTime < booking.EndTime &&
+                          b.EndTime > booking.StartTime &&
+                          (b.StatusId == 2 || b.StatusId == 4));
 
             if (overlaps)
             {
@@ -114,6 +122,7 @@ namespace PodBooking.Controllers
 
             return CreatedAtAction("GetBooking", new { id = booking.BookingId }, booking);
         }
+
 
         // DELETE: api/Bookings/5
         [HttpDelete("{id}")]

@@ -31,11 +31,7 @@ public partial class Account
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
-
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
-
-    public virtual ICollection<FoodOrder> FoodOrders { get; set; } = new List<FoodOrder>();
 
     public virtual Location? Location { get; set; }
 

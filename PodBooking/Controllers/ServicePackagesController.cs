@@ -42,7 +42,6 @@ namespace PodBooking.Controllers
         }
 
         // PUT: api/ServicePackages/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutServicePackage(int id, ServicePackage servicePackage)
         {
@@ -73,7 +72,6 @@ namespace PodBooking.Controllers
         }
 
         // POST: api/ServicePackages
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ServicePackage>> PostServicePackage(ServicePackage servicePackage)
         {

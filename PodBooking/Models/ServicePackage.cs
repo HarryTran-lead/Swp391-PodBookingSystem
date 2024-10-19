@@ -17,6 +17,8 @@ public partial class ServicePackage
 
     public string? DurationType { get; set; }
 
+    public decimal? DiscountPercentage { get; set; }
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual ICollection<UserPurchasedPackage> UserPurchasedPackages { get; set; } = new List<UserPurchasedPackage>();
