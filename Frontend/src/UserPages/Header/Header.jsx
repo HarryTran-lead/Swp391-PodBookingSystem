@@ -23,9 +23,14 @@ export default function Header({ isLoggedIn, handleLogout }) {
 
       <Nav className="login-btn">
         {isLoggedIn && (
-          <Nav.Link as={Link} to="/SWP391-PodSystemBooking/yourbooking" className="your-booking-btn">
-            Your Booking
-          </Nav.Link>
+          <>
+            <Nav.Link as={Link} to="/SWP391-PodSystemBooking/yourbooking" className="your-booking-btn">
+              Your Booking
+            </Nav.Link>
+            <Nav.Link as={Link} to="/SWP391-PodSystemBooking/yourpakage" className="your-package-btn">
+              Your Package
+            </Nav.Link>
+          </>
         )}
 
         {isLoggedIn ? (

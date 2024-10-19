@@ -4,7 +4,6 @@
 }
 
 .navbar {
-
   position: fixed !important; /* Fixes the navbar at the top of the viewport */
   top: 0; /* Positions the navbar at the very top */
   left: 0; /* Ensures the navbar starts at the left of the viewport */
@@ -32,14 +31,6 @@
   padding-top: 70px; /* Adds padding to prevent content from hiding under the fixed navbar */
 }
 
-/* Header.css */
-
-/* Styling cho dropdown container */
-/* Header.css */
-
-/* Styling cho dropdown container */
-/* Header.css */
-
 /* Đặt icon người dùng và dropdown căn theo chiều ngang */
 .login-icon-container {
   display: flex;
@@ -57,7 +48,6 @@
   background: none;
   color: white;
   margin-right: 0; /* Đặt margin để menu nằm đúng vị trí */
- 
 }
 
 /* Đặt icon ở bên phải của dropdown */
@@ -65,7 +55,6 @@
   font-size: 1.5rem;
   margin-left: 8px; /* Căn chỉnh khoảng cách giữa dropdown và icon */
   cursor: pointer;
-  
 }
 
 /* Định vị dropdown menu nằm bên trái của icon */
@@ -92,9 +81,11 @@
 .dropdown-toggle::after {
   display: none; /* Ẩn mũi tên mặc định của dropdown */
 }
-.your-booking-btn {
+
+.your-booking-btn,
+.your-package-btn {
   color: white;          /* Set the text color */
-  margin-right: 15px;    /* Space between "Your Booking" and the user icon */
+  margin-right: 15px;    /* Space between buttons and the user icon */
   padding: 5px 10px;     /* Adjust padding to make the button look good */
   text-transform: none;  /* Ensure text case stays the same */
   white-space: nowrap;   /* Prevent text from wrapping to the next line */
@@ -103,7 +94,8 @@
   text-decoration: underline; /* Add underline to the text */
 }
 
-.your-booking-btn:hover {
+.your-booking-btn:hover,
+.your-package-btn:hover {
   color: #f0a500;        /* Change hover color */
   text-decoration: underline; /* Keep underline on hover */
 }

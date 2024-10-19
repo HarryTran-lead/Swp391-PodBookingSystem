@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './HomePage.css';
 import bannerImage from '../../assets/BannerHomePage.jpg';
-import PrimeLocationImage from '../../assets/PrimeLocation.jpg';
-import OfficeSpace from '../../assets/OfficeSpace.png';
 
 // Trusted companies logos
 import GoogleLogo from '../../assets/BrandLogo/GoogleLogo.png';
@@ -15,7 +13,10 @@ import NetflixLogo from '../../assets/BrandLogo/NetflixLogo.png';
 
 export default function HomePage() {
   const [pods, setPods] = useState([]);
-  const API_URL = 'https://localhost:7257/api/Pods'; // Đường dẫn đến API của bạn
+  const [servicePackages, setServicePackages] = useState([]);
+  const API_URL = 'https://localhost:7257/api/Pods'; // API URL for Pods
+  const SERVICE_PACKAGE_API_URL = 'https://localhost:7257/api/ServicePackages'; // API URL for Service Packages
+  const USER_PURCHASED_PACKAGES_API_URL = 'https://localhost:7257/api/UserPurchasedPackages'; // API URL for User Purchased Packages
 
   // Fetch Pods data from API
   useEffect(() => {
@@ -28,9 +29,50 @@ export default function HomePage() {
       }
     };
 
+    // Fetch Service Packages data from API
+    const fetchServicePackages = async () => {
+      try {
+        const response = await axios.get(SERVICE_PACKAGE_API_URL);
+        setServicePackages(response.data);
+      } catch (error) {
+        console.error('Error fetching Service Packages:', error);
+      }
+    };
+
     fetchPods();
+    fetchServicePackages();
   }, []);
 
+  // Handle Buy Now button click to redirect to VNPay payment
+  const handleBuyNow = async (packageItem) => {
+    const accountId = localStorage.getItem('accountId'); // Get the account ID from localStorage
+  
+    if (!accountId) {
+      alert('Please log in to continue.');
+      return;
+    }
+  
+    try {
+      const paymentRequest = {
+        PackageID: packageItem.id,
+        Total: packageItem.price,
+        vnp_ReturnUrl: `http://localhost:5173/SWP391-PodSystemBooking/successfullpaymentservice?packageId=${packageItem.id}`, // URL to redirect after payment
+      };
+  
+      // Step 1: Initiate the payment request
+      const response = await axios.post('https://localhost:7257/ServicePackageVNPay/api/payment/servicepackage', paymentRequest);
+  
+      if (response.data.paymentUrl) {
+        // Step 2: Redirect to the payment URL
+        window.location.href = response.data.paymentUrl;
+      }
+    } catch (error) {
+      console.error('Error processing payment:', error);
+      alert('Error processing payment. Please try again.');
+    }
+  };
+  
+  
   return (
     <>
       {/* Main Banner */}
@@ -60,16 +102,34 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* Service Packages Section */}
+        <div className="service-packages-section">
+          <h2 className="text-center">Service Packages</h2>
+          <div className="service-packages-grid">
+            {servicePackages.map((packageItem) => (
+              <div key={packageItem.id} className="service-package-card">
+                <h3>{packageItem.packageName}</h3>
+                <p>Duration: {packageItem.duration} {packageItem.durationType}</p>
+                <p>Price: {packageItem.price.toFixed(2)} vnđ</p>
+                <p>{packageItem.features}</p>
+                <button className="btn btn-primary" onClick={() => handleBuyNow(packageItem)}>
+                  Buy Now
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* List of Pods Section */}
         <div className="pods-section">
           <h2 className="text-center">Available Pods</h2>
           <div className="pods-grid">
             {pods.map((pod) => (
-              <div key={pod.podId} className="pod-card"> {/* Đảm bảo sử dụng podId là duy nhất */}
+              <div key={pod.podId} className="pod-card">
                 <img src={`https://localhost:7257/api/Pods/${pod.podId}/image`} alt={pod.name} className="pod-image-homepage" />
                 <h3>{pod.name}</h3>
                 <p>{pod.description}</p>
-                <p>Price per Hour: {pod.pricePerHour}vnđ</p>
+                <p>Price per Hour: {pod.pricePerHour} vnđ</p>
                 <a href={`/SWP391-PodSystemBooking/pod/${pod.podId}`} className="btn btn-primary">
                   Book Now
                 </a>
@@ -82,64 +142,6 @@ export default function HomePage() {
             <a href="/SWP391-PodSystemBooking/pod" className="btn btn-outline-primary mt-4">
               View All Pods
             </a>
-          </div>
-        </div>
-
-        {/* Prime Locations and Office Space Section */}
-        <div className="prime-locations-section">
-          <img src={PrimeLocationImage} alt="Prime Locations" />
-          <div className="location">
-            <h3>CHECKOUT OUR</h3>
-            <h2>Prime Locations</h2>
-            <p>
-              Our office spaces are conveniently located in the heart of the city, putting
-              you in touch with industry players, with faster growth opportunities at hand.
-            </p>
-            <a href="/locations">See More</a>
-          </div>
-        </div>
-
-        <div className="office-space-section">
-          <div className="location">
-            <h3>EXPERIENCE</h3>
-            <h2>The Future of Office Space</h2>
-            <p>
-              Discover a new way to work – rent our premium flexibility, where you can book
-              spaces for any duration, in premium locations with modern amenities.
-            </p>
-            <a href="/spaces">See More</a>
-          </div>
-          <img src={OfficeSpace} alt="Office Space" />
-        </div>
-
-        {/* Peace of Mind Section */}
-        <div className="peace-of-mind-section">
-          <h2 className="text-center">Giving you peace of mind</h2>
-          <div className="services-grid">
-            <div className="service-card">
-              <h4>Easy Booking Process</h4>
-              <p>We ensure our booking process is streamlined for your convenience.</p>
-            </div>
-            <div className="service-card">
-              <h4>Community and Networking</h4>
-              <p>Join a vibrant community of professionals and create valuable networks.</p>
-            </div>
-            <div className="service-card">
-              <h4>Modern Amenities</h4>
-              <p>Enjoy top-notch amenities designed for your comfort and productivity.</p>
-            </div>
-            <div className="service-card">
-              <h4>Best Price</h4>
-              <p>We guarantee the best price for our workspaces without compromising on quality.</p>
-            </div>
-            <div className="service-card">
-              <h4>Strategic Location</h4>
-              <p>Our locations are hand-picked to ensure you are where you need to be.</p>
-            </div>
-            <div className="service-card">
-              <h4>Transparency</h4>
-              <p>Our pricing and service offerings are completely transparent, with no hidden costs.</p>
-            </div>
           </div>
         </div>
       </div>

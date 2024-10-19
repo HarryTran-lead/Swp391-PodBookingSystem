@@ -48,21 +48,13 @@ export const updateAccountDetails = async (accountDetails) => {
 
 };
 
-  [
-    {
-      "bookingId": 1,  // Optional if auto-generated
-      "accountId": 1,  // Use the ID of the account you are associating this booking with
-      "podId": 2,  // Example PodId
-      "packageId": 3,  // Example PackageId
-      "startTime": "2024-10-06T10:00:00",  // Adjust to current or desired start time
-      "endTime": "2024-10-06T12:00:00",  // Adjust to current or desired end time
-      "status": "Pending",  // Example status
-      "account": {
-        "id": 1,  // Make sure this matches the Account model's Id
-        "name": "Example Account",  // You may want to include more details
-        "username": "exampleUser",
-        "email": "user@example.com",
-        "phone": "1234567890"
-      }
-    }
-  ]
+export const getUserPackages = async (accountId) => {
+  try {
+    const response = await axios.get(`https://localhost:7257/api/UserPurchasedPackages`);
+    // Filter the packages that match the given accountId
+    const userPackages = response.data.filter(userPackage => userPackage.accountId === parseInt(accountId));
+    return userPackages;
+  } catch (error) {
+    throw new Error('Error fetching user packages');
+  }
+};

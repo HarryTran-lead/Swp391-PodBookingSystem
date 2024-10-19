@@ -22,6 +22,9 @@ import SuccessfulPayment from './UserPages/SuccessfulPayment/SuccessfullPayment'
 import BookingOrder from './AdminPages/BookingOrder/BookingOrder';
 import YourBooking from './UserPages/YourBooking/YourBooking';
 import UpdateBooking from './AdminPages/BookingOrder/UpdateBooking';
+import ServicePageSuccessPayment from './UserPages/ServicePage/ServicePageSuccessPayment';
+import YourPackage from './UserPages/YourPackage/YourPackage';
+import PackageService from './AdminPages/PackageService/PackageService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
@@ -70,6 +73,8 @@ const App = () => {
         <Route path="/SWP391-PodSystemBooking/profile" element={renderUserLayout(<ProfilePage />)} />
         <Route path="/SWP391-PodSystemBooking/successfullpayment" element={renderUserLayout(< SuccessfulPayment/>)} />
         <Route path="/SWP391-PodSystemBooking/yourbooking" element={renderUserLayout(< YourBooking/>)} />
+        <Route path="/SWP391-PodSystemBooking/successfullpaymentservice" element={renderUserLayout(< ServicePageSuccessPayment/>)} />
+        <Route path="/SWP391-PodSystemBooking/yourpakage" element={renderUserLayout(< YourPackage/>)} />
 
         <Route path="/SWP391-PodSystemBooking/admin/account" element={<AdminLayout><Account /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/update-account" element={<AdminLayout><UpdateAccount /></AdminLayout>} />
@@ -79,6 +84,8 @@ const App = () => {
         <Route path="/SWP391-PodSystemBooking/admin/update-pod" element={<AdminLayout><UpdatePod /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/bookingorder" element={<AdminLayout><BookingOrder /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/update-booking" element={<AdminLayout><UpdateBooking /></AdminLayout>} />
+        <Route path="/SWP391-PodSystemBooking/admin/servicepackage" element={<AdminLayout><PackageService /></AdminLayout>} />
+
       </Routes>
     </Router>
   );

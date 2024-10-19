@@ -1,0 +1,26 @@
+/* YourPackage.css */
+.your-packages-container {
+    margin: 20px;
+  }
+  
+  .package-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .package-table th, .package-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .package-table th {
+    background-color: #0946bf;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
