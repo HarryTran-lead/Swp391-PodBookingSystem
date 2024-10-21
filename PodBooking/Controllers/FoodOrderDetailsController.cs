@@ -71,31 +71,65 @@ namespace PodBooking.Controllers
 
             return NoContent();
         }
-
-        // POST: api/FoodOrderDetails
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<FoodOrderDetail>> PostFoodOrderDetail(FoodOrderDetail foodOrderDetail)
+        public async Task<IActionResult> PostFoodOrderDetails(List<FoodOrderDetailDTO> foodOrderDetailsDto)
         {
-            _context.FoodOrderDetails.Add(foodOrderDetail);
+            if (foodOrderDetailsDto == null || !foodOrderDetailsDto.Any())
+            {
+                return BadRequest("No food order details provided.");
+            }
+
+            var foodOrderDetails = new List<FoodOrderDetail>();
+
+            foreach (var detail in foodOrderDetailsDto)
+            {
+                // Validate Booking ID
+                var bookingExists = await _context.Bookings.AnyAsync(b => b.BookingId == detail.BookingId);
+                if (!bookingExists)
+                {
+                    return BadRequest($"Invalid Booking ID {detail.BookingId}.");
+                }
+
+                // Create a new FoodOrderDetail for each FoodId
+                foreach (var foodId in detail.FoodIds)
+                {
+                    // Validate Food ID
+                    var foodItemExists = await _context.FoodItems.AnyAsync(f => f.FoodId == foodId);
+                    if (!foodItemExists)
+                    {
+                        return BadRequest($"Invalid Food ID {foodId}.");
+                    }
+
+                    var foodOrderEntry = new FoodOrderDetail
+                    {
+                        BookingId = detail.BookingId,
+                        FoodId = foodId, // Correctly using the current FoodId
+                        Quantity = detail.Quantity,
+                        Price = detail.Price
+                    };
+
+                    foodOrderDetails.Add(foodOrderEntry);
+                }
+            }
+
+            // Add all details to the context
+            _context.FoodOrderDetails.AddRange(foodOrderDetails);
+
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
-                if (FoodOrderDetailExists(foodOrderDetail.BookingId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                // Log exception details for debugging
+                Console.WriteLine(ex); // or use a logging framework
+                return StatusCode(500, "An error occurred while saving the food order details.");
             }
 
-            return CreatedAtAction("GetFoodOrderDetail", new { id = foodOrderDetail.BookingId }, foodOrderDetail);
+            return Ok("Food order details saved successfully.");
         }
+
+
 
         // DELETE: api/FoodOrderDetails/5
         [HttpDelete("{id}")]
