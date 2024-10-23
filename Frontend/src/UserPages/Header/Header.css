@@ -21,86 +21,128 @@
   margin-right: 20px;
   font-size: 18px;
   color: white !important;
+  display: flex; /* Flexbox to align items horizontally */
+  align-items: center; /* Vertical alignment */
 }
 
 .login-btn {
-  margin-right: 20px; /* Adjust margin as needed */
+  display: flex;
+  align-items: center; /* Aligns the login elements vertically */
+  margin-left: auto; /* Pushes the login section to the right */
+  margin-right: 110px;
 }
 
 .body-content {
   padding-top: 70px; /* Adds padding to prevent content from hiding under the fixed navbar */
 }
 
-/* Đặt icon người dùng và dropdown căn theo chiều ngang */
-.login-icon-container {
+/* Aligns user icon, notification icon, and other buttons horizontally */
+.login-icon-container,
+.notification-icon-container {
   display: flex;
   align-items: center;
-  position: relative;
-  margin-right: 100px;
+  margin-left: 15px;
 }
 
-/* Điều chỉnh toggle để căn bên trái icon */
-.login-icon-container .dropdown-toggle {
-  display: flex;
-  align-items: center;
-  padding: 0;
-  border: none;
-  background: none;
-  color: white;
-  margin-right: 0; /* Đặt margin để menu nằm đúng vị trí */
-}
-
-/* Đặt icon ở bên phải của dropdown */
+/* Notification and User icon styling */
+.notification-icon,
 .user-icon {
   font-size: 1.5rem;
-  margin-left: 8px; /* Căn chỉnh khoảng cách giữa dropdown và icon */
+  color: white;
   cursor: pointer;
 }
 
-/* Định vị dropdown menu nằm bên trái của icon */
+/* Adjusts dropdown menu position for both notifications and login */
 .dropdown-menu-custom {
-  left: -40px; /* Điều chỉnh vị trí của menu so với icon */
-  top: 100%; /* Đặt menu nằm ngay dưới icon */
-  transform: none; /* Xóa căn giữa */
+  left: auto;
+  top: 100%; /* Position the dropdown just below the toggle */
+  transform: none; /* Remove centering */
   padding: 0;
-  min-width: 150px; /* Đặt chiều rộng tối thiểu */
+  min-width: 250px; /* Increased width for better layout */
+  max-height: 400px; /* Set maximum height for scroll */
+  overflow-y: auto; /* Enable scrolling */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
-/* Style cho các mục trong dropdown */
+/* Notification header styling */
+.notification-header {
+  font-weight: bold; /* Bold text */
+  padding: 10px 15px; /* Adequate padding */
+  background-color: rgb(150, 50, 50); /* Darker background for header */
+  color: white; /* White text color */
+  border-top-left-radius: 8px; /* Rounded top corners */
+  border-top-right-radius: 8px; /* Rounded top corners */
+}
+
+/* Style for dropdown items */
 .dropdown-item {
-  padding: 10px 15px;
-  color: #000;
-  text-decoration: none;
-  transition: background-color 0.3s;
+  padding: 10px 15px; /* Adequate padding */
+  color: #000; /* Black text color */
+  text-decoration: none; /* No underline */
+  transition: background-color 0.3s; /* Smooth transition */
+  display: flex; /* Flexbox for alignment */
+  flex-direction: column; /* Column layout for text */
 }
 
+/* Hover effect for dropdown items */
 .dropdown-item:hover {
-  background-color: #f0f0f0;
+  background-color: #f0f0f0; /* Light gray on hover */
 }
 
+/* Notification content styling */
+.dropdown-item div {
+  display: flex; /* Flex for proper alignment */
+  flex-direction: column; /* Stack items vertically */
+}
+
+/* Strong text for notification title */
+.dropdown-item strong {
+  font-size: 16px; /* Slightly larger font for title */
+}
+
+/* Message and timestamp styling */
+.dropdown-item p {
+  margin: 5px 0; /* Spacing between elements */
+  font-size: 14px; /* Normal font size for messages */
+  color: #ffffff; /* Darker gray for message text */
+}
+
+.dropdown-item small {
+  font-size: 12px; /* Smaller font for timestamp */
+  color: #888; /* Light gray for timestamp */
+}
+
+/* Disabled items styling */
+.dropdown-item:disabled {
+  color: #888; /* Gray color for disabled items */
+  background-color: transparent; /* No background */
+}
+
+/* Hide default dropdown arrow */
 .dropdown-toggle::after {
-  display: none; /* Ẩn mũi tên mặc định của dropdown */
+  display: none; 
 }
 
+/* Styling for "Your Booking" and "Your Package" buttons */
 .your-booking-btn,
 .your-package-btn {
-  color: white;          /* Set the text color */
-  margin-right: 15px;    /* Space between buttons and the user icon */
-  padding: 5px 10px;     /* Adjust padding to make the button look good */
-  text-transform: none;  /* Ensure text case stays the same */
-  white-space: nowrap;   /* Prevent text from wrapping to the next line */
-  display: inline-block;
-  font-size: 16px;       /* Adjust font size if needed */
-  text-decoration: underline; /* Add underline to the text */
+  color: white; /* Set the text color */
+  margin-right: 15px; /* Space between buttons */
+  padding: 5px 10px; /* Adjust padding */
+  text-transform: none;
+  white-space: nowrap;
+  font-size: 16px;
+  text-decoration: underline;
 }
 
 .your-booking-btn:hover,
 .your-package-btn:hover {
-  color: #f0a500;        /* Change hover color */
-  text-decoration: underline; /* Keep underline on hover */
+  color: #f0a500; /* Change color on hover */
 }
 
-.login-icon-container {
-  display: inline-block;
-  vertical-align: middle; /* Align the user icon with the "Your Booking" button */
+/* Flex alignment for the entire login section */
+.navbar .login-btn {
+  display: flex;
+  align-items: center;
 }
