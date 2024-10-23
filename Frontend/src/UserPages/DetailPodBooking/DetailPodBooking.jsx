@@ -3,6 +3,10 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './DetailPodBooking.css';
 import FoodOrder from '../FoodOrder/FoodOrder';
+import FoodOrderSummary from '../FoodOrder/FoodOrderSummary';
+import OrderedFood from '../FoodOrder/OrderedFood';
+import { useNavigate } from 'react-router-dom';
+import { FaStar, FaRegStar } from 'react-icons/fa';
 
 export default function DetailPodBooking() {
   const { id } = useParams(); // Extract PodID from the URL
@@ -17,6 +21,15 @@ export default function DetailPodBooking() {
   const [packagesWithDiscount, setPackagesWithDiscount] = useState([]); // State for packages with discount
   const [selectedPackageId, setSelectedPackageId] = useState(null);
   const [isFoodOrderOpen, setFoodOrderOpen] = useState(false);
+  const [foodOrders, setFoodOrders] = useState([]);
+  const [isOrderedFoodModalOpen, setOrderedFoodModalOpen] = useState(false);
+  const [feedbacks, setFeedbacks] = useState([]); // State for feedbacks
+  const [loadingFeedbacks, setLoadingFeedbacks] = useState(true); // Loading state for feedbacks
+  const [feedbackError, setFeedbackError] = useState(null); // Er
+
+  const navigate = useNavigate();
+  
+  
   // Booking details state
   const [bookingDetails, setBookingDetails] = useState({
     accountId: localStorage.getItem('accountId'), // Get accountId from localStorage
@@ -32,7 +45,11 @@ export default function DetailPodBooking() {
   const BOOKING_API_URL = `https://localhost:7257/api/Bookings`;
   const USER_API_URL = `https://localhost:7257/api/Accounts/`; // For fetching user details
   const USER_PURCHASED_PACKAGES_URL = `https://localhost:7257/api/UserPurchasedPackages`; // API endpoint for purchased packages
- 
+  const FEEDBACK_API_URL = `https://localhost:7257/api/Feedbacks/byPod/${id}`; // API for fetching feedbacks
+  const ACCOUNT_API_URL = `https://localhost:7257/api/Accounts`;
+
+
+
 
   useEffect(() => {
     const fetchUserPurchasedPackages = async () => {
@@ -61,6 +78,72 @@ export default function DetailPodBooking() {
     fetchUserPurchasedPackages();
   }, []);
   
+ 
+
+  const toggleFoodOrder = () => {
+    setFoodOrderOpen(!isFoodOrderOpen); // Toggle the food order modal
+  };
+
+  const handleOpenOrder = () => {
+    setOrderedFoodModalOpen(true); // Open the ordered food modal
+  };
+
+  const handleCloseOrder = () => {
+    setOrderedFoodModalOpen(false); // Close the ordered food modal
+  };
+
+  useEffect(() => {
+    // Fetch feedbacks by PodID
+    const fetchFeedbacks = async () => {
+      try {
+        setLoadingFeedbacks(true);
+        const feedbackResponse = await axios.get(FEEDBACK_API_URL);
+        const feedbackData = feedbackResponse.data;
+
+        // Fetch usernames for each feedback
+        const feedbacksWithUsernames = await Promise.all(
+          feedbackData.map(async (feedback) => {
+            try {
+              // Fetch the username based on accountId
+              const accountResponse = await axios.get(`${ACCOUNT_API_URL}/${feedback.accountId}`);
+              const username = accountResponse.data.username;
+
+              // Return the feedback item with the username included
+              return { ...feedback, username };
+            } catch (error) {
+              console.error(`Error fetching username for accountId ${feedback.accountId}:`, error);
+              return { ...feedback, username: 'Unknown User' };
+            }
+          })
+        );
+
+        setFeedbacks(feedbacksWithUsernames);
+        setFeedbackError(null);
+      } catch (error) {
+        setFeedbackError('Failed to load feedbacks. Please try again later.');
+        console.error('Error fetching feedbacks:', error);
+      } finally {
+        setLoadingFeedbacks(false);
+      }
+    };
+
+    fetchFeedbacks();
+  }, [FEEDBACK_API_URL, USER_API_URL]);
+
+  function renderStars(rating) {
+    const totalStars = 5; // Assuming a 5-star rating system
+    let stars = [];
+
+    for (let i = 1; i <= totalStars; i++) {
+        if (i <= rating) {
+            stars.push(<FaStar key={i} color="#ffc107" />); // Solid star for filled rating
+        } else {
+            stars.push(<FaRegStar key={i} color="#ccc" />); // Regular star for unfilled rating
+        }
+    }
+
+    return stars;
+}
 
   // Fetch pod details based on podId
   useEffect(() => {
@@ -298,11 +381,38 @@ const fetchSelectedTimeSlots = async (date) => {
     }
   };
 
-  const toggleFoodOrder = () => {
-    setFoodOrderOpen((prev) => !prev);
+
+
+  const handleFoodOrder = async (foodOrderData) => {
+    // Your logic to submit food order
+    const response = await submitFoodOrder(foodOrderData); // Make sure this function handles your API call
+    
+    if (response.success) {
+      setOrderPlaced(true); // Update state to reflect order completion
+      toggleFoodOrder(); // Close the food order modal
+    }
   };
 
+  useEffect(() => {
+    if (!bookingId) return;
 
+    const fetchFoodOrders = async () => {
+      try {
+        const response = await axios.get(`https://localhost:7257/api/FoodOrderDetails/booking/${bookingId}`);
+        setFoodOrders(response.data);
+      } catch (error) {
+        console.error('Error fetching food orders:', error);
+      }
+    };
+
+    fetchFoodOrders();
+  }, [bookingId]);
+
+  
+  if (loading) return <p>Loading food orders...</p>;
+  if (error) return <p>{error}</p>;
+
+  
   if (loading) {
     return <p>Loading pod details...</p>;
   }
@@ -417,17 +527,85 @@ const fetchSelectedTimeSlots = async (date) => {
         </button>
       </form>
       
-      <button onClick={toggleFoodOrder}>Order Food</button>
-      
-      {isFoodOrderOpen && (
-        <FoodOrder bookingId={bookingId} toggleFoodOrder={toggleFoodOrder} />
-      )}
       {bookingId && (
-        <button onClick={() => handlePayment(bookingId, bookingDetails.totalPrice)}>
-          Proceed to Payment
-        </button>
+        <>
+          <button
+            onClick={toggleFoodOrder}
+            style={{
+              backgroundColor: 'green',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '5px',
+              marginRight: '10px',
+            }}
+          >
+            Order Food
+          </button>
+          
+          <button
+            onClick={handleOpenOrder}
+            style={{
+              backgroundColor: 'blue',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '5px',
+              marginRight: '10px',
+            }}
+          >
+            View Ordered Food
+          </button>
+
+          <button
+            onClick={() => handlePayment(bookingId, bookingDetails.totalPrice)}
+            style={{
+              backgroundColor: 'orange',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '5px',
+            }}
+          >
+            Proceed to Payment
+          </button>
+
+          {isFoodOrderOpen && (
+            <FoodOrder
+              bookingId={bookingId}
+              toggleFoodOrder={toggleFoodOrder}
+              closeOrder={toggleFoodOrder}
+              setFoodOrders={setFoodOrders}
+              foodOrders={foodOrders}
+            />
+          )}
+
+          <OrderedFood
+            isOpen={isOrderedFoodModalOpen}
+            onClose={handleCloseOrder}
+            bookingId={bookingId}
+          />
+        </>
       )}
+
+<div className="feedback-form">
+      <h2>Feedback</h2>
+      {loadingFeedbacks && <p>Loading feedbacks...</p>}
+      {feedbackError && <p>{feedbackError}</p>}
+      {feedbacks.length === 0 && !loadingFeedbacks && (
+        <p>No feedback available for this pod.</p>
+      )}
+      {feedbacks.map((feedback, index) => (
+        <div key={index} className="feedback-item">
+          <p><strong>User:</strong> {feedback.username || 'Unknown User'}</p>
+          <p><strong>Rating:</strong> {renderStars(feedback.rating)}</p>
+          <p><strong>Comment:</strong> {feedback.comments}</p>
+          <hr />
+        </div>
+      ))}
     </div>
+    </div>
+  
   );
 } 
 

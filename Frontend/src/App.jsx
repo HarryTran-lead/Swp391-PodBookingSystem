@@ -25,6 +25,7 @@ import UpdateBooking from './AdminPages/BookingOrder/UpdateBooking';
 import ServicePageSuccessPayment from './UserPages/ServicePage/ServicePageSuccessPayment';
 import YourPackage from './UserPages/YourPackage/YourPackage';
 import PackageService from './AdminPages/PackageService/PackageService';
+import OrderedFood from './UserPages/FoodOrder/OrderedFood';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
@@ -75,6 +76,7 @@ const App = () => {
         <Route path="/SWP391-PodSystemBooking/yourbooking" element={renderUserLayout(< YourBooking/>)} />
         <Route path="/SWP391-PodSystemBooking/successfullpaymentservice" element={renderUserLayout(< ServicePageSuccessPayment/>)} />
         <Route path="/SWP391-PodSystemBooking/yourpakage" element={renderUserLayout(< YourPackage/>)} />
+        <Route path="/SWP391-PodSystemBooking/ordered-food/:bookingId" element={renderUserLayout(< OrderedFood/>)} />
 
         <Route path="/SWP391-PodSystemBooking/admin/account" element={<AdminLayout><Account /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/update-account" element={<AdminLayout><UpdateAccount /></AdminLayout>} />
