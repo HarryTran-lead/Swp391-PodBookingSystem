@@ -7,6 +7,8 @@ public partial class Notification
 {
     public int NotificationId { get; set; }
 
+    public string? NotificationName { get; set; }
+
     public int? AccountId { get; set; }
 
     public int? BookingId { get; set; }
@@ -15,13 +17,9 @@ public partial class Notification
 
     public DateTime? SentTime { get; set; }
 
-    public int? NotificationType { get; set; }
-
-    public string? ReadStatus { get; set; }
+    public bool? ReadStatus { get; set; }
 
     public virtual Account? Account { get; set; }
 
     public virtual Booking? Booking { get; set; }
-
-    public virtual NotificationType? NotificationTypeNavigation { get; set; }
 }

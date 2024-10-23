@@ -35,8 +35,6 @@ public partial class Account
 
     public virtual Location? Location { get; set; }
 
-    public virtual ICollection<NotificationType> NotificationTypes { get; set; } = new List<NotificationType>();
-
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     public virtual ICollection<UserPurchasedPackage> UserPurchasedPackages { get; set; } = new List<UserPurchasedPackage>();

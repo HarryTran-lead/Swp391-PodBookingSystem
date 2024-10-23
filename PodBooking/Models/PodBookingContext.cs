@@ -31,8 +31,6 @@ public partial class PodBookingContext : DbContext
 
     public virtual DbSet<Notification> Notifications { get; set; }
 
-    public virtual DbSet<NotificationType> NotificationTypes { get; set; }
-
     public virtual DbSet<PayMethod> PayMethods { get; set; }
 
     public virtual DbSet<Pod> Pods { get; set; }
@@ -222,48 +220,26 @@ public partial class PodBookingContext : DbContext
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E32EC4C6B3E");
+            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E32A71F9C34");
 
             entity.ToTable("Notification");
 
             entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
             entity.Property(e => e.AccountId).HasColumnName("AccountID");
             entity.Property(e => e.BookingId).HasColumnName("BookingID");
-            entity.Property(e => e.Message).HasColumnType("text");
-            entity.Property(e => e.ReadStatus)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength();
+            entity.Property(e => e.NotificationName)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.ReadStatus).HasDefaultValue(false);
             entity.Property(e => e.SentTime).HasColumnType("datetime");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.AccountId)
-                .HasConstraintName("FK__Notificat__Accou__4F7CD00D");
+                .HasConstraintName("FK__Notificat__Accou__30C33EC3");
 
             entity.HasOne(d => d.Booking).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.BookingId)
-                .HasConstraintName("FK__Notificat__Booki__5070F446");
-
-            entity.HasOne(d => d.NotificationTypeNavigation).WithMany(p => p.Notifications)
-                .HasForeignKey(d => d.NotificationType)
-                .HasConstraintName("FK__Notificat__Notif__5165187F");
-        });
-
-        modelBuilder.Entity<NotificationType>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Notifica__3213E83FC905D7FB");
-
-            entity.ToTable("NotificationType");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AccountId).HasColumnName("AccountID");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.Account).WithMany(p => p.NotificationTypes)
-                .HasForeignKey(d => d.AccountId)
-                .HasConstraintName("FK__Notificat__Accou__4CA06362");
+                .HasConstraintName("FK__Notificat__Booki__31B762FC");
         });
 
         modelBuilder.Entity<PayMethod>(entity =>
