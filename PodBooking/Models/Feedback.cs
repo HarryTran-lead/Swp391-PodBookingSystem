@@ -9,9 +9,11 @@ public partial class Feedback
 
     public int? AccountId { get; set; }
 
+    public int? PodId { get; set; }
+
     public int? BookingId { get; set; }
 
-    public int? Rating { get; set; }
+    public int Rating { get; set; }
 
     public string? Comments { get; set; }
 
@@ -20,4 +22,6 @@ public partial class Feedback
     public virtual Account? Account { get; set; }
 
     public virtual Booking? Booking { get; set; }
+
+    public virtual Pod? Pod { get; set; }
 }

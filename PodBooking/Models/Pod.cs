@@ -21,6 +21,8 @@ public partial class Pod
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
+    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+
     public virtual Location? Location { get; set; }
 
     public virtual PodModel? PodModel { get; set; }

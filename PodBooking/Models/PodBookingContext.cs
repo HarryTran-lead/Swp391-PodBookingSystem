@@ -47,7 +47,7 @@ public partial class PodBookingContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=PodBooking;User ID=sa;Password=123;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=PodBooking;User ID=sa;Password=123;Trust Server Certificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -141,7 +141,7 @@ public partial class PodBookingContext : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Feedback__3213E83F37BE9B5A");
+            entity.HasKey(e => e.Id).HasName("PK__Feedback__3213E83F8B83A01B");
 
             entity.ToTable("Feedback");
 
@@ -149,14 +149,20 @@ public partial class PodBookingContext : DbContext
             entity.Property(e => e.AccountId).HasColumnName("AccountID");
             entity.Property(e => e.BookingId).HasColumnName("BookingID");
             entity.Property(e => e.Comments).HasColumnType("text");
+            entity.Property(e => e.FeedbackDate).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.PodId).HasColumnName("PodID");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.AccountId)
-                .HasConstraintName("FK__Feedback__Accoun__6B24EA82");
+                .HasConstraintName("FK__Feedback__Accoun__2A164134");
 
             entity.HasOne(d => d.Booking).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.BookingId)
-                .HasConstraintName("FK__Feedback__Bookin__6C190EBB");
+                .HasConstraintName("FK__Feedback__Bookin__2B0A656D");
+
+            entity.HasOne(d => d.Pod).WithMany(p => p.Feedbacks)
+                .HasForeignKey(d => d.PodId)
+                .HasConstraintName("FK__Feedback__PodID__2BFE89A6");
         });
 
         modelBuilder.Entity<FoodItem>(entity =>

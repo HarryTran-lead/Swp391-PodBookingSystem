@@ -41,6 +41,22 @@ namespace PodBooking.Controllers
             return foodOrderDetail;
         }
 
+        // New GET method to get food order details by booking ID
+        [HttpGet("booking/{bookingId}")]
+        public async Task<ActionResult<IEnumerable<FoodOrderDetail>>> GetFoodOrderDetailsByBookingId(int bookingId)
+        {
+            var foodOrderDetails = await _context.FoodOrderDetails
+                .Where(f => f.BookingId == bookingId)
+                .ToListAsync();
+
+            if (!foodOrderDetails.Any())
+            {
+                return NotFound($"No food order details found for Booking ID {bookingId}.");
+            }
+
+            return Ok(foodOrderDetails);
+        }
+
         // PUT: api/FoodOrderDetails/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -71,6 +87,7 @@ namespace PodBooking.Controllers
 
             return NoContent();
         }
+
         [HttpPost]
         public async Task<IActionResult> PostFoodOrderDetails(List<FoodOrderDetailDTO> foodOrderDetailsDto)
         {
@@ -103,7 +120,7 @@ namespace PodBooking.Controllers
                     var foodOrderEntry = new FoodOrderDetail
                     {
                         BookingId = detail.BookingId,
-                        FoodId = foodId, // Correctly using the current FoodId
+                        FoodId = foodId,
                         Quantity = detail.Quantity,
                         Price = detail.Price
                     };
@@ -121,15 +138,12 @@ namespace PodBooking.Controllers
             }
             catch (DbUpdateException ex)
             {
-                // Log exception details for debugging
-                Console.WriteLine(ex); // or use a logging framework
+                Console.WriteLine(ex);
                 return StatusCode(500, "An error occurred while saving the food order details.");
             }
 
             return Ok("Food order details saved successfully.");
         }
-
-
 
         // DELETE: api/FoodOrderDetails/5
         [HttpDelete("{id}")]
