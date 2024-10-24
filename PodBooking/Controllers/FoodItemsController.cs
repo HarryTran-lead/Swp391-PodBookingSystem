@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PodBooking.Models;
@@ -47,7 +49,7 @@ namespace PodBooking.Controllers
 
             if (foodItem == null || foodItem.ImgPod == null)
             {
-                return NotFound();
+                return NotFound("Food item or image not found.");
             }
 
             // Return the image data as a file
@@ -62,7 +64,7 @@ namespace PodBooking.Controllers
 
             if (foodItem == null)
             {
-                return NotFound();
+                return NotFound("Food item not found.");
             }
 
             return foodItem;
@@ -70,11 +72,21 @@ namespace PodBooking.Controllers
 
         // PUT: api/FoodItems/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFoodItem(int id, FoodItem foodItem)
+        public async Task<IActionResult> PutFoodItem(int id, [FromForm] FoodItem foodItem, IFormFile imageFile = null)
         {
             if (id != foodItem.FoodId)
             {
-                return BadRequest();
+                return BadRequest("Food item ID mismatch.");
+            }
+
+            // If an image file is provided, read it into a byte array
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await imageFile.CopyToAsync(memoryStream);
+                    foodItem.ImgPod = memoryStream.ToArray(); // Update the image
+                }
             }
 
             _context.Entry(foodItem).State = EntityState.Modified;
@@ -87,11 +99,11 @@ namespace PodBooking.Controllers
             {
                 if (!FoodItemExists(id))
                 {
-                    return NotFound();
+                    return NotFound("Food item not found.");
                 }
                 else
                 {
-                    throw;
+                    throw; // Rethrow the exception for further handling
                 }
             }
 
@@ -100,8 +112,21 @@ namespace PodBooking.Controllers
 
         // POST: api/FoodItems
         [HttpPost]
-        public async Task<ActionResult<FoodItem>> PostFoodItem(FoodItem foodItem)
+        public async Task<ActionResult<FoodItem>> PostFoodItem([FromForm] FoodItem foodItem, IFormFile imageFile)
         {
+            // Check if the image file is being uploaded
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return BadRequest("Image file is required.");
+            }
+
+            // Read the image file into a byte array
+            using (var memoryStream = new MemoryStream())
+            {
+                await imageFile.CopyToAsync(memoryStream);
+                foodItem.ImgPod = memoryStream.ToArray(); // Store the image as byte array in the model
+            }
+
             _context.FoodItems.Add(foodItem);
             await _context.SaveChangesAsync();
 
@@ -115,7 +140,7 @@ namespace PodBooking.Controllers
             var foodItem = await _context.FoodItems.FindAsync(id);
             if (foodItem == null)
             {
-                return NotFound();
+                return NotFound("Food item not found.");
             }
 
             _context.FoodItems.Remove(foodItem);
