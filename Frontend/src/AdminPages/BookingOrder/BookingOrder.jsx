@@ -21,7 +21,9 @@ export default function BookingOrder() {
   const fetchBookings = async () => {
     try {
       const response = await axios.get(API_URL);
-      setBookings(response.data);
+      // Sort bookings by bookingId in descending order
+      const sortedBookings = response.data.sort((a, b) => b.bookingId - a.bookingId);
+      setBookings(sortedBookings); // Set sorted bookings
     } catch (error) {
       console.error('Error fetching bookings:', error);
       toast.error('Failed to fetch bookings.');
@@ -69,6 +71,7 @@ export default function BookingOrder() {
       <table>
         <thead>
           <tr>
+            <th>STT</th> {/* Serial Number Column */}
             <th>Booking ID</th>
             <th>Account ID</th>
             <th>Pod ID</th>
@@ -83,8 +86,9 @@ export default function BookingOrder() {
           </tr>
         </thead>
         <tbody>
-          {bookings.map((booking) => (
+          {bookings.map((booking, index) => (
             <tr key={booking.bookingId}>
+              <td>{index + 1}</td> {/* Serial Number */}
               <td>{booking.bookingId}</td>
               <td>{booking.accountId}</td>
               <td>{booking.podId}</td>

@@ -24,8 +24,14 @@ import YourBooking from './UserPages/YourBooking/YourBooking';
 import UpdateBooking from './AdminPages/BookingOrder/UpdateBooking';
 import ServicePageSuccessPayment from './UserPages/ServicePage/ServicePageSuccessPayment';
 import YourPackage from './UserPages/YourPackage/YourPackage';
-import PackageService from './AdminPages/PackageService/PackageService';
+import PackageService from './AdminPages/UserPackageService/PackageService';
 import OrderedFood from './UserPages/FoodOrder/OrderedFood';
+import Food from './AdminPages/Food/Food';
+import CreateFood from './AdminPages/Food/CreateFood';
+import UpdateFood from './AdminPages/Food/UpdateFood';
+import Package from './AdminPages/PackageService/Package';
+import CreatePackage from './AdminPages/PackageService/CreatePackage';
+import UpdatePackage from './AdminPages/PackageService/UpdatePackage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
@@ -87,7 +93,12 @@ const App = () => {
         <Route path="/SWP391-PodSystemBooking/admin/bookingorder" element={<AdminLayout><BookingOrder /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/update-booking" element={<AdminLayout><UpdateBooking /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/servicepackage" element={<AdminLayout><PackageService /></AdminLayout>} />
-
+        <Route path="/SWP391-PodSystemBooking/admin/food" element={<AdminLayout><Food /></AdminLayout>} />
+        <Route path="/SWP391-PodSystemBooking/admin/create-food" element={<AdminLayout><CreateFood /></AdminLayout>} />
+        <Route path="/SWP391-PodSystemBooking/admin/update-food" element={<AdminLayout><UpdateFood /></AdminLayout>} />
+        <Route path="/SWP391-PodSystemBooking/admin/package" element={<AdminLayout><Package /></AdminLayout>} />
+        <Route path="/SWP391-PodSystemBooking/admin/create-package" element={<AdminLayout><CreatePackage /></AdminLayout>} />
+        <Route path="/SWP391-PodSystemBooking/admin/update-package" element={<AdminLayout><UpdatePackage /></AdminLayout>} />
       </Routes>
     </Router>
   );

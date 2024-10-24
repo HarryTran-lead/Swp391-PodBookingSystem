@@ -466,8 +466,11 @@ const fetchSelectedTimeSlots = async (date) => {
 
      
 
-      <h2>User Purchased Packages</h2>
+   
+  
 <ul>
+
+<h3> click on your packages if you want to have discount !</h3>
   {userPurchasedPackages.map((pkg) => {
     // Find the corresponding package with discount information
     const matchingPackage = packagesWithDiscount.find(
@@ -515,7 +518,9 @@ const fetchSelectedTimeSlots = async (date) => {
 
     </div>
       {/* Booking Form */}
+   
 <form className="booking-form" onSubmit={handleBookingSubmit}>
+<h3>Create your booking</h3>
   <label>
     Booking Date:
     <input

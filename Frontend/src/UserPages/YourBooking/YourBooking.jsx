@@ -16,13 +16,12 @@ export default function YourBooking() {
   const accountId = localStorage.getItem('accountId'); // Get the AccountId from localStorage
   const BOOKINGS_API_URL = `https://localhost:7257/api/Bookings?accountId=${accountId}`; // Adjust API URL based on your backend implementation
   const FEEDBACKS_API_URL = `https://localhost:7257/api/Feedbacks`;
-  
+
   useEffect(() => {
     const fetchBookings = async () => {
       try {
         const response = await axios.get(BOOKINGS_API_URL);
         const bookingsData = response.data; // Assuming the response contains an array of bookings
-        console.log(bookingsData); // Check API response
 
         // Fetch pod details and status in one go for each booking
         const bookingsWithDetails = await Promise.all(
@@ -44,7 +43,10 @@ export default function YourBooking() {
           })
         );
 
-        setBookings(bookingsWithDetails);
+        // Sort bookings by bookingId in descending order
+        const sortedBookings = bookingsWithDetails.sort((a, b) => b.bookingId - a.bookingId);
+
+        setBookings(sortedBookings);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching bookings:', error);
@@ -80,7 +82,7 @@ export default function YourBooking() {
     if (!selectedBooking) return;
 
     try {
-      await axios.post('https://localhost:7257/api/Feedbacks', {
+      await axios.post(FEEDBACKS_API_URL, {
         podId: selectedBooking.podId,
         accountId,
         rating: feedback.rating,
@@ -111,6 +113,7 @@ export default function YourBooking() {
         <table className="booking-table">
           <thead>
             <tr>
+              <th>Order</th>
               <th>Booking ID</th>
               <th>Pod ID</th>
               <th>Pod Name</th>
@@ -123,8 +126,9 @@ export default function YourBooking() {
             </tr>
           </thead>
           <tbody>
-            {bookings.map((booking) => (
+            {bookings.map((booking, index) => (
               <tr key={booking.bookingId}>
+                <td>{index + 1}</td> {/* Order number starting from 1 */}
                 <td>{booking.bookingId}</td>
                 <td>{booking.podId}</td>
                 <td>{booking.podName}</td>

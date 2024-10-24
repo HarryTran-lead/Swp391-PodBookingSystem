@@ -24,20 +24,27 @@ export default function Header({ isLoggedIn, handleLogout }) {
   useEffect(() => {
     const fetchNotifications = async () => {
       if (!accountId) return; // Prevent fetch if accountId is not set
-
+  
       setLoading(true);
       try {
         const response = await axios.get(`https://localhost:7257/api/Notifications/accountId/${accountId}`);
-        setNotifications(response.data);
+        
+        // Sort notifications by notificationId in descending order
+        const sortedNotifications = response.data.sort(
+          (a, b) => b.notificationId - a.notificationId
+        );
+  
+        setNotifications(sortedNotifications);
       } catch (error) {
         setError(error.response?.data || 'Error fetching notifications.');
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchNotifications();
   }, [accountId]);
+  
 
   const handleNotificationClick = async (notificationId) => {
     // ... existing code to handle notification click
