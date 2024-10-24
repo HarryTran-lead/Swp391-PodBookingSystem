@@ -26,7 +26,7 @@ export default function DetailPodBooking() {
   const [feedbacks, setFeedbacks] = useState([]); // State for feedbacks
   const [loadingFeedbacks, setLoadingFeedbacks] = useState(true); // Loading state for feedbacks
   const [feedbackError, setFeedbackError] = useState(null); // Er
-
+ 
   const navigate = useNavigate();
   
   
@@ -299,20 +299,41 @@ const fetchSelectedTimeSlots = async (date) => {
     }
   
     try {
+      // Step 1: Create the booking
       const response = await axios.post(BOOKING_API_URL, {
         AccountID: bookingDetails.accountId,
         PodID: bookingDetails.podId,
         PackageID: null,
         PaymentID: null,
         NotificationID: null,
-        StartTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.startTime}`),
-        EndTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.endTime}`),
+        StartTime: new Date(`${bookingDate}T${startTime}`),
+        EndTime: new Date(`${bookingDate}T${endTime}`),
         Total: bookingDetails.totalPrice,
       });
   
       alert('Booking successful! Proceeding to payment...');
       setBookingId(response.data.bookingId);
-      
+  
+      // Step 2: Create a notification
+      try {
+        const notificationResponse = await axios.post('https://localhost:7257/api/Notifications', {
+          AccountId: bookingDetails.accountId,
+          Message: 'Your booking was successful!',
+          DateCreated: new Date().toISOString(), // Current date and time
+        });
+  
+        if (notificationResponse.status === 201) {
+          console.log('Notification created:', notificationResponse.data);
+        } else {
+          console.error('Failed to create notification:', notificationResponse.data);
+          alert('Booking was successful, but failed to create notification.');
+        }
+      } catch (notificationError) {
+        console.error('Error creating notification:', notificationError);
+        alert('Booking was successful, but there was an error sending the notification.');
+      }
+  
+      // Step 3: Save booking details to local storage
       localStorage.setItem('bookingId', response.data.bookingId);
       localStorage.setItem('bookingDetails', JSON.stringify({
         accountId: bookingDetails.accountId,
@@ -322,9 +343,7 @@ const fetchSelectedTimeSlots = async (date) => {
         endTime: bookingDetails.endTime,
         totalPrice: bookingDetails.totalPrice,
       }));
-    
   
-
     } catch (error) {
       if (error.response && error.response.status === 400) {
         alert(error.response.data || 'Booking failed due to an overlap.');
@@ -334,6 +353,7 @@ const fetchSelectedTimeSlots = async (date) => {
       }
     }
   };
+  
   
   // In the render method
   {selectedTimeSlots.length === 0 && bookingDetails.bookingDate && (
@@ -455,34 +475,39 @@ const fetchSelectedTimeSlots = async (date) => {
     );
 
     return (
-      <li key={pkg.userPackageId}>
-        <label>
-          <input
-            type="checkbox"
-            value={pkg.packageId}
-            checked={selectedPackageId === pkg.packageId}
-            onChange={(e) => {
-              setSelectedPackageId(e.target.checked ? pkg.packageId : null);
-              calculateTotalPrice({ ...bookingDetails, startTime: bookingDetails.startTime, endTime: bookingDetails.endTime, bookingDate: bookingDetails.bookingDate }); // Recalculate total price
-            }}
-          />
+      <li key={pkg.userPackageId} className="user-package-item">
+      <label>
+        <input
+          type="checkbox"
+          value={pkg.packageId}
+          checked={selectedPackageId === pkg.packageId}
+          onChange={(e) => {
+            setSelectedPackageId(e.target.checked ? pkg.packageId : null);
+            calculateTotalPrice({ 
+              ...bookingDetails, 
+              startTime: bookingDetails.startTime, 
+              endTime: bookingDetails.endTime, 
+              bookingDate: bookingDetails.bookingDate 
+            }); // Recalculate total price
+          }}
+        />
+        <span className={`status ${pkg.status ? '' : 'inactive'}`}>
           Status: {pkg.status ? 'Active' : 'Inactive'}
-          <br />
-          Package ID: {pkg.packageId}
-          <br />
-          Purchase Date: {new Date(pkg.purchaseDate).toLocaleString()}
-          <br />
-          Expiry Date: {new Date(pkg.expiryDate).toLocaleString()}
-          <br />
+        </span>
+        <br />
+        <div className="package-details">
+         
+        
+         
           {matchingPackage && (
-            <div>
-              Package Name: {matchingPackage.packageName}
-              <br />
-              Discount: {matchingPackage.discountPercentage}%
+            <div>          
+              <span className="discount">Discount: {matchingPackage.discountPercentage}%</span>
             </div>
           )}
-        </label>
-      </li>
+        </div>
+      </label>
+    </li>
+    
     );
   })}
 </ul>
@@ -490,103 +515,114 @@ const fetchSelectedTimeSlots = async (date) => {
 
     </div>
       {/* Booking Form */}
-      <form onSubmit={handleBookingSubmit}>
-        <label>
-          Booking Date:
-          <input type="date" name="bookingDate" value={bookingDetails.bookingDate} onChange={handleInputChange} required />
-        </label>
+<form className="booking-form" onSubmit={handleBookingSubmit}>
+  <label>
+    Booking Date:
+    <input
+      type="date"
+      name="bookingDate"
+      value={bookingDetails.bookingDate}
+      onChange={handleInputChange}
+      required
+    />
+  </label>
 
-        <label>
-          Start Time:
-          <input type="time" name="startTime" value={bookingDetails.startTime} onChange={handleInputChange} required />
-        </label>
+  <label>
+    Start Time:
+    <input
+      type="time"
+      name="startTime"
+      value={bookingDetails.startTime}
+      onChange={handleInputChange}
+      required
+    />
+  </label>
 
-        <label>
-          End Time:
-          <input type="time" name="endTime" value={bookingDetails.endTime} onChange={handleInputChange} required />
-        </label>
-        {selectedTimeSlots.length > 0 && (
-          <div className="unavailable-times">
-            <h3>Unavailable Time Slots for {bookingDetails.bookingDate}:</h3>
-            <ul>
-              {selectedTimeSlots.map((slot, index) => (
-                <li key={index}>
-                  {new Date(slot.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(slot.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        
-        <label>
-          Total Price: {bookingDetails.totalPrice}vnđ
-        </label>
+  <label>
+    End Time:
+    <input
+      type="time"
+      name="endTime"
+      value={bookingDetails.endTime}
+      onChange={handleInputChange}
+      required
+    />
+  </label>
 
-        <button type="submit" disabled={!bookingDetails.bookingDate || !bookingDetails.startTime || !bookingDetails.endTime}>
-          Book Pod
-        </button>
-      </form>
+  {selectedTimeSlots.length > 0 && (
+    <div className="unavailable-times">
+      <h3>Unavailable Time Slots for {bookingDetails.bookingDate}:</h3>
+      <ul>
+        {selectedTimeSlots.map((slot, index) => (
+          <li key={index}>
+            {new Date(slot.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
+            {new Date(slot.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  <label for="totalPrice">
+    Total Price: {bookingDetails.totalPrice}vnđ
+  </label>
+
+  <button
+    type="submit"
+    disabled={
+      !bookingDetails.bookingDate || 
+      !bookingDetails.startTime || 
+      !bookingDetails.endTime
+    }
+  >
+    Book Pod
+  </button>
+</form>
+
       
-      {bookingId && (
-        <>
-          <button
-            onClick={toggleFoodOrder}
-            style={{
-              backgroundColor: 'green',
-              color: 'white',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '5px',
-              marginRight: '10px',
-            }}
-          >
-            Order Food
-          </button>
-          
-          <button
-            onClick={handleOpenOrder}
-            style={{
-              backgroundColor: 'blue',
-              color: 'white',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '5px',
-              marginRight: '10px',
-            }}
-          >
-            View Ordered Food
-          </button>
+{bookingId && (
+  <>
+    <div className="button-group">
+      <button
+        onClick={toggleFoodOrder}
+        className="button-order-food"
+      >
+        Order Food
+      </button>
 
-          <button
-            onClick={() => handlePayment(bookingId, bookingDetails.totalPrice)}
-            style={{
-              backgroundColor: 'orange',
-              color: 'white',
-              border: 'none',
-              padding: '10px 20px',
-              borderRadius: '5px',
-            }}
-          >
-            Proceed to Payment
-          </button>
+      <button
+        onClick={handleOpenOrder}
+        className="button-view-ordered-food"
+      >
+        View Ordered Food
+      </button>
 
-          {isFoodOrderOpen && (
-            <FoodOrder
-              bookingId={bookingId}
-              toggleFoodOrder={toggleFoodOrder}
-              closeOrder={toggleFoodOrder}
-              setFoodOrders={setFoodOrders}
-              foodOrders={foodOrders}
-            />
-          )}
+      <button
+        onClick={() => handlePayment(bookingId, bookingDetails.totalPrice)}
+        className="button-proceed-payment"
+      >
+        Proceed to Payment
+      </button>
+    </div>
 
-          <OrderedFood
-            isOpen={isOrderedFoodModalOpen}
-            onClose={handleCloseOrder}
-            bookingId={bookingId}
-          />
-        </>
-      )}
+    {isFoodOrderOpen && (
+      <FoodOrder
+        bookingId={bookingId}
+        toggleFoodOrder={toggleFoodOrder}
+        closeOrder={toggleFoodOrder}
+        setFoodOrders={setFoodOrders}
+        foodOrders={foodOrders}
+      />
+    )}
+
+    <OrderedFood
+      isOpen={isOrderedFoodModalOpen}
+      onClose={handleCloseOrder}
+      bookingId={bookingId}
+    />
+  </>
+)}
+
 
 <div className="feedback-form">
       <h2>Feedback</h2>
@@ -598,7 +634,7 @@ const fetchSelectedTimeSlots = async (date) => {
       {feedbacks.map((feedback, index) => (
         <div key={index} className="feedback-item">
           <p><strong>User:</strong> {feedback.username || 'Unknown User'}</p>
-          <p><strong>Rating:</strong> {renderStars(feedback.rating)}</p>
+           <p><strong>Rating:</strong> {renderStars(feedback.rating)}</p>
           <p><strong>Comment:</strong> {feedback.comments}</p>
           <hr />
         </div>

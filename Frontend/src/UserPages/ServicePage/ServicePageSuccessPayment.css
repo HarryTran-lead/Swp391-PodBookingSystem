@@ -1,0 +1,38 @@
+/* Container styling */
+.success-payment-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Package details styling */
+  .package-details {
+    text-align: left;
+  }
+  
+  .package-details h1 {
+    color: #4caf50; /* Green color for success */
+    text-align: center;
+  }
+  
+  .package-details h2 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .package-details p {
+    margin: 10px 0;
+    color: #555;
+  }
+  
+  /* Error message styling */
+  .error-message {
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+  }
+  

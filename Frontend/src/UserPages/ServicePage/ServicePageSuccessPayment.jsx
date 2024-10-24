@@ -1,76 +1,88 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './ServicePageSuccessPayment.css'
+import './ServicePageSuccessPayment.css';
+
 export default function ServicePageSuccessPayment() {
   const [packageInfo, setPackageInfo] = useState(null);
-  const USER_PURCHASED_PACKAGES_API_URL = 'https://localhost:7257/api/UserPurchasedPackages'; // API URL for User Purchased Packages
   const [isPackageSaved, setIsPackageSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const USER_PURCHASED_PACKAGES_API_URL = 'https://localhost:7257/api/UserPurchasedPackages';
 
   useEffect(() => {
+    let isMounted = true; // Flag to prevent setting state after unmounting
+  
     const fetchPackageInfo = async () => {
-        const packageId = new URLSearchParams(window.location.search).get('packageId');
-        const accountId = localStorage.getItem('accountId');
-      
-        if (!accountId || !packageId || isPackageSaved) {
-          return; // Early return if accountId, packageId is missing, or the package has already been saved
+      const packageId = new URLSearchParams(window.location.search).get('packageId');
+      const accountId = localStorage.getItem('accountId');
+  
+      if (!accountId || !packageId || isPackageSaved) {
+        setLoading(false);
+        return;
+      }
+  
+      try {
+        // Fetch the package details directly
+        const response = await axios.get(`https://localhost:7257/api/ServicePackages/${packageId}`);
+  
+        if (response.data && isMounted) {
+          const purchaseDetails = {
+            AccountID: accountId,
+            PackageID: response.data.id,
+            PurchaseDate: new Date().toISOString(),
+            ExpiryDate: new Date(Date.now() + response.data.duration * 24 * 60 * 60 * 1000).toISOString(),
+            RemainingUsage: response.data.usage ?? 0,
+            Status: true,
+          };
+  
+          // Save the purchase details
+          await axios.post(USER_PURCHASED_PACKAGES_API_URL, purchaseDetails);
+  
+          // Update the state
+          setPackageInfo(response.data);
+          setIsPackageSaved(true);
         }
-      
-        try {
-          // Step 1: Check if the purchase record already exists
-          const existingPurchaseResponse = await axios.get(`${USER_PURCHASED_PACKAGES_API_URL}?accountId=${accountId}&packageId=${packageId}`);
-          
-          if (existingPurchaseResponse.data.length > 0) {
-            setIsPackageSaved(true); // Mark as saved to prevent future requests
-            return; // Exit if an existing record is found
-          }
-      
-          // Fetch the package information based on the packageId
-          const response = await axios.get(`https://localhost:7257/api/ServicePackages/${packageId}`);
-          console.log('API Response:', response.data); // Log the response data for debugging
-      
-          if (response.data) {
-            // Create the purchase details object
-            const purchaseDetails = {
-              AccountID: accountId,
-              PackageID: response.data.id,
-              PurchaseDate: new Date().toISOString(),
-              ExpiryDate: new Date(Date.now() + response.data.duration * 24 * 60 * 60 * 1000).toISOString(),
-              RemainingUsage: response.data.usage ?? 0,
-              status: true,
-            };
-      
-            // Save the purchase details to the database
-            await axios.post(USER_PURCHASED_PACKAGES_API_URL, purchaseDetails);
-      
-            // Update the state
-            setPackageInfo(response.data);
-            setIsPackageSaved(true); // Mark as saved
-          }
-        } catch (error) {
-          console.error('Error fetching package info:', error);
+      } catch (error) {
+        setErrorMessage('An error occurred while processing the package information.');
+        console.error('Error fetching package info:', error);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
         }
-      };
-      
+      }
+    };
+  
     fetchPackageInfo();
-  }, [isPackageSaved]); // Add isPackageSaved as a dependency
+  
+    return () => {
+      isMounted = false; // Clean up the flag on component unmount
+    };
+  }, [isPackageSaved]);
   
   
-  
+  if (loading) {
+    return <p>Loading package information...</p>;
+  }
+
+  if (errorMessage) {
+    return <div className="error-message">{errorMessage}</div>;
+  }
+
   return (
-    <div>
+    <div className="success-payment-container">
       {packageInfo ? (
-        <div>
+        <div className="package-details">
           <h1>Payment Successful!</h1>
           <h2>Package Details:</h2>
-          <p>Package Name: {packageInfo.packageName}</p>
-          <p>Duration: {packageInfo.duration} {packageInfo.durationType}</p>
-          <p>Price: {packageInfo.price} vnđ</p>
-          <p>Purchase Date: {new Date().toLocaleString()}</p> {/* Show current date as purchase date */}
-          <p>Expiry Date: {new Date(Date.now() + packageInfo.duration * 24 * 60 * 60 * 1000).toLocaleString()}</p> {/* Calculate expiry date */}
-          <p>Status: {packageInfo.status ? "Active" : "Inactive"}</p>
+          <p><strong>Package Name:</strong> {packageInfo.packageName}</p>
+          <p><strong>Duration:</strong> {packageInfo.duration} {packageInfo.durationType}</p>
+          <p><strong>Price:</strong> {packageInfo.price} vnđ</p>
+          <p><strong>Purchase Date:</strong> {new Date().toLocaleString()}</p>
+          <p><strong>Expiry Date:</strong> {new Date(Date.now() + packageInfo.duration * 24 * 60 * 60 * 1000).toLocaleString()}</p>
+          <p><strong>Status:</strong> {packageInfo.status ? "Active" : "Inactive"}</p>
         </div>
       ) : (
-        <p>Loading package information...</p>
+        <p>No package information available.</p>
       )}
     </div>
   );
