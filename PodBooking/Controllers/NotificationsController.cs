@@ -88,13 +88,25 @@ namespace PodBooking.Controllers
         }
 
         // POST: api/Notifications
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Notification>> PostNotification(Notification notification)
         {
+            // Ensure the notification object is not null
+            if (notification == null)
+            {
+                return BadRequest("Notification cannot be null.");
+            }
+
+            // Optionally, you can add additional validation here if needed
+            // e.g., checking if AccountId or Message is valid
+            notification.SentTime = DateTime.Now;
+            // Add the notification to the context
             _context.Notifications.Add(notification);
+
+            // Save the changes asynchronously
             await _context.SaveChangesAsync();
 
+            // Return a 201 Created response with the newly created notification
             return CreatedAtAction("GetNotification", new { id = notification.NotificationId }, notification);
         }
 
