@@ -24,6 +24,7 @@ namespace PodBooking.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
         {
+            await UpdateBookingStatuses(); // Update statuses before returning bookings
             return await _context.Bookings.ToListAsync();
         }
 
@@ -31,6 +32,7 @@ namespace PodBooking.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Booking>> GetBooking(int id)
         {
+            await UpdateBookingStatuses(); // Update statuses before retrieving a specific booking
             var booking = await _context.Bookings.FindAsync(id);
 
             if (booking == null)
@@ -45,11 +47,9 @@ namespace PodBooking.Controllers
         [HttpGet("AvailableTimeSlots/{podId}")]
         public async Task<ActionResult<IEnumerable<Booking>>> GetAvailableTimeSlots(int podId, [FromQuery] DateTime bookingDate)
         {
-            // Get the start and end of the day for the booking date
             var startOfDay = bookingDate.Date; // 00:00:00
             var endOfDay = bookingDate.Date.AddDays(1); // 24:00:00
 
-            // Get all bookings for the specified pod on the specified date with statusId 2 or 4
             var bookings = await _context.Bookings
                 .Where(b => b.PodId == podId
                             && b.StartTime >= startOfDay
@@ -57,10 +57,8 @@ namespace PodBooking.Controllers
                             && (b.StatusId == 2 || b.StatusId == 4)) // Check statusId
                 .ToListAsync();
 
-            // Return the list of bookings for that date
             return Ok(bookings);
         }
-
 
         // PUT: api/Bookings/5
         [HttpPut("{id}")]
@@ -91,11 +89,12 @@ namespace PodBooking.Controllers
 
             return NoContent();
         }
+
         // POST: api/Bookings
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
-            // Subtract 5 hours from StartTime and EndTime if they are not null
+            // Adjusting time zone for StartTime and EndTime
             if (booking.StartTime.HasValue)
             {
                 booking.StartTime = booking.StartTime.Value.AddHours(+7);
@@ -105,7 +104,7 @@ namespace PodBooking.Controllers
                 booking.EndTime = booking.EndTime.Value.AddHours(+7);
             }
 
-            // Check if the booking overlaps with existing bookings
+            // Check for overlapping bookings
             var overlaps = _context.Bookings
                 .Any(b => b.PodId == booking.PodId &&
                           b.StartTime < booking.EndTime &&
@@ -122,7 +121,6 @@ namespace PodBooking.Controllers
 
             return CreatedAtAction("GetBooking", new { id = booking.BookingId }, booking);
         }
-
 
         // DELETE: api/Bookings/5
         [HttpDelete("{id}")]
@@ -143,6 +141,22 @@ namespace PodBooking.Controllers
         private bool BookingExists(int id)
         {
             return _context.Bookings.Any(e => e.BookingId == id);
+        }
+
+        // This method checks for bookings that need their status updated to 5 (Finish)
+        private async Task UpdateBookingStatuses()
+        {
+            var currentTime = DateTime.UtcNow; // Use UTC for consistency
+            var bookingsToUpdate = await _context.Bookings
+                  .Where(b => b.EndTime < currentTime && b.StatusId != 5 && b.StatusId != 3) // Check for past bookings
+                .ToListAsync();
+
+            foreach (var booking in bookingsToUpdate)
+            {
+                booking.StatusId = 5; // Set status to 'Finish'
+            }
+
+            await _context.SaveChangesAsync(); // Save changes to the database
         }
     }
 }
