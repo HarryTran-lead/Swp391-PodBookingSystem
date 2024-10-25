@@ -2,140 +2,89 @@
 
 /* Main Banner Styling */
 .main-banner {
-    position: relative;
-    width: 100%;
-    height: 78vh;
-    overflow: hidden;
-  }
-  
-  .main-banner img.banner-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .main-banner .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(5, 5, 5, 0.5); /* Adds a dark overlay */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-    padding-top: 100px;
-  }
-  
-  .main-banner .overlay h1 {
-    font-size: 2.6rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .main-banner .search-bar {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .main-banner .search-bar .form-control {
-    width: 250px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  .main-banner .search-bar .btn {
-    padding: 10px 25px;
-    font-size: 1rem;
-    border-radius: 5px;
-    background-color: black;
-  }
-  
-  /* Trusted Companies Section */
-  .trusted-companies {
-    padding-top: 10px;
-    padding-bottom: 30px;
-    background-color: #383838;
- 
-
-  }
-  
-  .trusted-companies p {
-    font-size: 1rem;
-    margin-bottom: 20px;
-    color: white;
-  }
-  
-  .trusted-companies .companies-logos {
-    display: flex;
-    justify-content: center;
-    gap: 70px;
-    flex-wrap: wrap;
-  }
-  
-  .trusted-companies .companies-logos img {
-    width: 100px;
-    height: auto;
-    filter: grayscale(100%);
-    transition: filter 0.3s;
-  }
-  
-  .trusted-companies .companies-logos img:hover {
-    filter: grayscale(0%);
-  }
-
-  /* Main Banner */
-.main-banner {
   position: relative;
+  width: 100%;
+  height: 78vh;
+  overflow: hidden;
 }
 
-.banner-image {
+.main-banner img.banner-image {
   width: 100%;
-  height: 500px;
+  height: 100%;
   object-fit: cover;
 }
 
-.overlay {
+.main-banner .overlay {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(5, 5, 5, 0.5); /* Adds a dark overlay */
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding-top: 100px;
 }
 
-.overlay h1 {
-  color: #fff;
-  font-size: 48px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+.main-banner .overlay h1 {
+  font-size: 2.6rem;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
-.search-bar {
-  margin-top: 20px;
+.main-banner .search-bar {
   display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
-.search-bar input {
-  margin-right: 10px;
-  flex: 1;
+.main-banner .search-bar .form-control {
+  width: 250px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
+.main-banner .search-bar .btn {
+  padding: 10px 25px;
+  font-size: 1rem;
+  border-radius: 5px;
+  background-color: black;
+}
+
+/* Trusted Companies Section */
 .trusted-companies {
-  padding: 40px 0;
+  padding-top: 10px;
+  padding-bottom: 30px;
+  background-color: #383838;
 }
 
-.companies-logos img {
-  width: 120px;
-  margin: 0 10px;
+.trusted-companies p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.trusted-companies .companies-logos {
+  display: flex;
+  justify-content: center;
+  gap: 70px;
+  flex-wrap: wrap;
+}
+
+.trusted-companies .companies-logos img {
+  width: 100px;
+  height: auto;
+  filter: grayscale(100%);
+  transition: filter 0.3s;
+}
+
+.trusted-companies .companies-logos img:hover {
+  filter: grayscale(0%);
 }
 
 /* Prime Locations & Office Space Sections */
@@ -155,20 +104,22 @@
 
 .location {
   padding: 20px 50px;
-  
-
 }
-.location h3{
+
+.location h3 {
   color: rgb(164, 111, 5);
   font-size: 26px;
 }
+
 .location h2 {
   font-size: 36px;
   color: white;
 }
-.location p{
+
+.location p {
   color: white;
 }
+
 .location a {
   color: #ffffff;
   text-decoration: underline;
@@ -190,7 +141,6 @@
   flex-wrap: wrap;
   justify-content: space-between;
   margin: 10px 100px;
-  
 }
 
 .service-card {
@@ -206,98 +156,129 @@
   font-size: 20px;
   margin-bottom: 10px;
 }
+
+/* Updated Pods Section */
 .pods-section{
-  background-color: #252424;
-}
-
-.pods-section h2{
-  color: #ffffff;
-}
-
-.pods-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Two columns layout */
-  gap: 20px; /* Space between the cards */
+  background-color: #181818;
+  color: white;
   padding: 20px;
 }
 
-.pod-card {
-  background-color: #252424;
-border-radius: 8px;
-  padding: 16px;
-  text-align: center;
-
-  color:white;
-}
-
-.pod-image-homepage{
-  width: 300px;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.btn-primary {
-  margin-top: 10px;
-}
 /* Service Packages Section */
 .service-packages-section {
-  padding: 40px 20px;
-  background-color: #181818;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #181818, #1f1f1f);
 }
 
 .service-packages-section h2 {
-  font-size: 2rem;
-  margin-bottom: 30px;
-  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: #ffffff;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .service-packages-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 25px;
   justify-content: center;
 }
 
 .service-package-card {
-  background-color: #3a3838;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  width: 280px;
+  background: linear-gradient(135deg, #2c2c2c, #3a3838);
+  border-radius: 12px;
+  padding: 25px;
+  width: 300px;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-package-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: skewX(-30deg);
+  transition: transform 0.5s;
+}
+
+.service-package-card:hover::before {
+  transform: skewX(-30deg) translateX(50%);
 }
 
 .service-package-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 
 .service-package-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  color: #cfcfcf;
+  font-size: 1.75rem;
+  margin-bottom: 15px;
+  color: #e0e0e0;
 }
 
 .service-package-card p {
-  font-size: 0.95rem;
-  color: #f1f1f1;
-  margin-bottom: 15px;
+  font-size: 1rem;
+  color: #f5f5f5;
+  margin-bottom: 20px;
 }
 
 .service-package-card .btn {
-  background-color: #007bff;
+  background: linear-gradient(135deg, #222223, #fafbfb);
   border: none;
   color: #fff;
-  padding: 10px 20px;
+  padding: 12px 25px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 30px;
   text-transform: uppercase;
   font-weight: bold;
-  transition: background-color 0.3s;
+  transition: background 0.3s, transform 0.3s;
 }
 
 .service-package-card .btn:hover {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, #464749, #e72107);
+  transform: scale(1.05);
+}
+
+
+.service-package-card h2 {
+  position: absolute;
+  top: 15px;
+  right: 0px;
+  background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+  color: #ffffff;
+  font-size: 1.2rem;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+}
+
+/* Adding hover effect to the badge */
+.service-package-card:hover h2 {
+  transform: scale(1.1);
+}
+
+/* Make sure the parent card has relative positioning */
+.service-package-card {
+  position: relative;
+}
+
+.service-package-card::before {
+  z-index: 0;
+}
+
+.service-package-card .btn {
+  position: relative;
+  z-index: 1;
 }

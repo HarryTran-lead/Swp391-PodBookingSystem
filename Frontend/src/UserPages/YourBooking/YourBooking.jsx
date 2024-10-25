@@ -63,8 +63,13 @@ export default function YourBooking() {
   }, [accountId]);
 
   const openModal = (booking) => {
-    setSelectedBooking(booking);
-    setIsModalOpen(true);
+    // Check if the status description is "Finish"
+    if (booking.descriptionStatus === 'Finish') {
+      setSelectedBooking(booking);
+      setIsModalOpen(true);
+    } else {
+      alert('Bạn chưa sử dụng hết thời gian.'); // Show alert if feedback cannot be given
+    }
   };
 
   const closeModal = () => {

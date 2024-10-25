@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './HomePage.css';
 import bannerImage from '../../assets/BannerHomePage.jpg';
 
@@ -17,6 +18,7 @@ export default function HomePage() {
   const API_URL = 'https://localhost:7257/api/Pods'; // API URL for Pods
   const SERVICE_PACKAGE_API_URL = 'https://localhost:7257/api/ServicePackages'; // API URL for Service Packages
   const USER_PURCHASED_PACKAGES_API_URL = 'https://localhost:7257/api/UserPurchasedPackages'; // API URL for User Purchased Packages
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Fetch Pods data from API
   useEffect(() => {
@@ -71,8 +73,12 @@ export default function HomePage() {
       alert('Error processing payment. Please try again.');
     }
   };
-  
-  
+
+  // Handle card click to navigate to pod detail page
+  const handleCardClick = (id) => {
+    navigate(`/SWP391-PodSystemBooking/pod/${id}`); // Navigate to the DetailPodBooking with pod ID
+  };
+
   return (
     <>
       {/* Main Banner */}
@@ -108,6 +114,7 @@ export default function HomePage() {
           <div className="service-packages-grid">
             {servicePackages.map((packageItem) => (
               <div key={packageItem.id} className="service-package-card">
+                <h2>{packageItem.discountPercentage}%</h2>
                 <h3>{packageItem.packageName}</h3>
                 <p>Duration: {packageItem.duration} {packageItem.durationType}</p>
                 <p>Price: {packageItem.price.toFixed(2)} vnđ</p>
@@ -120,28 +127,41 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* List of Pods Section */}
+        {/* Available Pods Section */}
         <div className="pods-section">
           <h2 className="text-center">Available Pods</h2>
-          <div className="pods-grid">
-            {pods.map((pod) => (
-              <div key={pod.podId} className="pod-card">
-                <img src={`https://localhost:7257/api/Pods/${pod.podId}/image`} alt={pod.name} className="pod-image-homepage" />
-                <h3>{pod.name}</h3>
-                <p>{pod.description}</p>
-                <p>Price per Hour: {pod.pricePerHour} vnđ</p>
-                <a href={`/SWP391-PodSystemBooking/pod/${pod.podId}`} className="btn btn-primary">
-                  Book Now
-                </a>
-              </div>
-            ))}
-          </div>
+          <div className="pod-content">
+            <div className="pod-list">
+              {pods.map((pod) => (
+                <div
+                  key={pod.podId}
+                  className="pod-card"
+                  onClick={() => handleCardClick(pod.podId)}
+                >
+                  <img
+                    src={`https://localhost:7257${pod.imgPod}`}
+                    alt={pod.name}
+                    className="pod-image"
+                  />
+                  <div className="pod-details">
+                    <div className="price-tag">{pod.pricePerHour} vnđ/h</div>
+                    <h3 className="pod-name">{pod.name}, {pod.locationId}</h3>
+                    <p className="pod-address">{pod.description}</p>
+                    <div className="pod-info">
+                      <span>👥 2-8 people</span> • <span>📏 5,215 sf</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-          {/* View All Pods Button */}
-          <div className="view-all-pods text-center">
-            <a href="/SWP391-PodSystemBooking/pod" className="btn btn-outline-primary mt-4">
-              View All Pods
-            </a>
+            <div className="pod-map">
+              <img
+                src="https://images.fastcompany.net/image/upload/w_596,c_limit,q_auto:best,f_auto/wp-cms/uploads/2023/08/IMAGE-1.png"
+                alt="Map Placeholder"
+                className="map-image"
+              />
+            </div>
           </div>
         </div>
       </div>

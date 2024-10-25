@@ -32,6 +32,10 @@ import UpdateFood from './AdminPages/Food/UpdateFood';
 import Package from './AdminPages/PackageService/Package';
 import CreatePackage from './AdminPages/PackageService/CreatePackage';
 import UpdatePackage from './AdminPages/PackageService/UpdatePackage';
+import LoginPageAdmin from './AdminPages/LoginPageAdmin/LoginPageAdmin';
+import StaffLayout from './Staff/StaffLayout/StaffLayout';
+import FeedBack from './Staff/FeedBack/FeedBack';
+import BookingOrderStaff from './Staff/BookingOrder/BookingOrder';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
@@ -84,6 +88,7 @@ const App = () => {
         <Route path="/SWP391-PodSystemBooking/yourpakage" element={renderUserLayout(< YourPackage/>)} />
         <Route path="/SWP391-PodSystemBooking/ordered-food/:bookingId" element={renderUserLayout(< OrderedFood/>)} />
 
+        <Route path="/SWP391-PodSystemBooking/admin/loginadmin" element={<LoginPageAdmin />} />
         <Route path="/SWP391-PodSystemBooking/admin/account" element={<AdminLayout><Account /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/update-account" element={<AdminLayout><UpdateAccount /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/create-account" element={<AdminLayout><CreateAccount /></AdminLayout>} />
@@ -99,6 +104,9 @@ const App = () => {
         <Route path="/SWP391-PodSystemBooking/admin/package" element={<AdminLayout><Package /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/create-package" element={<AdminLayout><CreatePackage /></AdminLayout>} />
         <Route path="/SWP391-PodSystemBooking/admin/update-package" element={<AdminLayout><UpdatePackage /></AdminLayout>} />
+
+        <Route path="/SWP391-PodSystemBooking/staff/feedback" element={<StaffLayout><FeedBack /></StaffLayout>} />
+        <Route path="/SWP391-PodSystemBooking/staff/bookingorder" element={<StaffLayout><BookingOrderStaff /></StaffLayout>} />
       </Routes>
     </Router>
   );

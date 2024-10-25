@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ServicePageSuccessPayment.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function ServicePageSuccessPayment() {
   const [packageInfo, setPackageInfo] = useState(null);
@@ -8,7 +9,7 @@ export default function ServicePageSuccessPayment() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const USER_PURCHASED_PACKAGES_API_URL = 'https://localhost:7257/api/UserPurchasedPackages';
-
+  const navigate = useNavigate();
   useEffect(() => {
     let isMounted = true; // Flag to prevent setting state after unmounting
   
@@ -59,6 +60,9 @@ export default function ServicePageSuccessPayment() {
     };
   }, [isPackageSaved]);
   
+  const handleBackToYourPackage = () => {
+    navigate('/SWP391-PodSystemBooking/yourpakage');
+  };
   
   if (loading) {
     return <p>Loading package information...</p>;
@@ -79,7 +83,9 @@ export default function ServicePageSuccessPayment() {
           <p><strong>Price:</strong> {packageInfo.price} vnđ</p>
           <p><strong>Purchase Date:</strong> {new Date().toLocaleString()}</p>
           <p><strong>Expiry Date:</strong> {new Date(Date.now() + packageInfo.duration * 24 * 60 * 60 * 1000).toLocaleString()}</p>
-          <p><strong>Status:</strong> {packageInfo.status ? "Active" : "Inactive"}</p>
+          <button onClick={handleBackToYourPackage} className="back-to-yourpackage-button">
+            Back to Your Package
+          </button>
         </div>
       ) : (
         <p>No package information available.</p>

@@ -64,7 +64,7 @@ export default function DetailPodBooking() {
         // Fetch discount for each package
         const packagesWithDiscountPromises = response.data.map(async (pkg) => {
           const servicePackageResponse = await axios.get(`https://localhost:7257/api/ServicePackages/${pkg.packageId}`);
-          return { ...pkg, discountPercentage: servicePackageResponse.data.discountPercentage }; // Add discount percentage
+          return { ...pkg, discountPercentage: servicePackageResponse.data.discountPercentage, features:servicePackageResponse.data.features }; // Add discount percentage
         });
   
         const packagesWithDiscountData = await Promise.all(packagesWithDiscountPromises);
@@ -505,6 +505,8 @@ const fetchSelectedTimeSlots = async (date) => {
           {matchingPackage && (
             <div>          
               <span className="discount">Discount: {matchingPackage.discountPercentage}%</span>
+              <br/>
+              <span className="discount">Features: {matchingPackage.features}</span>
             </div>
           )}
         </div>

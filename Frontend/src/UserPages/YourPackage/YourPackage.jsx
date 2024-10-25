@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getUserPackages } from '../apiService'; // Import the API function
+import axios from 'axios'; // Import axios for API calls
 import './YourPackage.css';
 
 export default function YourPackage() {
@@ -18,9 +19,23 @@ export default function YourPackage() {
 
       try {
         const packages = await getUserPackages(accountId); // Fetch user packages using the API function
-        setUserPackages(packages); // Set user packages
+        
+        // Fetch details for each package from the ServicePackages API
+        const packageDetailsPromises = packages.map(async (pkg) => {
+          const response = await axios.get(`https://localhost:7257/api/ServicePackages/${pkg.packageId}`);
+          return {
+            ...pkg,
+            packageName: response.data.packageName,
+            features: response.data.features,
+            discountPercentage: response.data.discountPercentage,
+          };
+        });
+
+        const detailedPackages = await Promise.all(packageDetailsPromises); // Wait for all requests to complete
+        setUserPackages(detailedPackages); // Set the combined user package details
       } catch (error) {
         setErrorMessage('Error fetching user packages. Please try again later.');
+        console.error('Error fetching user packages:', error);
       } finally {
         setLoading(false); // Stop loading regardless of the outcome
       }
@@ -43,20 +58,25 @@ export default function YourPackage() {
           <thead>
             <tr>
               <th>Package ID</th>
+              <th>Package Name</th>
               <th>Purchase Date</th>
               <th>Expiry Date</th>
               <th>Remaining Usage</th>
+              <th>Features</th>
+              <th>Discount Percentage</th>
             </tr>
           </thead>
           <tbody>
             {userPackages.map((pkg) => (
-             <tr key={pkg.userPackageId}>
-             <td>{pkg.packageId}</td>
-             <td>{new Date(pkg.purchaseDate).toLocaleString()}</td> {/* Display both date and time */}
-             <td>{new Date(pkg.expiryDate).toLocaleString()}</td>   {/* Display both date and time */}
-             <td>{pkg.remainingUsage}</td>
-           </tr>
-           
+              <tr key={pkg.userPackageId}>
+                <td>{pkg.packageId}</td>
+                <td>{pkg.packageName}</td>
+                <td>{new Date(pkg.purchaseDate).toLocaleString()}</td> {/* Display both date and time */}
+                <td>{new Date(pkg.expiryDate).toLocaleString()}</td>   {/* Display both date and time */}
+                <td>{pkg.remainingUsage}</td>
+                <td>{pkg.features}</td>
+                <td>{pkg.discountPercentage}%</td>
+              </tr>
             ))}
           </tbody>
         </table>
