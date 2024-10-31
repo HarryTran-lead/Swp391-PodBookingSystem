@@ -60,6 +60,23 @@ namespace PodBooking.Controllers
             return Ok(bookings);
         }
 
+        // GET: api/Bookings/Account/{accountId}
+        [HttpGet("Account/{accountId}")]
+        public async Task<ActionResult<IEnumerable<Booking>>> GetBookingsByAccountId(int accountId)
+        {
+            await UpdateBookingStatuses(); // Update statuses before returning bookings
+            var bookings = await _context.Bookings
+                .Where(b => b.AccountId == accountId) // Filter by accountId
+                .ToListAsync();
+
+            if (bookings == null || !bookings.Any())
+            {
+                return NotFound("No bookings found for the given Account ID.");
+            }
+
+            return Ok(bookings);
+        }
+
         // PUT: api/Bookings/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBooking(int id, Booking booking)
