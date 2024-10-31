@@ -9,23 +9,25 @@ export default function ServicePageSuccessPayment() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const USER_PURCHASED_PACKAGES_API_URL = 'https://localhost:7257/api/UserPurchasedPackages';
+  const NOTIFICATIONS_API_URL = 'https://localhost:7257/api/Notifications';
   const navigate = useNavigate();
+
   useEffect(() => {
     let isMounted = true; // Flag to prevent setting state after unmounting
-  
+
     const fetchPackageInfo = async () => {
       const packageId = new URLSearchParams(window.location.search).get('packageId');
       const accountId = localStorage.getItem('accountId');
-  
+
       if (!accountId || !packageId || isPackageSaved) {
         setLoading(false);
         return;
       }
-  
+
       try {
         // Fetch the package details directly
         const response = await axios.get(`https://localhost:7257/api/ServicePackages/${packageId}`);
-  
+
         if (response.data && isMounted) {
           const purchaseDetails = {
             AccountID: accountId,
@@ -35,10 +37,29 @@ export default function ServicePageSuccessPayment() {
             RemainingUsage: response.data.usage ?? 0,
             Status: true,
           };
-  
+
           // Save the purchase details
           await axios.post(USER_PURCHASED_PACKAGES_API_URL, purchaseDetails);
-  
+
+          // Create a notification after successful package purchase
+          try {
+            const notificationResponse = await axios.post(NOTIFICATIONS_API_URL, {
+              AccountId: accountId,
+              Message: 'Your package purchase was successful!',
+              DateCreated: new Date().toISOString(), // Current date and time
+            });
+
+            if (notificationResponse.status === 201) {
+              console.log('Notification created:', notificationResponse.data);
+            } else {
+              console.error('Failed to create notification:', notificationResponse.data);
+              alert('Purchase was successful, but failed to create notification.');
+            }
+          } catch (notificationError) {
+            console.error('Error creating notification:', notificationError);
+            alert('Purchase was successful, but there was an error sending the notification.');
+          }
+
           // Update the state
           setPackageInfo(response.data);
           setIsPackageSaved(true);
@@ -52,18 +73,18 @@ export default function ServicePageSuccessPayment() {
         }
       }
     };
-  
+
     fetchPackageInfo();
-  
+
     return () => {
       isMounted = false; // Clean up the flag on component unmount
     };
   }, [isPackageSaved]);
-  
+
   const handleBackToYourPackage = () => {
     navigate('/SWP391-PodSystemBooking/yourpakage');
   };
-  
+
   if (loading) {
     return <p>Loading package information...</p>;
   }

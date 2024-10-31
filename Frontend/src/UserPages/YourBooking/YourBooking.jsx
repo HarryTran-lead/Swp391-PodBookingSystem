@@ -14,7 +14,7 @@ export default function YourBooking() {
   const [feedback, setFeedback] = useState({ rating: '', comments: '' });
 
   const accountId = localStorage.getItem('accountId'); // Get the AccountId from localStorage
-  const BOOKINGS_API_URL = `https://localhost:7257/api/Bookings?accountId=${accountId}`; // Adjust API URL based on your backend implementation
+  const BOOKINGS_API_URL = `https://localhost:7257/api/Bookings/Account/${accountId}`; // Adjusted API URL
   const FEEDBACKS_API_URL = `https://localhost:7257/api/Feedbacks`;
 
   useEffect(() => {
@@ -47,6 +47,12 @@ export default function YourBooking() {
         const sortedBookings = bookingsWithDetails.sort((a, b) => b.bookingId - a.bookingId);
 
         setBookings(sortedBookings);
+        
+        // Check if bookings are empty and set error message accordingly
+        if (sortedBookings.length === 0) {
+          setError('No bookings found for your account.');
+        }
+        
         setLoading(false);
       } catch (error) {
         console.error('Error fetching bookings:', error);
@@ -59,6 +65,7 @@ export default function YourBooking() {
       fetchBookings();
     } else {
       setError('No Account ID found. Please log in.');
+      setLoading(false); // Make sure to set loading to false if no accountId
     }
   }, [accountId]);
 
@@ -110,84 +117,86 @@ export default function YourBooking() {
   }
 
   return (
-    <div className="your-bookings">
-      <h2>Your Bookings</h2>
-      {bookings.length === 0 ? (
-        <p>No bookings found.</p>
-      ) : (
-        <table className="booking-table">
-          <thead>
-            <tr>
-              <th>Order</th>
-              <th>Booking ID</th>
-              <th>Pod ID</th>
-              <th>Pod Name</th>
-              <th>Pod Image</th>
-              <th>Start Time</th>
-              <th>End Time</th>
-              <th>Total Price</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bookings.map((booking, index) => (
-              <tr key={booking.bookingId}>
-                <td>{index + 1}</td> {/* Order number starting from 1 */}
-                <td>{booking.bookingId}</td>
-                <td>{booking.podId}</td>
-                <td>{booking.podName}</td>
-                <td>
-                  <img src={`https://localhost:7257/api/Pods/${booking.podId}/image`} alt={booking.podName} style={{ width: '100px', height: '100px' }} />
-                </td>
-                <td>{booking.startTime ? new Date(booking.startTime).toLocaleString() : 'N/A'}</td>
-                <td>{booking.endTime ? new Date(booking.endTime).toLocaleString() : 'N/A'}</td>
-                <td>{booking.totalPrice} vnđ</td>
-                <td>{booking.descriptionStatus}</td>
-                <td>
-                  <button onClick={() => openModal(booking)}>Feedback</button>
-                </td>
+    <div className="your-booking-container"> {/* Added this div */}
+      <div className="your-bookings">
+        <h2>Your Bookings</h2>
+        {bookings.length === 0 ? (
+          <p>No bookings found for your account.</p>
+        ) : (
+          <table className="booking-table">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Booking ID</th>
+                <th>Pod ID</th>
+                <th>Pod Name</th>
+                <th>Pod Image</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+            <tbody>
+              {bookings.map((booking, index) => (
+                <tr key={booking.bookingId}>
+                  <td>{index + 1}</td> {/* Order number starting from 1 */}
+                  <td>{booking.bookingId}</td>
+                  <td>{booking.podId}</td>
+                  <td>{booking.podName}</td>
+                  <td>
+                    <img src={`https://localhost:7257/api/Pods/${booking.podId}/image`} alt={booking.podName} style={{ width: '100px', height: '100px' }} />
+                  </td>
+                  <td>{booking.startTime ? new Date(booking.startTime).toLocaleString() : 'N/A'}</td>
+                  <td>{booking.endTime ? new Date(booking.endTime).toLocaleString() : 'N/A'}</td>
+                  <td>{booking.totalPrice} vnđ</td>
+                  <td>{booking.descriptionStatus}</td>
+                  <td>
+                    <button onClick={() => openModal(booking)}>Feedback</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
 
-      {/* Modal for Feedback */}
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        contentLabel="Submit Feedback"
-        className="feedback-modal"
-        overlayClassName="feedback-modal-overlay"
-      >
-        <h2>Submit Feedback</h2>
-        <div className="feedback-form">
-          <label>
-            Rating:
-            <input
-              type="number"
-              name="rating"
-              value={feedback.rating}
-              onChange={handleFeedbackChange}
-              min="1"
-              max="5"
-              required
-            />
-          </label>
-          <label>
-            Comments:
-            <textarea
-              name="comments"
-              value={feedback.comments}
-              onChange={handleFeedbackChange}
-              required
-            />
-          </label>
-          <button onClick={submitFeedback}>Submit</button>
-          <button onClick={closeModal} style={{ marginLeft: '10px' }}>Cancel</button>
-        </div>
-      </Modal>
+        {/* Modal for Feedback */}
+        <Modal
+          isOpen={isModalOpen}
+          onRequestClose={closeModal}
+          contentLabel="Submit Feedback"
+          className="feedback-modal"
+          overlayClassName="feedback-modal-overlay"
+        >
+          <h2>Submit Feedback</h2>
+          <div className="feedback-form">
+            <label>
+              Rating:
+              <input
+                type="number"
+                name="rating"
+                value={feedback.rating}
+                onChange={handleFeedbackChange}
+                min="1"
+                max="5"
+                required
+              />
+            </label>
+            <label>
+              Comments:
+              <textarea
+                name="comments"
+                value={feedback.comments}
+                onChange={handleFeedbackChange}
+                required
+              />
+            </label>
+            <button onClick={submitFeedback}>Submit</button>
+            <button onClick={closeModal} style={{ marginLeft: '10px' }}>Cancel</button>
+          </div>
+        </Modal>
+      </div>
     </div>
   );
 }

@@ -282,3 +282,122 @@
   position: relative;
   z-index: 1;
 }
+.hero-wrap {
+  text-align: center; /* Center align the content */
+  padding: 50px 20px; /* Add some padding */
+ 
+}
+
+.hero-wrap h1 {
+  font-size: 50px !important; /* Heading styles */
+  background: linear-gradient(45deg, #ffffff, #000000, #d4d4d4);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientAnimation 6s ease-in-out infinite;
+  font-weight: bold;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.search-bar {
+  margin-top: 30px; /* Space between the heading and search bar */
+  display: flex; /* Use flexbox for layout */
+  justify-content: center; /* Center the search bar items */
+  gap: 10px; /* Space between inputs and button */
+}
+
+.search-bar .form-control {
+  padding: 15px; /* Padding inside input fields */
+  border: 2px solid #007bff; /* Border color */
+  border-radius: 5px; /* Rounded corners */
+  outline: none; /* Remove outline on focus */
+  transition: border-color 0.6s ease; /* Smooth transition */
+}
+
+.search-bar .form-control:focus {
+  border-color: #0056b3; /* Darker blue on focus */
+}
+
+.search-bar .btn {
+  padding: 15px 30px; /* Button padding */
+  font-size: 16px; /* Button font size */
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.search-bar .btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+/* Blog Section */
+.blog-section {
+  padding: 50px 15px; /* Add padding to the section */
+  background-color: #121212; /* Dark background color */
+  color: #e0e0e0; /* Light text color for readability */
+}
+
+.blog-section h2 {
+  text-align: center; /* Center the title */
+  margin-bottom: 30px; /* Space below the title */
+  color: #ffca28; /* Golden color for the title */
+  font-size: 2.5rem; /* Title font size */
+}
+
+.row {
+  margin: 0; /* Reset margin for the row */
+}
+
+/* Blog post card */
+.blog-post {
+  background-color: #363636 !important; /* Slightly lighter background for blog posts */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Deeper shadow for depth */
+  padding: 20px; /* Padding inside the post card */
+  transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effect */
+  margin-bottom: 20px; /* Space between posts */
+}
+
+.blog-post:hover {
+  transform: translateY(-5px); /* Lift effect on hover */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6); /* Intensified shadow on hover */
+}
+
+.blog-post img {
+  width: 100%; /* Full width for images */
+  border-radius: 8px; /* Rounded corners for images */
+  margin-bottom: 15px; /* Space below the image */
+}
+
+.blog-post h2 {
+  font-size: 1.75rem; /* Font size for post title */
+  margin-bottom: 10px; /* Space below the title */
+  color: #ffffff !important; /* Golden color for the title */
+}
+
+.blog-post p {
+  color: #ffffff !important; /* Light gray for descriptions */
+  margin-bottom: 15px; /* Space below descriptions */
+}
+
+.blog-post a {
+  text-decoration: none; /* Remove underline from link */
+  display: inline-block; /* Make the link behave like a button */
+  background-color: #ffca28; /* Golden color for the button */
+  color: #ffffff; /* Dark text color */
+  padding: 10px 15px; /* Padding inside the button */
+  border-radius: 5px; /* Rounded corners for the button */
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover */
+}
+
+.blog-post a:hover {
+  background-color: #ffd54f; /* Lighter shade on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.blog-post .btn-primary {
+  background-color: #1a1c1e !important;
+  border-color: #ffffff !important;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 4px;
+}

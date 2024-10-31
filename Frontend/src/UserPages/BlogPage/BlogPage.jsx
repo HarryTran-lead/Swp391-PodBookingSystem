@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebookMessenger } from "@fortawesome/free-brands-svg-icons";
 import { Pagination } from "react-bootstrap";
+import bannerImage from '../../assets/BannerHomePage.jpg';
 
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
@@ -46,18 +47,13 @@ export default function BlogPage() {
 
   return (
     <div className="main-container">
-      <Header />
 
       <div className="hero-wrap hero-bread mt-4" style={{
-        backgroundImage: `url('https://tse2.mm.bing.net/th?id=OIP.J8x2ZXoCWJvX4S5zMjJWFgHaCO&pid=Api&P=0&h=220')`,
+        backgroundImage: `url(${bannerImage})`,
       }}>
         <div className="container">
           <div className="row no-gutters slider-text align-items-center justify-content-center">
-            <div className="col-md-9 ftco-animate text-center">
-              <p className="breadcrumbs">
-                <span className="mr-2"><Link to="/SWP391-PodSystemBooking/">Home</Link></span>
-                <span>Blog</span>
-              </p>
+            <div className="col-md-9 ftco-animate text-center">             
               <h1 className="mb-0 bread">Blog</h1>
             </div>
           </div>
@@ -108,7 +104,7 @@ export default function BlogPage() {
         </a>
       </div>
     
-      <Footer />
+      
     </div>
   );
 }

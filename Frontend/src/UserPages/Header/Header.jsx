@@ -8,7 +8,7 @@ import { FaUser, FaBell } from 'react-icons/fa';
 import axios from 'axios';
 import './Header.css';
 
-export default function Header({ isLoggedIn, handleLogout }) {
+export default function Header({ isLoggedIn, handleLogout: propHandleLogout }) {
   const [accountId, setAccountId] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,9 +45,19 @@ export default function Header({ isLoggedIn, handleLogout }) {
     fetchNotifications();
   }, [accountId]);
   
-
   const handleNotificationClick = async (notificationId) => {
     // ... existing code to handle notification click
+  };
+
+  const logoutUser = () => {
+    // Clear accountId and any other necessary data from local storage
+    localStorage.removeItem('accountId');
+
+    // Call the prop function to handle logout in the parent component
+    propHandleLogout(); 
+
+   
+
   };
 
   return (
@@ -69,7 +79,7 @@ export default function Header({ isLoggedIn, handleLogout }) {
             <Nav.Link as={Link} to="/SWP391-PodSystemBooking/yourbooking" className="your-booking-btn">
               Your Booking
             </Nav.Link>
-            <Nav.Link as={Link} to="/SWP391-PodSystemBooking/yourpakage" className="your-package-btn">
+            <Nav.Link as={Link} to="/SWP391-PodSystemBooking/yourpackage" className="your-package-btn">
               Your Package
             </Nav.Link>
           </>
@@ -118,7 +128,7 @@ export default function Header({ isLoggedIn, handleLogout }) {
                 <Dropdown.Item as={Link} to="/SWP391-PodSystemBooking/profile">
                   Profile
                 </Dropdown.Item>
-                <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                <Dropdown.Item onClick={logoutUser}>Logout</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </>

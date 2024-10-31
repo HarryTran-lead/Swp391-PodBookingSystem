@@ -3,9 +3,16 @@
 /* General styles for the component */
 .your-bookings {
   padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-height: 80vh; /* Set minimum height to 80vh */
+}
+
+/* Container for your bookings */
+.your-booking-container {
+  max-width: 1200px; /* Maximum width for larger screens */
+  margin: 0 auto; /* Center align */
 }
 
 /* Table styles */
@@ -13,9 +20,10 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  background-color: #fff;
-  border-radius: 8px;
+  background-color: #ffffff;
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Added shadow to table */
 }
 
 .booking-table th,
@@ -31,11 +39,11 @@
 }
 
 .booking-table tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: #f6f8fa; /* Lighter background for even rows */
 }
 
 .booking-table tbody tr:hover {
-  background-color: #ddd;
+  background-color: #e3f2e3; /* Light green on hover */
 }
 
 .booking-table img {
@@ -58,17 +66,17 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #45a049; /* Darker green on hover */
 }
 
 /* Modal styles */
 .feedback-modal {
   position: relative;
   width: 400px;
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   max-width: 90%;
   margin: auto;
 }
@@ -92,7 +100,7 @@ button:hover {
 }
 
 .feedback-form label {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   font-weight: bold;
 }
 
@@ -100,7 +108,7 @@ button:hover {
 .feedback-form textarea {
   width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 14px;
@@ -110,7 +118,7 @@ button:hover {
 
 .feedback-form input[type="number"]:focus,
 .feedback-form textarea:focus {
-  border-color: #4CAF50;
+  border-color: #4CAF50; /* Highlight on focus */
 }
 
 .feedback-form textarea {
@@ -124,4 +132,13 @@ button:hover {
 }
 
 /* Error and loading messages */
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+}
 
+.loading-message {
+  font-style: italic;
+  margin-top: 20px;
+}

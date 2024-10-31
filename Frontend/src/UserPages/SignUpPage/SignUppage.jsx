@@ -104,6 +104,17 @@ export default function SignUpPage() {
               />
             </Form.Group>
 
+{/* User Name Input */}
+<Form.Group controlId="username">
+              <Form.Control
+                type="text"
+                placeholder="UserName"
+                value={formData.username}
+                onChange={handleInputChange}
+                required
+              />
+            </Form.Group>
+
             {/* Password Input */}
             <Form.Group controlId="password">
               <Form.Control

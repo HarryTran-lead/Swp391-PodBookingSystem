@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate, Link } from 'react-router-dom';
 import './HomePage.css';
 import bannerImage from '../../assets/BannerHomePage.jpg';
 
@@ -15,12 +15,13 @@ import NetflixLogo from '../../assets/BrandLogo/NetflixLogo.png';
 export default function HomePage() {
   const [pods, setPods] = useState([]);
   const [servicePackages, setServicePackages] = useState([]);
+  const [currentPosts, setCurrentPosts] = useState([]); // State for blog posts
   const API_URL = 'https://localhost:7257/api/Pods'; // API URL for Pods
   const SERVICE_PACKAGE_API_URL = 'https://localhost:7257/api/ServicePackages'; // API URL for Service Packages
-  const USER_PURCHASED_PACKAGES_API_URL = 'https://localhost:7257/api/UserPurchasedPackages'; // API URL for User Purchased Packages
+  const BLOG_API_URL = 'https://localhost:7257/api/Blogs'; // API URL for Blogs
   const navigate = useNavigate(); // Initialize useNavigate
 
-  // Fetch Pods data from API
+  // Fetch Pods, Service Packages, and Blog data from API
   useEffect(() => {
     const fetchPods = async () => {
       try {
@@ -31,7 +32,6 @@ export default function HomePage() {
       }
     };
 
-    // Fetch Service Packages data from API
     const fetchServicePackages = async () => {
       try {
         const response = await axios.get(SERVICE_PACKAGE_API_URL);
@@ -41,8 +41,28 @@ export default function HomePage() {
       }
     };
 
+    const fetchBlogPosts = async () => {
+      try {
+        const response = await fetch(BLOG_API_URL);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        // Create image paths for each post
+        const postsWithImages = data.map((post) => ({
+          ...post,
+          imageUrl: `https://localhost:7257/api/Blogs/${post.id}/image`
+        }));
+        setCurrentPosts(postsWithImages);
+      } catch (error) {
+        console.error('Error fetching blog posts:', error);
+        alert('Failed to load blog posts. Please try again later.'); // Notify user of the error
+      }
+    };
+
     fetchPods();
     fetchServicePackages();
+    fetchBlogPosts();
   }, []);
 
   // Handle Buy Now button click to redirect to VNPay payment
@@ -86,11 +106,10 @@ export default function HomePage() {
         <div className="main-banner">
           <img src={bannerImage} alt="Office Banner" className="banner-image" />
           <div className="overlay">
-            <h1>Rent Offices Tailored to Your Success</h1>
-            <div className="search-bar">
-              <input type="text" placeholder="Search here" className="form-control" />
-              <input type="text" placeholder="Search Nearby" className="form-control" />
-              <button className="btn btn-primary">Search</button>
+            <div className="hero-wrap">
+              <div className="container">
+                <h1>Rent Offices Tailored to Your Success</h1>
+              </div>
             </div>
           </div>
         </div>
@@ -162,6 +181,34 @@ export default function HomePage() {
                 className="map-image"
               />
             </div>
+          </div>
+        </div>
+
+        {/* Blog Section */}
+        <div className="blog-section">
+          <h2 className="text-center">Latest Blogs</h2>
+          <div className="row">
+            {currentPosts.map((post) => (
+              <div className="col-md-12 mb-4" key={post.id}>
+                <div className="row no-gutters">
+                  <div className="col-md-4">
+                    {/* Display the image from the API */}
+                    <img src={post.imageUrl} alt={post.title} className="img-fluid mb-3" />
+                  </div>
+                  <div className="col-md-8">
+                    <div className="blog-post">
+                      <h2>{post.title}</h2>
+                      <p>{post.shortDes}</p>
+                      <p>
+                        <Link to={`/SWP391-MomAndBaby/detailBlog/${post.id}`} className="btn btn-primary">
+                          Read more
+                        </Link>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

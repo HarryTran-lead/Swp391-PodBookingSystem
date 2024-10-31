@@ -1,40 +1,46 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import './LoginPage.css';
-import SignIn from '../../assets/SignIn.png'; // Đường dẫn hình ảnh đăng nhập
+import SignIn from '../../assets/SignIn.png';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginAccount } from '../apiService'; // Import hàm login từ apiService
+import { loginAccount } from '../apiService';
 
 export default function LoginPage({ onLogin }) {
-  const [username, setUsername] = useState(''); // Trạng thái cho username
-  const [password, setPassword] = useState(''); // Trạng thái cho password
-  const [errorMessage, setErrorMessage] = useState(''); // Trạng thái cho thông báo lỗi
-  const [isLoading, setIsLoading] = useState(false); // Trạng thái cho loading
-  const navigate = useNavigate(); // Hook để điều hướng
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
   
     try {
-      const result = await loginAccount(username, password); // Assuming this returns the account ID
-  
-      console.log(result); // Check what you receive here
+      const result = await loginAccount(username, password);
+      console.log('Login result:', result); // Check the structure of the result
   
       if (result.error === null) {
-        if (result.error === null) {
-          localStorage.setItem('username', result.item.username);
-          console.log(result.username);
-          localStorage.setItem('accountId', result.item.id); // Ensure this is set
-          console.log('Logged in with ID:', result.item.id); // Log the ID for confirmation
-          onLogin(result.username);
+        const { id, role } = result.item; // Assuming `id` and `role` are in `item`
+        localStorage.setItem('username', username);
+        localStorage.setItem('accountId', id);
+        localStorage.setItem('userRole', role);
+  
+        onLogin(id, role);
+  
+        // Redirect based on role
+        if (role === "Admin") {
+          navigate('/SWP391-PodSystemBooking/admin/account');
+        } else if (role === "Staff") { // Add staff role check
+          navigate('/SWP391-PodSystemBooking/staff/bookingorder');
+        } else {
           navigate('/SWP391-PodSystemBooking/');
         }
-        
       } else {
         setErrorMessage('Login failed. Please try again.');
       }
     } catch (error) {
+      console.error('Login error:', error); // Log error details
       setErrorMessage('An error occurred while logging in.');
     } finally {
       setIsLoading(false);

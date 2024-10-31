@@ -1,0 +1,105 @@
+/* Center the table container */
+.profile-container {
+    width: 80%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  /* Table styles */
+  .profile-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  .profile-table th,
+  .profile-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .profile-table th {
+    background-color: #f4f6f8;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .profile-table td {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  /* Input field for editing mode */
+  .profile-container input {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  /* Error and success message styles */
+  .error-message {
+    color: #e74c3c;
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+  
+  .success-message {
+    color: #2ecc71;
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+  
+  /* Button styles */
+  button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button.save-btn {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  button.save-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  button.cancel-btn {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  button.cancel-btn:hover {
+    background-color: #5a6268;
+  }
+  
+  button.edit-btn {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  button.edit-btn:hover {
+    background-color: #218838;
+  }
+  
