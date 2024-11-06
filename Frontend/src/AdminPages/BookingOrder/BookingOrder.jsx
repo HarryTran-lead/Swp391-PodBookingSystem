@@ -3,56 +3,51 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './BookingOrder.css'; // Make sure to create BookingOrder.css for styling
+import './BookingOrder.css';
 
 export default function BookingOrder() {
   const [bookings, setBookings] = useState([]);
-  const [statuses, setStatuses] = useState([]); // State to store status descriptions
+  const [statuses, setStatuses] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
   const navigate = useNavigate();
   const API_URL = 'https://localhost:7257/api/Bookings';
-  const STATUS_API_URL = 'https://localhost:7257/api/StatusLookups'; // Endpoint for status descriptions
+  const STATUS_API_URL = 'https://localhost:7257/api/StatusLookups';
 
   useEffect(() => {
     fetchBookings();
-    fetchStatusDescriptions(); // Fetch status descriptions on component mount
+    fetchStatusDescriptions();
   }, []);
 
-  // Fetch all bookings
   const fetchBookings = async () => {
     try {
       const response = await axios.get(API_URL);
-      // Sort bookings by bookingId in descending order
       const sortedBookings = response.data.sort((a, b) => b.bookingId - a.bookingId);
-      setBookings(sortedBookings); // Set sorted bookings
+      setBookings(sortedBookings);
     } catch (error) {
       console.error('Error fetching bookings:', error);
       toast.error('Failed to fetch bookings.');
     }
   };
 
-  // Fetch all status descriptions
   const fetchStatusDescriptions = async () => {
     try {
       const response = await axios.get(STATUS_API_URL);
-      setStatuses(response.data); // Store status descriptions in state
+      setStatuses(response.data);
     } catch (error) {
       console.error('Error fetching status descriptions:', error);
       toast.error('Failed to fetch status descriptions.');
     }
   };
 
-  // Get status description by status ID
   const getStatusDescription = (statusId) => {
     const status = statuses.find((s) => s.statusId === statusId);
-    return status ? status.statusDescription : 'Unknown'; // Return 'Unknown' if status not found
+    return status ? status.statusDescription : 'Unknown';
   };
 
-  // Navigate to update booking page
   const handleUpdate = (booking) => {
     navigate('/SWP391-PodSystemBooking/admin/update-booking', { state: { booking } });
   };
 
-  // Delete a booking
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${API_URL}/${id}`);
@@ -64,14 +59,32 @@ export default function BookingOrder() {
     }
   };
 
+  // Filter bookings based on the search term
+// Inside BookingOrder component
+const filteredBookings = bookings.filter((booking) =>
+  Object.values(booking).some((value) =>
+    value !== null && value !== undefined && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+  )
+);
+
+
   return (
     <div className="booking-order-page">
-      <h1>Booking Orders</h1>
+      <h1 style={{marginTop:30}}>Booking Orders</h1>
+
+      {/* Search Input */}
+      <input
+        type="text"
+        className="search-input"
+        placeholder="Search bookings..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
 
       <table>
         <thead>
           <tr>
-            <th>STT</th> {/* Serial Number Column */}
+            <th>STT</th>
             <th>Booking ID</th>
             <th>Account ID</th>
             <th>Pod ID</th>
@@ -86,9 +99,9 @@ export default function BookingOrder() {
           </tr>
         </thead>
         <tbody>
-          {bookings.map((booking, index) => (
+          {filteredBookings.map((booking, index) => (
             <tr key={booking.bookingId}>
-              <td>{index + 1}</td> {/* Serial Number */}
+              <td>{index + 1}</td>
               <td>{booking.bookingId}</td>
               <td>{booking.accountId}</td>
               <td>{booking.podId}</td>
@@ -97,7 +110,7 @@ export default function BookingOrder() {
               <td>{booking.notificationID || 'N/A'}</td>
               <td>{new Date(booking.startTime).toLocaleString()}</td>
               <td>{new Date(booking.endTime).toLocaleString()}</td>
-              <td>{getStatusDescription(booking.statusId)}</td> {/* Display status description */}
+              <td>{getStatusDescription(booking.statusId)}</td>
               <td>${booking.total}</td>
               <td>
                 <button onClick={() => handleUpdate(booking)}>Update</button>

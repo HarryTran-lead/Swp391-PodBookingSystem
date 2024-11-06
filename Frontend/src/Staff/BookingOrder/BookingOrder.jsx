@@ -2,49 +2,58 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './BookingOrder.css';
 
-const STATUS_API_URL = 'https://localhost:7257/api/StatusLookups'; // Endpoint for status descriptions
+const STATUS_API_URL = 'https://localhost:7257/api/StatusLookups';
+const BOOKINGS_API_URL = 'https://localhost:7257/api/Bookings';
 
 export default function BookingOrder() {
-  const [bookings, setBookings] = useState([]); // State to hold booking data
-  const [statuses, setStatuses] = useState([]); // State to hold status descriptions
+  const [bookings, setBookings] = useState([]);
+  const [statuses, setStatuses] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
 
   useEffect(() => {
-    fetchBookings(); // Fetch bookings on component mount
-    fetchStatusDescriptions(); // Fetch status descriptions on component mount
+    fetchBookings();
+    fetchStatusDescriptions();
   }, []);
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get('https://localhost:7257/api/Bookings'); // Fetch booking data
-      const sortedBookings = response.data.sort((a, b) => b.bookingId - a.bookingId); // Sort by bookingId descending
-      setBookings(sortedBookings); // Set sorted booking data
+      const response = await axios.get(BOOKINGS_API_URL);
+      const sortedBookings = response.data.sort((a, b) => b.bookingId - a.bookingId);
+      setBookings(sortedBookings);
     } catch (error) {
       setErrorMessage('Error fetching booking data. Please try again later.');
       console.error('Error fetching booking data:', error);
     } finally {
-      setLoading(false); // Stop loading regardless of the outcome
+      setLoading(false);
     }
   };
 
   const fetchStatusDescriptions = async () => {
     try {
-      const response = await axios.get(STATUS_API_URL); // Fetch status descriptions
-      setStatuses(response.data); // Store status descriptions in state
+      const response = await axios.get(STATUS_API_URL);
+      setStatuses(response.data);
     } catch (error) {
       console.error('Error fetching status descriptions:', error);
       setErrorMessage('Failed to fetch status descriptions.');
     }
   };
 
-  // Get status description by status ID
   const getStatusDescription = (statusId) => {
     const status = statuses.find((s) => s.statusId === statusId);
-    return status ? status.statusDescription : 'Unknown'; // Return 'Unknown' if status not found
+    return status ? status.statusDescription : 'Unknown';
   };
 
-  // Loading state
+  // Filter bookings based on search term
+  const filteredBookings = bookings.filter((booking) =>
+    Object.values(booking).some((value) =>
+      value !== null &&
+      value !== undefined &&
+      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -53,7 +62,17 @@ export default function BookingOrder() {
     <div className="booking-order-container">
       <h2>Booking Orders</h2>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      {bookings.length > 0 ? (
+
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Search by any field..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
+
+      {filteredBookings.length > 0 ? (
         <table className="booking-table">
           <thead>
             <tr>
@@ -66,24 +85,24 @@ export default function BookingOrder() {
               <th>Notification ID</th>
               <th>Start Time</th>
               <th>End Time</th>
-              <th>Status</th> {/* Display status description */}
+              <th>Status</th>
               <th>Total (VND)</th>
             </tr>
           </thead>
           <tbody>
-            {bookings.map((booking, index) => (
+            {filteredBookings.map((booking, index) => (
               <tr key={booking.bookingId}>
-                <td>{index + 1}</td> {/* Display auto-incrementing index */}
+                <td>{index + 1}</td>
                 <td>{booking.bookingId}</td>
                 <td>{booking.accountId}</td>
                 <td>{booking.podId}</td>
                 <td>{booking.packageId || 'N/A'}</td>
                 <td>{booking.paymentId || 'N/A'}</td>
                 <td>{booking.notificationId || 'N/A'}</td>
-                <td>{new Date(booking.startTime).toLocaleString()}</td> {/* Display formatted start time */}
-                <td>{new Date(booking.endTime).toLocaleString()}</td>   {/* Display formatted end time */}
-                <td>{getStatusDescription(booking.statusId)}</td> {/* Display status description */}
-                <td>{booking.total.toLocaleString('vi-VN')} VND</td>   {/* Format number with commas */}
+                <td>{new Date(booking.startTime).toLocaleString()}</td>
+                <td>{new Date(booking.endTime).toLocaleString()}</td>
+                <td>{getStatusDescription(booking.statusId)}</td>
+                <td>{booking.total.toLocaleString('vi-VN')} VND</td>
               </tr>
             ))}
           </tbody>

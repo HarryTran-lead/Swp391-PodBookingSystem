@@ -89,15 +89,17 @@ const FoodOrder = ({ closeOrder, bookingId }) => {
     try {
       const response = await axios.post(FOOD_ORDER_API_URL, orderDetails);
       if (response.status === 201 || response.status === 200) {
-        alert('Order submitted successfully!');
+          alert('Order submitted successfully!');
+          const totalPrice = calculateTotalPrice(); // Calculate the total price
+          localStorage.setItem('totalPrice', totalPrice); // Save to local storage
+          closeOrder();
+          
       }
-      closeOrder(); // Close the food order menu
-      
-    } catch (error) {
+  } catch (error) {
       console.error('Error submitting order:', error);
       alert('Failed to submit the order.');
-    }
-  };
+  }
+};
 
   if (loading) return <p>Loading food items...</p>;
   if (error) return <p>{error}</p>;
@@ -127,7 +129,7 @@ const FoodOrder = ({ closeOrder, bookingId }) => {
                     Quantity:
                     <input
                       type="number"
-                      min="0"
+                      min="1"
                       onChange={(e) => handleFoodItemChange(item.foodId, parseInt(e.target.value, 10) || 0)}
                     />
                   </label>

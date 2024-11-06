@@ -2,15 +2,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify'; // Import react-toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import react-toastify CSS
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Account.css';
 
 export default function Account() {
   const [accounts, setAccounts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
   const navigate = useNavigate();
 
-  const API_URL = 'https://localhost:7257/api/Accounts'; // Updated URL
+  const API_URL = 'https://localhost:7257/api/Accounts';
 
   useEffect(() => {
     fetchAccounts();
@@ -29,10 +30,10 @@ export default function Account() {
     try {
       await axios.delete(`${API_URL}/${id}`);
       fetchAccounts();
-      toast.success('Account deleted successfully!'); // Show success notification
+      toast.success('Account deleted successfully!');
     } catch (error) {
       console.error('Error deleting account:', error);
-      toast.error('Error deleting account.'); // Show error notification
+      toast.error('Error deleting account.');
     }
   };
 
@@ -44,6 +45,14 @@ export default function Account() {
     navigate('/SWP391-PodSystemBooking/admin/create-account');
   };
 
+  // Filtered accounts based on search term
+  const filteredAccounts = accounts.filter((account) =>
+    Object.values(account).some((value) =>
+      value != null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+  
+
   return (
     <div className="account-page">
       <h1>Account Management</h1>
@@ -51,6 +60,15 @@ export default function Account() {
       <button className="create-button" onClick={handleCreate}>
         Create New Account
       </button>
+
+      {/* Search input */}
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
 
       <table>
         <thead>
@@ -64,7 +82,7 @@ export default function Account() {
           </tr>
         </thead>
         <tbody>
-          {accounts.map((account) => (
+          {filteredAccounts.map((account) => (
             <tr key={account.id}>
               <td>{account.id}</td>
               <td>{account.name}</td>
@@ -80,7 +98,6 @@ export default function Account() {
         </tbody>
       </table>
 
-      {/* ToastContainer for displaying notifications */}
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     </div>
   );

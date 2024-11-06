@@ -38,6 +38,10 @@ import BookingOrderStaff from './Staff/BookingOrder/BookingOrder';
 import PrivateRoute from './PrivateRoute';
 import ProfileAdmin from './AdminPages/ProfileAdmin/ProfilePage';
 import ProfileStaff from './Staff/ProfileStaff/ProfilePage';
+import OrderFood from './UserPages/OrderFood/OrderFood';
+import Dashboard from './AdminPages/Dashboard/Dashboard';
+import SuccessOrderFood from './UserPages/SuccesOrderFood/SuccessOrderFood';
+import UserFoodOrder from './Staff/UserFoodOrder/UserFoodOrder';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
@@ -98,6 +102,8 @@ const App = () => {
         <Route path="/SWP391-PodSystemBooking/successfullpaymentservice" element={renderUserLayout(<ServicePageSuccessPayment />)} />
         <Route path="/SWP391-PodSystemBooking/yourpackage" element={renderUserLayout(<YourPackage />)} />
         <Route path="/SWP391-PodSystemBooking/ordered-food/:bookingId" element={renderUserLayout(<OrderedFood />)} />
+        <Route path="/SWP391-PodSystemBooking/oderfood/:bookingId" element={renderUserLayout(< OrderFood/>)} />
+        <Route path="/SWP391-PodSystemBooking/oderfood/succesorderfood" element={renderUserLayout(< SuccessOrderFood/>)} />
 
         <Route 
   path="/SWP391-PodSystemBooking/login" 
@@ -122,12 +128,14 @@ const App = () => {
         <Route path="/SWP391-PodSystemBooking/admin/create-package" element={<PrivateRoute element={renderAdminLayout(<CreatePackage />)} isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin']}  />} />
         <Route path="/SWP391-PodSystemBooking/admin/update-package" element={<PrivateRoute element={renderAdminLayout(<UpdatePackage />)} isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin']}  />} />
         <Route path="/SWP391-PodSystemBooking/admin/profile-admin" element={<PrivateRoute element={renderAdminLayout(<ProfileAdmin />)} isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin']}  />} />
+        <Route path="/SWP391-PodSystemBooking/admin/dashboard" element={<PrivateRoute element={renderAdminLayout(<Dashboard />)} isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['admin']}  />} />
         {/* Repeat similarly for other admin routes with allowedRoles={['admin']} */}
 
         {/* Protected Staff Routes */}
         <Route path="/SWP391-PodSystemBooking/staff/feedback" element={<PrivateRoute element={renderStaffLayout(<FeedBack />)} isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['staff']} />} />
         <Route path="/SWP391-PodSystemBooking/staff/bookingorder" element={<PrivateRoute element={renderStaffLayout(<BookingOrderStaff />)} isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['staff']} />} />
         <Route path="/SWP391-PodSystemBooking/staff/profile-staff" element={<PrivateRoute element={renderStaffLayout(<ProfileStaff />)} isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['staff']} />} />
+        <Route path="/SWP391-PodSystemBooking/staff/userfoodorder" element={<PrivateRoute element={renderStaffLayout(<UserFoodOrder />)} isLoggedIn={isLoggedIn} userRole={userRole} allowedRoles={['staff']} />} />
       </Routes>
     </Router>
   );

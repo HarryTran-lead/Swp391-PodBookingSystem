@@ -13,9 +13,10 @@ export default function Header({ isLoggedIn, handleLogout: propHandleLogout }) {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
 
   useEffect(() => {
-    const storedAccountId = localStorage.getItem('accountId'); // Get accountId from local storage
+    const storedAccountId = localStorage.getItem('accountId');
     if (storedAccountId) {
       setAccountId(storedAccountId);
     }
@@ -23,17 +24,16 @@ export default function Header({ isLoggedIn, handleLogout: propHandleLogout }) {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      if (!accountId) return; // Prevent fetch if accountId is not set
-  
+      if (!accountId) return;
       setLoading(true);
       try {
         const response = await axios.get(`https://localhost:7257/api/Notifications/accountId/${accountId}`);
+        const sortedNotifications = response.data.sort((a, b) => b.notificationId - a.notificationId);
         
-        // Sort notifications by notificationId in descending order
-        const sortedNotifications = response.data.sort(
-          (a, b) => b.notificationId - a.notificationId
-        );
-  
+        // Check if there are any unread notifications
+        const unreadNotifications = sortedNotifications.some(notification => !notification.isRead);
+        setHasUnreadNotifications(unreadNotifications);
+
         setNotifications(sortedNotifications);
       } catch (error) {
         setError(error.response?.data || 'Error fetching notifications.');
@@ -41,23 +41,25 @@ export default function Header({ isLoggedIn, handleLogout: propHandleLogout }) {
         setLoading(false);
       }
     };
-  
+
     fetchNotifications();
   }, [accountId]);
-  
+
   const handleNotificationClick = async (notificationId) => {
-    // ... existing code to handle notification click
+    // Handle marking the clicked notification as read in backend if necessary
+  };
+
+  const handleNotificationsDropdownToggle = (isOpen) => {
+    if (isOpen) {
+      // Mark all notifications as read when the dropdown is opened
+      setHasUnreadNotifications(false);
+      // Optionally, you could also update the notifications on the server as read
+    }
   };
 
   const logoutUser = () => {
-    // Clear accountId and any other necessary data from local storage
     localStorage.removeItem('accountId');
-
-    // Call the prop function to handle logout in the parent component
-    propHandleLogout(); 
-
-   
-
+    propHandleLogout();
   };
 
   return (
@@ -88,9 +90,13 @@ export default function Header({ isLoggedIn, handleLogout: propHandleLogout }) {
         {isLoggedIn && (
           <>
             {/* Notification Dropdown */}
-            <Dropdown className="notification-icon-container">
+            <Dropdown
+              className="notification-icon-container"
+              onToggle={handleNotificationsDropdownToggle}
+            >
               <Dropdown.Toggle variant="link" id="notification-dropdown" aria-haspopup="true" aria-expanded="false">
                 <FaBell className="notification-icon" />
+                {hasUnreadNotifications && <span className="notification-badge"></span>}
               </Dropdown.Toggle>
               <Dropdown.Menu className="dropdown-menu-custom">
                 <div className="notification-header">Notifications</div>

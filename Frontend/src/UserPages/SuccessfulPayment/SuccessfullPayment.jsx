@@ -29,6 +29,7 @@ export default function SuccessfulPayment() {
       StartTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.startTime}`),
       EndTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.endTime}`),
       Total: bookingDetails.totalPrice,
+      CreatedAt: new Date(),
     };
 
     setBookingData(bookingData);

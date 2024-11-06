@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Import axios for API calls
-import './FeedBack.css'; // Optional: Add custom styles
+import axios from 'axios';
+import './FeedBack.css';
 
 export default function FeedBack() {
   const [feedbacks, setFeedbacks] = useState([]); // State to hold feedback data
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(true); // Loading state
+  const [searchTerm, setSearchTerm] = useState(''); // State for the search term
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -24,6 +25,15 @@ export default function FeedBack() {
     fetchFeedbacks(); // Fetch feedback data on component mount
   }, []);
 
+  // Filter feedbacks based on search term
+  const filteredFeedbacks = feedbacks.filter((feedback) =>
+    Object.values(feedback).some((value) =>
+      value !== null &&
+      value !== undefined &&
+      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
   // Loading state
   if (loading) {
     return <div>Loading...</div>;
@@ -32,8 +42,18 @@ export default function FeedBack() {
   return (
     <div className="feedback-container">
       <h2>User Feedback</h2>
+
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Search by any field..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
+
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      {feedbacks.length > 0 ? (
+      {filteredFeedbacks.length > 0 ? (
         <table className="feedback-table">
           <thead>
             <tr>
@@ -48,9 +68,9 @@ export default function FeedBack() {
             </tr>
           </thead>
           <tbody>
-            {feedbacks.map((feedback, index) => (
+            {filteredFeedbacks.map((feedback, index) => (
               <tr key={feedback.id}>
-                <td>{index + 1}</td> {/* Display auto-incrementing index */}
+                <td>{index + 1}</td>
                 <td>{feedback.id}</td>
                 <td>{feedback.accountId}</td>
                 <td>{feedback.podId}</td>

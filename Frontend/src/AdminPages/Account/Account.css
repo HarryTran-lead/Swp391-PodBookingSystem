@@ -183,4 +183,26 @@
   .submit-button:hover {
     background-color: #218838;
   }
+  .search-input {
+    width: 100%;
+    max-width: 300px; /* Limits the width of the search input */
+    padding: 10px 15px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 25px; /* Rounded corners */
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  .search-input:focus {
+    border-color: #007bff; /* Changes border color on focus */
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Shadow on focus */
+  }
+  
+  .search-input::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
   

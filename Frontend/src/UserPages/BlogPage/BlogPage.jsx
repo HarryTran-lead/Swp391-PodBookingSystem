@@ -73,7 +73,7 @@ export default function BlogPage() {
                     <h2>{post.title}</h2>
                     <p>{post.shortDes}</p>
                     <p>
-                      <Link to={`/SWP391-MomAndBaby/detailBlog/${post.id}`} className="btn btn-primary">
+                      <Link to={`/SWP391-PodSystemBooking/detailBlog/${post.id}`} className="btn btn-primary">
                         Read more
                       </Link>
                     </p>

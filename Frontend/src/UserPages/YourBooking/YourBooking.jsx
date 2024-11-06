@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal'; // Import react-modal
 import "./YourBooking.css";
-
+import { useNavigate } from 'react-router-dom';
 Modal.setAppElement('#root'); // Set the root element for accessibility
 
 export default function YourBooking() {
@@ -12,10 +12,11 @@ export default function YourBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [feedback, setFeedback] = useState({ rating: '', comments: '' });
-
+  const navigate = useNavigate(); // Initialize navigate hook
   const accountId = localStorage.getItem('accountId'); // Get the AccountId from localStorage
   const BOOKINGS_API_URL = `https://localhost:7257/api/Bookings/Account/${accountId}`; // Adjusted API URL
   const FEEDBACKS_API_URL = `https://localhost:7257/api/Feedbacks`;
+  const FOOD_ITEMS_API_URL = `https://localhost:7257/api/FoodItems`; 
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -27,21 +28,27 @@ export default function YourBooking() {
         const bookingsWithDetails = await Promise.all(
           bookingsData.map(async (booking) => {
             if (!booking.podId) {
+              console.log('Booking without podId:', booking); // Log if podId is missing
               return { ...booking, podName: 'N/A', imgPod: '', descriptionStatus: 'Invalid Pod', totalPrice: 0 };
             }
-
+        
             const podResponse = await axios.get(`https://localhost:7257/api/Pods/${booking.podId}`);
             const statusResponse = await axios.get(`https://localhost:7257/api/StatusLookups/${booking.statusId}`);
-
-            return {
+        
+            const processedBooking = {
               ...booking,
               podName: podResponse.data.name,
               imgPod: podResponse.data.imgPod,
               descriptionStatus: statusResponse.data.statusDescription,
               totalPrice: booking.total
             };
+        
+            console.log('Processed booking:', processedBooking); // Log each processed booking
+        
+            return processedBooking;
           })
         );
+        
 
         // Sort bookings by bookingId in descending order
         const sortedBookings = bookingsWithDetails.sort((a, b) => b.bookingId - a.bookingId);
@@ -115,7 +122,9 @@ export default function YourBooking() {
   if (error) {
     return <p>{error}</p>;
   }
-
+  const handleOrderFood = (bookingId) => {
+    navigate(`/SWP391-PodSystemBooking/oderfood/${bookingId}`); // Navigate to the food order page with the bookingId
+  };
   return (
     <div className="your-booking-container"> {/* Added this div */}
       <div className="your-bookings">
@@ -154,6 +163,7 @@ export default function YourBooking() {
                   <td>{booking.descriptionStatus}</td>
                   <td>
                     <button onClick={() => openModal(booking)}>Feedback</button>
+                    <button onClick={() => handleOrderFood(booking.bookingId)} style={{ marginLeft: '10px' }}>Order Food</button>
                   </td>
                 </tr>
               ))}

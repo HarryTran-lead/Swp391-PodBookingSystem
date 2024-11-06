@@ -1,277 +1,219 @@
-/* Container for pod details */
-.pod-detail-container {
-  margin: 20px auto;
-  max-width: 800px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f8f9fa;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* General Styling */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f2f2f2;
+  color: #333;
+  margin: 0;
+  padding: 0;
 }
 
-/* Pod image styling */
-.pod-image {
+.booking-container {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1600px;
+  margin: auto;
+  background-color: #242424; /* Slightly lighter for better contrast */
+  border-radius: 12px; /* More rounded corners */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
+}
+
+/* Left Section */
+.booking-details {
+  flex: 1.5;
+  background-color: #242424;
+  color: #ffffff;
+  border-radius: 8px; /* Added rounded corners */
+  padding: 1.5rem; /* Added padding for spacing */
+  margin-top: 0px !important;
+}
+
+.booking-details h1 {
+  font-size: 2.5rem; /* Increased font size for emphasis */
+  color: #000000;
+  margin-bottom: 1rem;
+}
+
+.main-image img {
   width: 100%;
-  height: auto;
-  max-height: 500px; /* Limit the height */
-  margin-bottom: 20px;
-  border-radius: 8px;
+  max-width: 650px;
+  height: auto; /* Allow height to adjust naturally */
   object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s; /* Smooth zoom effect on hover */
 }
 
-/* Button styling */
-.btn {
-  display: block;
-  margin-top: 20px;
-  padding: 12px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+.main-image img:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
 }
 
-.btn:hover {
-  background-color: #45a049;
+.booking-details p {
+  font-size: 1rem;
+  color: #000000; /* Softer color for better readability */
+  margin: 0.5rem 0;
 }
 
-/* Feedback form styling */
+/* Feedback Section */
 .feedback-form {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
 }
 
 .feedback-form h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  font-size: 1.75rem; /* Increased size for visibility */
+  margin-bottom: 1rem;
+  color: #ffffff;
 }
 
-/* Feedback item card styling */
 .feedback-item {
-  background-color: #ffffff;
-  padding: 15px;
-  margin-bottom: 15px;
+  padding: 1rem;
+  background-color: #eaeaea; /* Darker background for feedback items */
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #4caf50; /* Accent color for the card */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.feedback-item:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Slightly more pronounced shadow */
 }
 
 .feedback-item p {
-  margin: 5px 0;
-  color: #555;
+  margin: 0.5rem 0;
+  color: #000000; /* Lighter text for contrast */
 }
 
-.feedback-item strong {
-  color: #333;
-}
-
-.feedback-item hr {
+hr {
   border: none;
-  border-top: 1px solid #ddd;
-  margin: 10px 0;
+  border-top: 1px solid #444; /* Darker color for the divider */
 }
 
-/* Styling for the user package item */
-.user-package-item {
-  background-color: #f9f9f9;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #0f120f; /* Accent color for active status */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* Right Section */
+.booking-form-container {
+  flex: 1;
+  background-color: #ffffff; /* Bright background for contrast */
+  padding: 1.5rem;
+  border-radius: 12px; /* Match the main container */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Styling when hovering over the user package item */
-.user-package-item:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.booking-form-container h2,
+.booking-form-container h3 {
+  font-size: 1.75rem; /* Slightly larger for headings */
+  margin-bottom: 1rem;
 }
 
-/* Styling for the checkbox label */
-.user-package-item label {
+.booking-form-container form label {
   display: block;
-  color: #333;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-/* Styling for the status */
-.user-package-item .status {
+  margin-bottom: 0.5rem;
   font-weight: bold;
-  color: #4caf50; /* Green color for active status */
 }
 
-.user-package-item .status.inactive {
-  color: #f44336; /* Red color for inactive status */
-}
-
-/* Package details styling */
-.user-package-item .package-details {
-  font-size: 14px;
-  color: #555;
-  margin-top: 8px;
-}
-
-/* Discount styling */
-.user-package-item .discount {
-  font-weight: bold;
-  color: #ff9800; /* Orange color for discount text */
-}
-
-
-/* Booking form container */
-.booking-form {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 30px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Form labels */
-.booking-form label {
+.booking-form-container input[type="date"],
+.booking-form-container input[type="time"],
+.booking-form-container input[type="checkbox"] {
   display: block;
-  margin-bottom: 10px;
-  font-weight: 600;
-  color: #333;
-}
-
-/* Form inputs */
-.booking-form input[type="date"],
-.booking-form input[type="time"] {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc; /* Lighter border for inputs */
+  border-radius: 4px;
+  transition: border 0.3s; /* Smooth border color transition */
 }
 
-/* Styling for the unavailable time slots */
-.unavailable-times {
-  margin-bottom: 20px;
-  background-color: #fff3cd;
-  padding: 15px;
-  border-radius: 8px;
-  border-left: 4px solid #ffc107;
+.booking-form-container input[type="date"]:focus,
+.booking-form-container input[type="time"]:focus {
+  border-color: #007bff; /* Highlight on focus */
 }
 
-.unavailable-times h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-  color: #856404;
+.booking-form-container button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s; /* Added transition */
+}
+
+.booking-form-container button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.button-group .button-order-food,
+.button-group .button-view-ordered-food,
+.button-group .button-proceed-payment {
+  background-color: #28a745;
+  color: #fff;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s; /* Added transition */
+}
+
+.button-group .button-order-food:hover,
+.button-group .button-view-ordered-food:hover,
+.button-group .button-proceed-payment:hover {
+  background-color: #218838;
+  transform: translateY(-2px); /* Slight lift on hover */
 }
 
 .unavailable-times ul {
-  padding-left: 20px;
-  list-style-type: disc;
-  color: #856404;
+  list-style-type: none;
+  padding: 0;
 }
 
-/* Total price styling */
-.booking-form label[for="totalPrice"] {
-  font-weight: bold;
-  color: #4caf50;
-  display: block;
-  margin-top: 20px;
+.unavailable-times li {
+  font-size: 0.9rem;
+  color: #d9534f; /* Highlighted color for unavailable times */
 }
 
-/* Book Pod button styling */
-.booking-form button {
-  width: 100%;
-  padding: 12px;
-  background-color: #4caf50;
-  color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.booking-form button:hover {
-  background-color: #45a049;
-}
-
-.booking-form button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* Button container styling */
-.button-group {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-/* Button styling */
-.button-group button {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-/* Specific styles for each button */
-.button-order-food {
-  background-color: #4caf50; /* Green */
-}
-
-.button-order-food:hover {
-  background-color: #45a049; /* Darker green */
-}
-
-.button-view-ordered-food {
-  background-color: #2196f3; /* Blue */
-}
-
-.button-view-ordered-food:hover {
-  background-color: #1976d2; /* Darker blue */
-}
-
-.button-proceed-payment {
-  background-color: #ff9800; /* Orange */
-}
-
-.button-proceed-payment:hover {
-  background-color: #fb8c00; /* Darker orange */
-}
-
-/* Modal or food order styling if needed */
-.food-order-modal {
+.pricing-details {
+  margin-top: 2rem;
   background-color: #f9f9f9;
-  padding: 20px;
+  padding: 1rem;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Additional styles for ordered food component */
-.ordered-food {
-  background-color: #ffffff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+.pricing-details p {
+  margin: 0;
+  font-size: 1rem;
 }
 
+.status {
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.inactive {
+  color: #d9534f;
+}
+
+/* Package List Styling */
+.user-package-item {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #e9ecef;
+  border-radius: 8px;
+}
+
+.user-package-item label {
+  display: flex;
+  align-items: center;
+  gap: 0rem;
+}
+
+.user-package-item input[type="checkbox"] {
+  width: auto;
+}
+
+.discount {
+  font-weight: bold;
+  font-size: 13px;
+  color: #007bff;
+}

@@ -1,13 +1,13 @@
-// ./AdminPages/FoodItems.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Food.css'; // Ensure you create this CSS file for styling
+import './Food.css';
 
 export default function Food() {
   const [foodItems, setFoodItems] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
   const navigate = useNavigate();
 
   const API_URL = 'https://localhost:7257/api/FoodItems';
@@ -16,7 +16,6 @@ export default function Food() {
     fetchFoodItems();
   }, []);
 
-  // Fetch all food items
   const fetchFoodItems = async () => {
     try {
       const response = await axios.get(API_URL);
@@ -27,7 +26,6 @@ export default function Food() {
     }
   };
 
-  // Delete a food item
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${API_URL}/${id}`);
@@ -39,15 +37,22 @@ export default function Food() {
     }
   };
 
-  // Navigate to update food item page
   const handleUpdate = (foodItem) => {
     navigate('/SWP391-PodSystemBooking/admin/update-food', { state: { foodItem } });
   };
 
-  // Navigate to create new food item page
   const handleCreate = () => {
     navigate('/SWP391-PodSystemBooking/admin/create-food');
   };
+
+  // Filter food items based on search term
+  const filteredFoodItems = foodItems.filter((item) =>
+    Object.values(item).some((value) =>
+      value !== null &&
+      value !== undefined &&
+      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   return (
     <div className="food-item-page">
@@ -56,6 +61,15 @@ export default function Food() {
       <button className="create-button" onClick={handleCreate}>
         Create New Food Item
       </button>
+
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Search by any field..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
 
       <table>
         <thead>
@@ -70,8 +84,8 @@ export default function Food() {
           </tr>
         </thead>
         <tbody>
-          {foodItems.map((foodItem) => (
-            <tr key={foodItem.foodId}>  {/* Ensure foodId is unique */}
+          {filteredFoodItems.map((foodItem) => (
+            <tr key={foodItem.foodId}>
               <td>{foodItem.foodId}</td>
               <td>
                 <img

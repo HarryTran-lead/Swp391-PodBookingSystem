@@ -26,6 +26,8 @@ export default function DetailPodBooking() {
   const [feedbacks, setFeedbacks] = useState([]); // State for feedbacks
   const [loadingFeedbacks, setLoadingFeedbacks] = useState(true); // Loading state for feedbacks
   const [feedbackError, setFeedbackError] = useState(null); // Er
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [combinedTotal, setCombinedTotal] = useState(0);
  
   const navigate = useNavigate();
   
@@ -309,6 +311,7 @@ const fetchSelectedTimeSlots = async (date) => {
         StartTime: new Date(`${bookingDate}T${startTime}`),
         EndTime: new Date(`${bookingDate}T${endTime}`),
         Total: bookingDetails.totalPrice,
+        CreatedAt: new Date(),
       });
   
       alert('Booking successful! Proceeding to payment...');
@@ -342,6 +345,7 @@ const fetchSelectedTimeSlots = async (date) => {
         startTime: bookingDetails.startTime,
         endTime: bookingDetails.endTime,
         totalPrice: bookingDetails.totalPrice,
+        CreatedAt: new Date(),
       }));
   
     } catch (error) {
@@ -374,6 +378,7 @@ const fetchSelectedTimeSlots = async (date) => {
         StartTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.startTime}`),
         EndTime: new Date(`${bookingDetails.bookingDate}T${bookingDetails.endTime}`),
         Total: bookingDetails.totalPrice,
+        CreatedAt: new Date(),
       };
   
       const updateResponse = await axios.put(`${BOOKING_API_URL}/${bookingId}`, bookingData);
@@ -428,6 +433,12 @@ const fetchSelectedTimeSlots = async (date) => {
     fetchFoodOrders();
   }, [bookingId]);
 
+  useEffect(() => {
+    const savedPrice = localStorage.getItem('totalPrice');
+    if (savedPrice) {
+        setTotalPrice(savedPrice); // Set the total price if it exists
+    }
+}, []);
   
   if (loading) return <p>Loading food orders...</p>;
   if (error) return <p>{error}</p>;
@@ -446,31 +457,45 @@ const fetchSelectedTimeSlots = async (date) => {
   }
 
   return (
-    <div className="pod-detail-container">
-      <h1>{pod.name}</h1>
-      <img
+ <div className="booking-container">
+  {/* Left Section for Details and Images */}
+  <div className="booking-details">
+    <h1>{pod.name}</h1>
+
+    <div className="main-image">
+    <img
   src={`https://localhost:7257/api/Pods/${pod.podId}/image`}
   alt={pod.name}
   className="pod-image"
-  style={{ width: '650px', height: '300px' }} // Adjust these values as needed
+  style={{ width: '750px', height: '300px' }} // Adjust these values as needed
 />
 
-      <p>{pod.description}</p>
+    </div>
+    <p>{pod.description}</p>
       <p>Price per Hour: {pod.pricePerHour}vnđ</p>
       <p>Location: {pod.location}</p>
+  {/* Feedback Section */}
+  <div className="feedback-form">
+      <h2>Feedback</h2>
+      {loadingFeedbacks && <p>Loading feedbacks...</p>}
+      {feedbackError && <p>{feedbackError}</p>}
+      {feedbacks.length === 0 && !loadingFeedbacks && <p>No feedback available for this pod.</p>}
+      {feedbacks.map((feedback, index) => (
+        <div key={index} className="feedback-item">
+          <p><strong>User:</strong> {feedback.username || 'Unknown User'}</p>
+          <p><strong>Rating:</strong> {renderStars(feedback.rating)}</p>
+          <p><strong>Comment:</strong> {feedback.comments}</p>
+          <hr />
+        </div>
+      ))}
+    </div>
+  </div>
 
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+  {/* Right Section for Booking Form */}
+  <div className="booking-form-container">
+  <ul>
 
-     <div>
-      {errorMessage && <p>{errorMessage}</p>}
-
-     
-
-   
-  
-<ul>
-
-<h3> click on your packages if you want to have discount !</h3>
+<h3> click on your packages!</h3>
   {userPurchasedPackages.map((pkg) => {
     // Find the corresponding package with discount information
     const matchingPackage = packagesWithDiscount.find(
@@ -516,47 +541,41 @@ const fetchSelectedTimeSlots = async (date) => {
     );
   })}
 </ul>
+    <h2>Create Your Booking</h2>
+    <form className="booking-form" onSubmit={handleBookingSubmit}>
+      <label>
+        Booking Date:
+        <input
+          type="date"
+          name="bookingDate"
+          value={bookingDetails.bookingDate}
+          onChange={handleInputChange}
+          required
+        />
+      </label>
 
+      <label>
+        Start Time:
+        <input
+          type="time"
+          name="startTime"
+          value={bookingDetails.startTime}
+          onChange={handleInputChange}
+          required
+        />
+      </label>
 
-    </div>
-      {/* Booking Form */}
-   
-<form className="booking-form" onSubmit={handleBookingSubmit}>
-<h3>Create your booking</h3>
-  <label>
-    Booking Date:
-    <input
-      type="date"
-      name="bookingDate"
-      value={bookingDetails.bookingDate}
-      onChange={handleInputChange}
-      required
-    />
-  </label>
-
-  <label>
-    Start Time:
-    <input
-      type="time"
-      name="startTime"
-      value={bookingDetails.startTime}
-      onChange={handleInputChange}
-      required
-    />
-  </label>
-
-  <label>
-    End Time:
-    <input
-      type="time"
-      name="endTime"
-      value={bookingDetails.endTime}
-      onChange={handleInputChange}
-      required
-    />
-  </label>
-
-  {selectedTimeSlots.length > 0 && (
+      <label>
+        End Time:
+        <input
+          type="time"
+          name="endTime"
+          value={bookingDetails.endTime}
+          onChange={handleInputChange}
+          required
+        />
+      </label>
+      {selectedTimeSlots.length > 0 && (
     <div className="unavailable-times">
       <h3>Unavailable Time Slots for {bookingDetails.bookingDate}:</h3>
       <ul>
@@ -569,10 +588,11 @@ const fetchSelectedTimeSlots = async (date) => {
       </ul>
     </div>
   )}
-
   <label for="totalPrice">
     Total Price: {bookingDetails.totalPrice}vnđ
   </label>
+
+
 
   <button
     type="submit"
@@ -584,10 +604,11 @@ const fetchSelectedTimeSlots = async (date) => {
   >
     Book Pod
   </button>
-</form>
-
       
-{bookingId && (
+   
+    </form>
+
+    {bookingId && (
   <>
     <div className="button-group">
       <button
@@ -629,25 +650,20 @@ const fetchSelectedTimeSlots = async (date) => {
     />
   </>
 )}
+   {/* Pricing Details */}
+   <div className="pricing-details">
+        <p>Pricing Details</p>
+        <p>${bookingDetails.basePrice} x {bookingDetails.hours} hours - ${bookingDetails.totalPrice}</p>
+      </div>
 
-
-<div className="feedback-form">
-      <h2>Feedback</h2>
-      {loadingFeedbacks && <p>Loading feedbacks...</p>}
-      {feedbackError && <p>{feedbackError}</p>}
-      {feedbacks.length === 0 && !loadingFeedbacks && (
-        <p>No feedback available for this pod.</p>
-      )}
-      {feedbacks.map((feedback, index) => (
-        <div key={index} className="feedback-item">
-          <p><strong>User:</strong> {feedback.username || 'Unknown User'}</p>
-           <p><strong>Rating:</strong> {renderStars(feedback.rating)}</p>
-          <p><strong>Comment:</strong> {feedback.comments}</p>
-          <hr />
+      <div>
+            <h3>Total Price: {totalPrice} vnđ</h3>
         </div>
-      ))}
-    </div>
-    </div>
+  
+  </div>
+  
+</div>
+
   
   );
 } 
