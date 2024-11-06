@@ -25,6 +25,8 @@ public partial class Booking
 
     public decimal? Total { get; set; }
 
+    public DateTime? CreatedAt { get; set; }
+
     public virtual Account? Account { get; set; }
 
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();

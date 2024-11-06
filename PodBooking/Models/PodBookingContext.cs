@@ -45,7 +45,7 @@ public partial class PodBookingContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=PodBooking;User ID=sa;Password=123;Trust Server Certificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=PodBooking;User ID=sa;Password=123;Trust Server Certificate=True; TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -90,14 +90,8 @@ public partial class PodBookingContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AdminId).HasColumnName("adminId");
-            entity.Property(e => e.MainDes)
-                .HasMaxLength(255)
-                .IsUnicode(false);
             entity.Property(e => e.ShortDes)
                 .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Title)
-                .HasMaxLength(50)
                 .IsUnicode(false);
         });
 
@@ -109,6 +103,9 @@ public partial class PodBookingContext : DbContext
 
             entity.Property(e => e.BookingId).HasColumnName("BookingID");
             entity.Property(e => e.AccountId).HasColumnName("AccountID");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.EndTime).HasColumnType("datetime");
             entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
             entity.Property(e => e.PackageId).HasColumnName("PackageID");

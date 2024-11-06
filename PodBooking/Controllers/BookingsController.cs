@@ -111,33 +111,47 @@ namespace PodBooking.Controllers
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
-            // Adjusting time zone for StartTime and EndTime
-            if (booking.StartTime.HasValue)
+            try
             {
-                booking.StartTime = booking.StartTime.Value.AddHours(+7);
+                // Adjusting time zone for StartTime and EndTime
+                if (booking.StartTime.HasValue)
+                {
+                    booking.StartTime = booking.StartTime.Value.AddHours(+7);
+                }
+                if (booking.EndTime.HasValue)
+                {
+                    booking.EndTime = booking.EndTime.Value.AddHours(+7);
+                }
+
+                // Set CreatedAt to the current time with a +7-hour offset
+                booking.CreatedAt = DateTime.UtcNow.AddHours(7);
+
+                // Check for overlapping bookings
+                var overlaps = _context.Bookings
+                    .Any(b => b.PodId == booking.PodId &&
+                              b.StartTime < booking.EndTime &&
+                              b.EndTime > booking.StartTime &&
+                              (b.StatusId == 2 || b.StatusId == 4));
+
+                if (overlaps)
+                {
+                    return BadRequest("The selected time slot is already booked.");
+                }
+
+                _context.Bookings.Add(booking);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetBooking", new { id = booking.BookingId }, booking);
             }
-            if (booking.EndTime.HasValue)
+            catch (Exception ex)
             {
-                booking.EndTime = booking.EndTime.Value.AddHours(+7);
+                // Log the error and return an informative message
+                Console.WriteLine(ex); // Use a logging library in production
+                return StatusCode(500, "An error occurred while creating the booking: " + ex.Message);
             }
-
-            // Check for overlapping bookings
-            var overlaps = _context.Bookings
-                .Any(b => b.PodId == booking.PodId &&
-                          b.StartTime < booking.EndTime &&
-                          b.EndTime > booking.StartTime &&
-                          (b.StatusId == 2 || b.StatusId == 4));
-
-            if (overlaps)
-            {
-                return BadRequest("The selected time slot is already booked.");
-            }
-
-            _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBooking", new { id = booking.BookingId }, booking);
         }
+
+
 
         // DELETE: api/Bookings/5
         [HttpDelete("{id}")]
