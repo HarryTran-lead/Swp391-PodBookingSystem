@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Modal, Button, Table } from 'react-bootstrap';
 
-
 export default function FoodOrderDetails() {
   const [foodOrders, setFoodOrders] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [foodDetails, setFoodDetails] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
 
   useEffect(() => {
     const fetchFoodOrders = async () => {
@@ -43,15 +43,34 @@ export default function FoodOrderDetails() {
     setFoodDetails(null);
   };
 
+  // Filter food orders based on the search term
+  const filteredFoodOrders = foodOrders.filter((order) =>
+    Object.values(order).some((value) =>
+      value !== null &&
+      value !== undefined &&
+      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="food-order-container">
-      <h2 style={{marginTop:30}}>Food Order Details</h2>
+      <h2 style={{ marginTop: 30 }}>Food Order Details</h2>
+
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Search by any field..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
+
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      {foodOrders.length > 0 ? (
+      {filteredFoodOrders.length > 0 ? (
         <Table className="food-order-table" striped bordered hover>
           <thead>
             <tr>
@@ -64,7 +83,7 @@ export default function FoodOrderDetails() {
             </tr>
           </thead>
           <tbody>
-            {foodOrders.map((order, index) => (
+            {filteredFoodOrders.map((order, index) => (
               <tr key={`${order.bookingId}-${order.foodId}`}>
                 <td>{index + 1}</td>
                 <td>{order.bookingId}</td>

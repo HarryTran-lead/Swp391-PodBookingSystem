@@ -3,6 +3,7 @@ footer {
     color: #DADADA;
     padding: 20px 0;
     font-family: Arial, sans-serif;
+    margin-top: 0 !important;
   }
   
   .footer-container {

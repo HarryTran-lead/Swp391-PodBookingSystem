@@ -61,9 +61,9 @@ export default function YourPackage() {
               <th>Package Name</th>
               <th>Purchase Date</th>
               <th>Expiry Date</th>
-              <th>Remaining Usage</th>
               <th>Features</th>
               <th>Discount Percentage</th>
+              <th>Status Active</th> {/* New column for Status Active */}
             </tr>
           </thead>
           <tbody>
@@ -72,10 +72,10 @@ export default function YourPackage() {
                 <td>{pkg.packageId}</td>
                 <td>{pkg.packageName}</td>
                 <td>{new Date(pkg.purchaseDate).toLocaleString()}</td> {/* Display both date and time */}
-                <td>{new Date(pkg.expiryDate).toLocaleString()}</td>   {/* Display both date and time */}
-                <td>{pkg.remainingUsage}</td>
+                <td>{new Date(pkg.expiryDate).toLocaleString()}</td> {/* Display both date and time */}
                 <td>{pkg.features}</td>
                 <td>{pkg.discountPercentage}%</td>
+                <td>{pkg.status === 1 ? "InActive" : "Active"}</td> {/* Display "Active" if status is 1 */}
               </tr>
             ))}
           </tbody>

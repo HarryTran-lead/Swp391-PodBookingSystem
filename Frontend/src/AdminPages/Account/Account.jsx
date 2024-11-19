@@ -1,4 +1,3 @@
-// ./AdminPages/Account.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -8,7 +7,7 @@ import './Account.css';
 
 export default function Account() {
   const [accounts, setAccounts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(''); // State for search term
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   const API_URL = 'https://localhost:7257/api/Accounts';
@@ -23,17 +22,20 @@ export default function Account() {
       setAccounts(response.data);
     } catch (error) {
       console.error('Error fetching accounts:', error);
+      toast.error('Failed to fetch accounts.');
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${API_URL}/${id}`);
-      fetchAccounts();
-      toast.success('Account deleted successfully!');
+      if (window.confirm("Are you sure you want to deactivate this account?")) {
+        await axios.put(`${API_URL}/${id}`, { status: 'inactive' }); // Update status to 'inactive'
+        setAccounts(accounts.map(account => account.id === id ? { ...account, status: 'inactive' } : account)); // Update UI
+        toast.success('Account marked as inactive successfully!');
+      }
     } catch (error) {
-      console.error('Error deleting account:', error);
-      toast.error('Error deleting account.');
+      console.error('Error updating account status:', error);
+      toast.error('Error marking account as inactive.');
     }
   };
 
@@ -51,12 +53,11 @@ export default function Account() {
       value != null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
-  
 
   return (
     <div className="account-page">
       <h1>Account Management</h1>
-      
+
       <button className="create-button" onClick={handleCreate}>
         Create New Account
       </button>
@@ -78,6 +79,7 @@ export default function Account() {
             <th>Username</th>
             <th>Phone</th>
             <th>Role</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -89,9 +91,12 @@ export default function Account() {
               <td>{account.username}</td>
               <td>{account.phone}</td>
               <td>{account.role}</td>
+              <td>{account.status === 'inactive' ? 'Inactive' : 'Active'}</td>
               <td>
                 <button onClick={() => handleUpdate(account)}>Update</button>
-                <button onClick={() => handleDelete(account.id)}>Delete</button>
+                {account.status === 'active' && (
+                  <button onClick={() => handleDelete(account.id)}>Deactivate</button>
+                )}
               </td>
             </tr>
           ))}

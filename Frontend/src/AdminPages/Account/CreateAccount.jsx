@@ -10,7 +10,8 @@ export default function CreateAccount() {
     name: '',
     username: '',
     phone: '',
-    role: '',
+    role: 'Customer', // Set default role to 'Customer'
+    password: ''
   });
   const navigate = useNavigate();
 
@@ -25,9 +26,9 @@ export default function CreateAccount() {
     e.preventDefault();
     try {
       await axios.post(API_URL, formData);
-      toast.success('Account created successfully!'); // Show success notification
+      toast.success('Account created successfully!');
       setTimeout(() => {
-        navigate('/SWP391-PodSystemBooking/admin/account'); // Redirect after 2 seconds
+        navigate('/SWP391-PodSystemBooking/admin/account');
       }, 2000);
     } catch (error) {
       toast.error('Error creating account!');
@@ -71,10 +72,23 @@ export default function CreateAccount() {
         </div>
         <div className="form-group">
           <label>Role:</label>
-          <input
-            type="text"
+          <select
             name="role"
             value={formData.role}
+            onChange={handleChange}
+            required
+          >
+            <option value="Customer">Customer</option>
+            <option value="Admin">Admin</option>
+            <option value="Staff">Staff</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label>Password:</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
             onChange={handleChange}
             required
           />

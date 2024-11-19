@@ -82,7 +82,7 @@ export default function ServicePageSuccessPayment() {
   }, [isPackageSaved]);
 
   const handleBackToYourPackage = () => {
-    navigate('/SWP391-PodSystemBooking/yourpakage');
+    navigate('/SWP391-PodSystemBooking/yourpackage');
   };
 
   if (loading) {

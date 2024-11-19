@@ -142,8 +142,10 @@ export default function YourBooking() {
                 <th>Pod Image</th>
                 <th>Start Time</th>
                 <th>End Time</th>
+                <th>Created Time</th>
                 <th>Total Price</th>
                 <th>Status</th>
+
                 <th>Actions</th>
               </tr>
             </thead>
@@ -159,6 +161,8 @@ export default function YourBooking() {
                   </td>
                   <td>{booking.startTime ? new Date(booking.startTime).toLocaleString() : 'N/A'}</td>
                   <td>{booking.endTime ? new Date(booking.endTime).toLocaleString() : 'N/A'}</td>
+                  <td>{booking.createdAt ? new Date(booking.createdAt).toLocaleString() : 'N/A'}</td>
+              
                   <td>{booking.totalPrice} vnđ</td>
                   <td>{booking.descriptionStatus}</td>
                   <td>

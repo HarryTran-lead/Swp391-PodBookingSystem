@@ -83,10 +83,7 @@ export default function ProfilePage() {
                   <th>Phone:</th>
                   <td>{accountDetails.phone}</td>
                 </tr>
-                <tr>
-                  <th>Status:</th>
-                  <td>{accountDetails.status}</td>
-                </tr>
+                
                 <tr>
                   <th>Role:</th>
                   <td>{accountDetails.role}</td>

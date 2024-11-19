@@ -6,16 +6,39 @@ import './SuccessOrderFood.css';
 export default function SuccessOrderFood() {
   const navigate = useNavigate();
   const [orderedItems, setOrderedItems] = useState([]);
+  const [error, setError] = useState(null);
 
   // Fetch ordered food items using bookingId
   useEffect(() => {
     const bookingId = localStorage.getItem('bookingId'); // Assume bookingId is stored in localStorage
     const FOOD_ORDER_API_URL = `https://localhost:7257/api/FoodOrderDetails/booking/${bookingId}`;
-    
+
     const fetchOrderedItems = async () => {
       try {
         const response = await axios.get(FOOD_ORDER_API_URL);
         setOrderedItems(response.data);
+
+        // Create notification after fetching the food order
+        const accountId = localStorage.getItem('accountId'); // Assuming accountId is also stored in localStorage
+        if (accountId) {
+          try {
+            const notificationResponse = await axios.post('https://localhost:7257/api/Notifications', {
+              AccountId: accountId,
+              Message: 'Your food order was successful!',
+              DateCreated: new Date().toISOString(), // Current date and time
+            });
+
+            if (notificationResponse.status === 201) {
+              console.log('Notification created:', notificationResponse.data);
+            } else {
+              console.error('Failed to create notification:', notificationResponse.data);
+              setError('Food order was successful, but failed to create notification.');
+            }
+          } catch (notificationError) {
+            console.error('Error creating notification:', notificationError);
+            setError('Food order was successful, but there was an error sending the notification.');
+          }
+        }
       } catch (error) {
         console.error('Error fetching ordered items:', error);
       }
@@ -40,6 +63,9 @@ export default function SuccessOrderFood() {
     <div className="success-order-container">
       <h2>Payment Successful!</h2>
       <p>Thank you for your order. Your food items will be prepared shortly.</p>
+
+      {/* Error message */}
+      {error && <p className="error-message">{error}</p>}
 
       {/* Ordered Items Bill */}
       <div className="order-bill">

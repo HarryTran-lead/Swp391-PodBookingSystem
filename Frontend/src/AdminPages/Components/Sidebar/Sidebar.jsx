@@ -11,22 +11,22 @@ export default function Sidebar() {
           <Link to="/SWP391-PodSystemBooking/admin/dashboard">DashBoard</Link>
         </li>
         <li className="list-group-item">
-          <Link to="/SWP391-PodSystemBooking/admin/account">Account</Link>
-        </li>
-        <li className="list-group-item">
-          <Link to="/SWP391-PodSystemBooking/admin/pod">Pod</Link>
-        </li>
-        <li className="list-group-item">
           <Link to="/SWP391-PodSystemBooking/admin/bookingorder">Booking Order</Link>
         </li>
         <li className="list-group-item">
           <Link to="/SWP391-PodSystemBooking/admin/servicepackage">User ServicePackage</Link>
         </li>
         <li className="list-group-item">
+          <Link to="/SWP391-PodSystemBooking/admin/package">Service Package</Link>
+        </li>
+        <li className="list-group-item">
+          <Link to="/SWP391-PodSystemBooking/admin/pod">Pod</Link>
+        </li>
+        <li className="list-group-item">
           <Link to="/SWP391-PodSystemBooking/admin/food">Food</Link>
         </li>
         <li className="list-group-item">
-          <Link to="/SWP391-PodSystemBooking/admin/package">Service Package</Link>
+          <Link to="/SWP391-PodSystemBooking/admin/account">Account</Link>
         </li>
       </ul>
     </div>

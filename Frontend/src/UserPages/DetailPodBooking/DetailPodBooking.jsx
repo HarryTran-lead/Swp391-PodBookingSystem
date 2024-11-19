@@ -369,6 +369,7 @@ const fetchSelectedTimeSlots = async (date) => {
 
 
   const handlePayment = async (bookingId, total) => {
+    
     try {
       const bookingData = {
         BookingID: bookingId,
@@ -543,16 +544,18 @@ const fetchSelectedTimeSlots = async (date) => {
 </ul>
     <h2>Create Your Booking</h2>
     <form className="booking-form" onSubmit={handleBookingSubmit}>
-      <label>
-        Booking Date:
-        <input
-          type="date"
-          name="bookingDate"
-          value={bookingDetails.bookingDate}
-          onChange={handleInputChange}
-          required
-        />
-      </label>
+    <label>
+  Booking Date:
+  <input
+    type="date"
+    name="bookingDate"
+    value={bookingDetails.bookingDate}
+    onChange={handleInputChange}
+    min={new Date().toISOString().split("T")[0]} // Sets minimum date to today
+    required
+  />
+</label>
+
 
       <label>
         Start Time:
@@ -611,19 +614,7 @@ const fetchSelectedTimeSlots = async (date) => {
     {bookingId && (
   <>
     <div className="button-group">
-      <button
-        onClick={toggleFoodOrder}
-        className="button-order-food"
-      >
-        Order Food
-      </button>
-
-      <button
-        onClick={handleOpenOrder}
-        className="button-view-ordered-food"
-      >
-        View Ordered Food
-      </button>
+     
 
       <button
         onClick={() => handlePayment(bookingId, bookingDetails.totalPrice)}
@@ -653,12 +644,10 @@ const fetchSelectedTimeSlots = async (date) => {
    {/* Pricing Details */}
    <div className="pricing-details">
         <p>Pricing Details</p>
-        <p>${bookingDetails.basePrice} x {bookingDetails.hours} hours - ${bookingDetails.totalPrice}</p>
+        <p>  ${bookingDetails.totalPrice}</p>
       </div>
 
-      <div>
-            <h3>Total Price: {totalPrice} vnđ</h3>
-        </div>
+      
   
   </div>
   

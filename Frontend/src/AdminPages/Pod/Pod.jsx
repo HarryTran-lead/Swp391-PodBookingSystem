@@ -1,13 +1,13 @@
-// ./AdminPages/Pod.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Pod.css'; // Đảm bảo bạn đã tạo tệp Pod.css cho styling
+import './Pod.css';
 
 export default function Pod() {
   const [pods, setPods] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
   const navigate = useNavigate();
 
   const API_URL = 'https://localhost:7257/api/Pods';
@@ -49,6 +49,13 @@ export default function Pod() {
     navigate('/SWP391-PodSystemBooking/admin/create-pod');
   };
 
+  // Filter pods based on search term
+  const filteredPods = pods.filter((pod) =>
+    Object.values(pod).some((value) =>
+      value?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
   return (
     <div className="pod-page">
       <h1>Pod Management</h1>
@@ -57,26 +64,34 @@ export default function Pod() {
         Create New Pod
       </button>
 
+      <input
+        type="text"
+        placeholder="Search by any field"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
+
       <table>
         <thead>
           <tr>
             <th>ID</th>
             <th>Image</th>
             <th>Name</th>
-            <th>LocationID</th>
+        
             <th>Price Per Hour</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {pods.map((pod) => (
-            <tr key={pod.podId}>  {/* Đảm bảo pod.podId là duy nhất */}
+          {filteredPods.map((pod) => (
+            <tr key={pod.podId}>
               <td>{pod.podId}</td>
               <td>
                 <img src={`https://localhost:7257/api/Pods/${pod.podId}/image`} alt={pod.name} className="pod-image" />
               </td>
               <td>{pod.name}</td>
-              <td>{pod.locationId}</td>
+           
               <td>${pod.pricePerHour}</td>
               <td>
                 <button onClick={() => handleUpdate(pod)}>Update</button>

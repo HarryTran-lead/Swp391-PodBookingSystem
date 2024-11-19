@@ -290,7 +290,7 @@
 
 .hero-wrap h1 {
   font-size: 50px !important; /* Heading styles */
-  background: linear-gradient(45deg, #ffffff, #000000, #d4d4d4);
+  background: linear-gradient(45deg, #ffffff, #e2e1e1, #d4d4d4);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

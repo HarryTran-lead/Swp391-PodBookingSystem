@@ -88,9 +88,6 @@ const filteredBookings = bookings.filter((booking) =>
             <th>Booking ID</th>
             <th>Account ID</th>
             <th>Pod ID</th>
-            <th>Package ID</th>
-            <th>Payment ID</th>
-            <th>Notification ID</th>
             <th>Start Time</th>
             <th>End Time</th>
             <th>Status</th>
@@ -105,9 +102,6 @@ const filteredBookings = bookings.filter((booking) =>
               <td>{booking.bookingId}</td>
               <td>{booking.accountId}</td>
               <td>{booking.podId}</td>
-              <td>{booking.packageID || 'N/A'}</td>
-              <td>{booking.paymentID || 'N/A'}</td>
-              <td>{booking.notificationID || 'N/A'}</td>
               <td>{new Date(booking.startTime).toLocaleString()}</td>
               <td>{new Date(booking.endTime).toLocaleString()}</td>
               <td>{getStatusDescription(booking.statusId)}</td>

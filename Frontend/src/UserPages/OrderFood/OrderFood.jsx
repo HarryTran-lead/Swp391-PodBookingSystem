@@ -5,19 +5,20 @@ import './OrderFood.css';
 import { useNavigate } from 'react-router-dom';
 
 export default function OrderFood({ closeOrder }) {
-  const { bookingId } = useParams();
+  const { bookingId } = useParams();  // Using bookingId from URL params
   const [foodItems, setFoodItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedFoodItems, setSelectedFoodItems] = useState({});
   const [bookedItems, setBookedItems] = useState({});
   const [orderedFood, setOrderedFood] = useState([]);
-  const [isOrderSubmitted, setIsOrderSubmitted] = useState(false); // New state
+  const [isOrderSubmitted, setIsOrderSubmitted] = useState(false);
+  const [bookingIdState, setBookingIdState] = useState(null); // Store bookingId after order is submitted
   const navigate = useNavigate();
 
   const FOOD_ITEMS_API_URL = 'https://localhost:7257/api/FoodItems';
   const FOOD_ORDER_API_URL = 'https://localhost:7257/api/FoodOrderDetails';
-  const PAYMENT_API_URL = 'https://localhost:7257/VNPay/api/payment/vnpay';
+  const PAYMENT_API_URL = 'https://localhost:7257/VNPay/api/payment/vnpay'; // Updated payment API URL
 
   useEffect(() => {
     const fetchFoodItems = async () => {
@@ -74,7 +75,7 @@ export default function OrderFood({ closeOrder }) {
     const orderDetails = foodItems
       .filter(item => selectedFoodItems[item.foodId] > 0)
       .map(item => ({
-        bookingId: bookingId,
+        bookingId: bookingId,  // Use bookingId for the order
         foodIds: [item.foodId],
         quantity: selectedFoodItems[item.foodId],
         price: item.price
@@ -89,33 +90,39 @@ export default function OrderFood({ closeOrder }) {
       const response = await axios.post(FOOD_ORDER_API_URL, orderDetails);
       if (response.status === 200 || response.status === 201) {
         alert('Order submitted successfully!');
+        setBookingIdState(bookingId); // Save bookingId state
         setIsOrderSubmitted(true); // Update state to show payment button
         localStorage.setItem('totalPrice', calculateTotalPrice());
         closeOrder();
       }
     } catch (error) {
       console.error('Error submitting order:', error);
-      alert('Failed to submit the order. Please try again.');
+      alert('');
     }
   };
 
   const handlePayment = async () => {
     const total = calculateTotalPrice();
+    if (!bookingIdState) {  // Check bookingIdState instead of orderId
+      alert('Booking ID not found. Please try again.');
+      return;
+    }
+
     try {
       const paymentResponse = await axios.post(PAYMENT_API_URL, {
-        BookingID: bookingId,
+        BookingId: bookingIdState,  // Send bookingIdState instead of orderIdtoán
         Total: total,
-        vnp_ReturnUrl: 'http://localhost:5173/SWP391-PodSystemBooking/oderfood/succesorderfood',
+        vnp_ReturnUrl: "http://localhost:5173/SWP391-PodSystemBooking/oderfood/succesorderfood",
       });
-      
+
       if (paymentResponse.data && paymentResponse.data.paymentUrl) {
         window.location.href = paymentResponse.data.paymentUrl;
       } else {
-        alert('Payment initiation failed. Please try again.');
+        alert("Payment initiation failed. Please try again.");
       }
     } catch (error) {
-      console.error('Error initiating payment:', error);
-      alert('Payment failed. Please try again.');
+      console.error("Error initiating payment:", error);
+      alert("Payment failed. Please try again.");
     }
   };
 
@@ -158,7 +165,6 @@ export default function OrderFood({ closeOrder }) {
         Submit Order
       </button>
 
-      {/* Conditionally render payment button based on order submission */}
       {isOrderSubmitted && (
         <button onClick={handlePayment} className="payment-button">
           Proceed to Payment

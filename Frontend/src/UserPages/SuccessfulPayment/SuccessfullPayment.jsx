@@ -57,6 +57,10 @@ export default function SuccessfulPayment() {
     }
   };
 
+  const handleOrderFood = (bookingId) => {
+    navigate(`/SWP391-PodSystemBooking/oderfood/${bookingId}`);
+  };
+
   useEffect(() => {
     updateBookingStatus();
   }, []);
@@ -88,13 +92,14 @@ export default function SuccessfulPayment() {
                 <td>{bookingData.PodID}</td>
               </tr>
               <tr>
-                <th>Start Time</th>
-                <td>{bookingData.StartTime.toString()}</td>
-              </tr>
-              <tr>
-                <th>End Time</th>
-                <td>{bookingData.EndTime.toString()}</td>
-              </tr>
+  <th>Start Time</th>
+  <td>{new Date(bookingData.StartTime).toLocaleString('en-GB', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}</td>
+</tr>
+<tr>
+  <th>End Time</th>
+  <td>{new Date(bookingData.EndTime).toLocaleString('en-GB', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}</td>
+</tr>
+
               <tr>
                 <th>Total</th>
                 <td>{bookingData.Total.toLocaleString()} vnđ</td>
@@ -109,6 +114,9 @@ export default function SuccessfulPayment() {
       <p>Click the button below to return to the homepage.</p>
       <button onClick={() => navigate('/')} className="btn btn-primary">
         Go to Homepage
+      </button>
+      <button className="btn btn-primary" onClick={() => handleOrderFood(bookingData?.bookingId)} style={{ marginLeft: '10px' }}>
+        Order Food
       </button>
     </div>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
-import './About.css'; // Assuming you will style it with a separate CSS file
+import './About.css';
+import ContactImg from '../../assets/ContactImg.jpg';
 
 export default function About() {
   const teamMembers = [
@@ -7,37 +8,31 @@ export default function About() {
       name: 'John Smith',
       role: 'Founder and CEO',
       description: 'With over 10 years of experience, John has been at the forefront of driving the company’s success.',
-      img: 'path_to_john_image.jpg'
     },
     {
       name: 'Sarah Johnson',
       role: 'Operations Manager',
       description: 'Sarah ensures that daily operations run smoothly and oversees the staff to achieve the company’s goals.',
-      img: 'path_to_sarah_image.jpg'
     },
     {
       name: 'David Lee',
       role: 'Sales and Marketing Director',
       description: 'David is responsible for managing the sales team and developing marketing strategies to boost revenue.',
-      img: 'path_to_david_image.jpg'
     },
     {
       name: 'Emily Davis',
       role: 'Customer Experience Specialist',
       description: 'Emily makes sure that customers have a great experience by addressing their needs and feedback.',
-      img: 'path_to_emily_image.jpg'
     },
     {
       name: 'Michael Robinson',
       role: 'Senior Product Designer',
       description: 'Michael leads the design team in crafting user-friendly and visually appealing products.',
-      img: 'path_to_michael_image.jpg'
     },
     {
       name: 'Linda Martinez',
       role: 'Events and Administration Coordinator',
       description: 'Linda manages all events, meetings, and coordinates office resources for efficiency and productivity.',
-      img: 'path_to_linda_image.jpg'
     },
   ];
 
@@ -56,15 +51,16 @@ export default function About() {
       <section className="about-us">
         <h2>The Team</h2>
         <p>Meet the people behind our company. Our team is committed to providing exceptional service and making your experience seamless.</p>
+        <img src={ContactImg} alt="Our Team" className="team-group-image" />
       </section>
 
       {/* Section: Team */}
       <div className="team-section">
+     
         <div className="team-grid">
           {teamMembers.map((member, index) => (
             <div key={index} className="team-member">
-              <img src={member.img} alt={member.name} className="team-image" />
-              <h3>{member.name}</h3>
+              <h4>{member.name}</h4>
               <p className="role">{member.role}</p>
               <p className="description">{member.description}</p>
             </div>

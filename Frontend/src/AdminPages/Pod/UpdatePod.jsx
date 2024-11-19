@@ -1,35 +1,66 @@
 // ./AdminPages/UpdatePod.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Pod.css'; // Create this CSS file for styling
 
 export default function UpdatePod() {
-  const { state } = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
+  const { pod } = location.state; // Get pod data from navigation state
+
   const [formData, setFormData] = useState({
-    Name: state?.pod.Name || '',
-    LocationID: state?.pod.LocationID || '',
-    PricePerHour: state?.pod.PricePerHour || '',
+    name: '',
+    pricePerHour: '',
+    description: '',
+    imgPod: null,
   });
 
-  const API_URL = `https://667f687ff2cb59c38dc8cee6.mockapi.io/api/v1/Pod/${state?.pod.id}`;
+  const API_URL = `https://localhost:7257/api/Pods/${pod.podId}`;
 
-  // Handle form input changes
+  useEffect(() => {
+    if (pod) {
+      setFormData({
+        name: pod.name || '',
+        pricePerHour: pod.pricePerHour || '',
+        description: pod.description || '',
+        imgPod: pod.imgPod || null,
+      });
+    }
+  }, [pod]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  // Handle form submission to update the pod
+  const handleFileChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      imgPod: e.target.files[0],
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formDataToSend = new FormData();
+    formDataToSend.append('name', formData.name);
+    formDataToSend.append('pricePerHour', formData.pricePerHour);
+    formDataToSend.append('description', formData.description);
+    if (formData.imgPod) {
+      formDataToSend.append('imgPod', formData.imgPod);
+    }
+
     try {
-      await axios.put(API_URL, formData);
+      await axios.put(API_URL, formDataToSend, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       toast.success('Pod updated successfully!');
-      navigate('/SWP391-PodSystemBooking/admin/pods'); // Redirect back to the Pod management page
+      navigate('/SWP391-PodSystemBooking/admin/pod'); // Redirect to pod list
     } catch (error) {
       console.error('Error updating pod:', error);
       toast.error('Failed to update pod.');
@@ -40,42 +71,51 @@ export default function UpdatePod() {
     <div className="update-pod-page">
       <h1>Update Pod</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Name:</label>
+        <label>
+          Name:
           <input
             type="text"
-            name="Name"
-            value={formData.Name}
+            name="name"
+            value={formData.name}
             onChange={handleChange}
             required
           />
-        </div>
-        <div className="form-group">
-          <label>Location ID:</label>
-          <input
-            type="text"
-            name="LocationID"
-            value={formData.LocationID}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Price Per Hour:</label>
+        </label>
+
+        <label>
+          Price Per Hour:
           <input
             type="number"
-            name="PricePerHour"
-            value={formData.PricePerHour}
+            name="pricePerHour"
+            value={formData.pricePerHour}
             onChange={handleChange}
             required
           />
-        </div>
-        <button type="submit" className="update-button">
-          Update Pod
-        </button>
+        </label>
+
+        <label>
+          Description:
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+          />
+        </label>
+
+        <label>
+          Pod Image:
+          <input
+            type="file"
+            name="imgPod"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+          {pod.imgPod && <img src={pod.imgPod} alt={pod.name} className="pod-preview" />}
+        </label>
+
+        <button type="submit">Update Pod</button>
       </form>
 
-      {/* ToastContainer for notifications */}
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     </div>
   );
