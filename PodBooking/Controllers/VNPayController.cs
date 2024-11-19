@@ -18,8 +18,8 @@ namespace PodBooking.Controllers
             var merchantCode = "E8MKHDAW";
             var secureKey = "ORZJJLH7V1FV19YRY4DCHXZIFOXOSHAC";
             var vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-
-            // Build the payment request parameters
+            string currentTimeInSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+            // Build the payment request parameters cái này là thanh toán cho book phòng và food lun 
             var vnpayParameters = new SortedDictionary<string, string>
             {
                 { "vnp_Version", "2.0.0" },
@@ -27,7 +27,7 @@ namespace PodBooking.Controllers
                 { "vnp_TmnCode", merchantCode },
                 { "vnp_Amount", (paymentRequest.Total * 100).ToString() }, // Total amount in dong
                 { "vnp_CurrCode", "VND" },
-                { "vnp_TxnRef", paymentRequest.BookingID.ToString() }, // Booking ID
+                { "vnp_TxnRef", paymentRequest.BookingID.ToString() + currentTimeInSeconds }, // Booking ID
                 { "vnp_OrderInfo", "Booking ID: " + paymentRequest.BookingID },
                 { "vnp_Locale", "vn" },
                  { "vnp_ReturnUrl", paymentRequest.vnp_ReturnUrl },
@@ -35,7 +35,7 @@ namespace PodBooking.Controllers
                 { "vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss") },
             };
 
-            // Generate the secure hash
+            // Generate the secure hash 
             var queryString = string.Join("&", vnpayParameters.Select(p => $"{p.Key}={p.Value}"));
             var hashData = queryString + "&vnp_SecureHash=" + GenerateSecureHash(queryString, secureKey);
 

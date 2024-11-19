@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -18,7 +18,6 @@ namespace PodBooking.Controllers
             var merchantCode = "E8MKHDAW"; // Use the same merchant code or a different one if needed
             var secureKey = "ORZJJLH7V1FV19YRY4DCHXZIFOXOSHAC"; // Use the same secure key or a different one if needed
             var vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-
             // Build the payment request parameters
             var vnpayParameters = new SortedDictionary<string, string>
             {
@@ -34,16 +33,12 @@ namespace PodBooking.Controllers
                 { "vnp_IpAddr", HttpContext.Connection.RemoteIpAddress.ToString() },
                 { "vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss") },
             };
-
             // Generate the secure hash
             var queryString = string.Join("&", vnpayParameters.Select(p => $"{p.Key}={p.Value}"));
             var hashData = queryString + "&vnp_SecureHash=" + GenerateSecureHash(queryString, secureKey);
-
             var paymentUrl = vnpUrl + "?" + hashData;
-
             return Ok(new { paymentUrl });
         }
-
         private string GenerateSecureHash(string data, string secureKey)
         {
             // Implement hash generation using HMAC
@@ -54,14 +49,12 @@ namespace PodBooking.Controllers
             }
         }
     }
-
     public class ServicePackagePaymentRequest
     {
-        public int PackageID { get; set; } // Use PackageID instead of BookingID for service packages
+        public int PackageID { get; set; } // oke r đó a Use PackageID instead of BookingID for service packages
         public decimal Total { get; set; }
         public string vnp_ReturnUrl { get; set; }
     }
-
     public class ServicePackagePaymentResponse
     {
         public string TxnRef { get; set; }

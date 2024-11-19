@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,56 +8,78 @@ using System.Text;
 namespace PodBooking.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/payment")]
     public class VNPayControllerForFood : ControllerBase
     {
-        [HttpPost]
-        [Route("api/payment/foodorder")]
+        private const string MerchantCode = "E8MKHDAW";
+        private const string SecureKey = "ORZJJLH7V1FV19YRY4DCHXZIFOXOSHAC";
+        private const string VNPayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+
+        // Gi? s? b?n có ph??ng th?c ?? ki?m tra t?ng ti?n ?ã thanh toán cho m?t booking
+        private bool IsFullPaymentCompleted(int bookingId, decimal totalAmountRequired)
+        {
+            // L?y t?ng s? ti?n ?ã thanh toán cho bookingId này t? c? s? d? li?u
+            //var totalPaid = dbContext.Transactions
+            //                         .Where(t => t.BookingId == bookingId && t.Status == "Completed")
+            //                         .Sum(t => t.AmountPaid);
+
+            return true;
+        }
+
+        [HttpPost("foodorder")]
         public IActionResult CreatePaymentForFoodOrder([FromBody] FoodOrderPaymentRequest paymentRequest)
         {
-            // Your VNPay merchant information
-            var merchantCode = "E8MKHDAW";
-            var secureKey = "ORZJJLH7V1FV19YRY4DCHXZIFOXOSHAC";
-            var vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+            // Ki?m tra n?u t?ng s? ti?n ?ã ???c thanh toán
+            decimal totalAmountRequired = 100000; // S? ti?n yêu c?u (ví d?)
 
-            // Build the payment request parameters
-            var vnpayParameters = new SortedDictionary<string, string>
+            if (IsFullPaymentCompleted(paymentRequest.BookingId, totalAmountRequired))
+            {
+                return BadRequest("Full payment has already been completed for this Booking ID.");
+            }
+
+            // T?o mã giao d?ch duy nh?t (TxnRef)
+            var txnRef = GenerateTxnRef(paymentRequest.BookingId);
+
+            var vnpayParams = new SortedDictionary<string, string>
             {
                 { "vnp_Version", "2.0.0" },
                 { "vnp_Command", "pay" },
-                { "vnp_TmnCode", merchantCode },
-                { "vnp_Amount", (paymentRequest.Total * 100).ToString() }, // Total amount in dong
+                { "vnp_TmnCode", MerchantCode },
+                { "vnp_Amount", (paymentRequest.Total * 100).ToString() },
                 { "vnp_CurrCode", "VND" },
-                { "vnp_TxnRef", paymentRequest.FoodOrderID.ToString() }, // Food Order ID as transaction reference
-                { "vnp_OrderInfo", "Food Order ID: " + paymentRequest.FoodOrderID },
+                { "vnp_TxnRef", txnRef },
+                { "vnp_OrderInfo", "Booking ID: " + paymentRequest.BookingId },
                 { "vnp_Locale", "vn" },
                 { "vnp_ReturnUrl", paymentRequest.vnp_ReturnUrl },
-                { "vnp_IpAddr", HttpContext.Connection.RemoteIpAddress.ToString() },
-                { "vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss") },
+                { "vnp_IpAddr", HttpContext.Connection.RemoteIpAddress?.ToString() },
+                { "vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss") }
             };
 
-            // Generate the secure hash
-            var queryString = string.Join("&", vnpayParameters.Select(p => $"{p.Key}={p.Value}"));
-            var hashData = queryString + "&vnp_SecureHash=" + GenerateSecureHash(queryString, secureKey);
+            var queryString = string.Join("&", vnpayParams.Select(p => $"{p.Key}={p.Value}"));
+            var secureHash = GenerateSecureHash(queryString, SecureKey);
 
-            var paymentUrl = vnpUrl + "?" + hashData;
+            var paymentUrl = $"{VNPayUrl}?{queryString}&vnp_SecureHash={secureHash}";
 
             return Ok(new { paymentUrl });
         }
 
-        private string GenerateSecureHash(string data, string secureKey)
+        private static string GenerateTxnRef(int bookingId)
         {
-            using (var hmac = new HMACSHA512(Encoding.ASCII.GetBytes(secureKey)))
-            {
-                var hash = hmac.ComputeHash(Encoding.ASCII.GetBytes(data));
-                return BitConverter.ToString(hash).Replace("-", "").ToLower();
-            }
+            // T?o m?t TxnRef duy nh?t d?a trên BookingId và th?i gian hi?n t?i
+            return $"{bookingId}-{DateTime.Now:yyyyMMddHHmmssfff}";
+        }
+
+        private static string GenerateSecureHash(string data, string secureKey)
+        {
+            using var hmac = new HMACSHA512(Encoding.ASCII.GetBytes(secureKey));
+            var hash = hmac.ComputeHash(Encoding.ASCII.GetBytes(data));
+            return BitConverter.ToString(hash).Replace("-", "").ToLower();
         }
     }
 
     public class FoodOrderPaymentRequest
     {
-        public int FoodOrderID { get; set; } // Unique identifier for food orders
+        public int BookingId { get; set; }
         public decimal Total { get; set; }
         public string vnp_ReturnUrl { get; set; }
     }
@@ -67,6 +89,6 @@ namespace PodBooking.Controllers
         public string TxnRef { get; set; }
         public string Amount { get; set; }
         public string ResponseCode { get; set; }
-        // Add other necessary properties based on VNPay response
+        // Additional fields as required cái này em định làm riêng cho thanh toán food, nhưng mà em sài chung thanh toán này lun
     }
 }

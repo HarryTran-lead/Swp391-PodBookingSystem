@@ -86,6 +86,20 @@ namespace PodBooking.Controllers
                 return BadRequest();
             }
 
+            // Adjusting time zone for StartTime, EndTime, and CreatedAt
+            if (booking.StartTime.HasValue)
+            {
+                booking.StartTime = booking.StartTime.Value.AddHours(+7);
+            }
+            if (booking.EndTime.HasValue)
+            {
+                booking.EndTime = booking.EndTime.Value.AddHours(+7);
+            }
+            if (booking.CreatedAt.HasValue)
+            {
+                booking.CreatedAt = booking.CreatedAt.Value.AddHours(+7);
+            }
+
             _context.Entry(booking).State = EntityState.Modified;
 
             try
@@ -107,51 +121,45 @@ namespace PodBooking.Controllers
             return NoContent();
         }
 
+
         // POST: api/Bookings
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
-            try
+            // Adjusting time zone for StartTime and EndTime
+            if (booking.StartTime.HasValue)
             {
-                // Adjusting time zone for StartTime and EndTime
-                if (booking.StartTime.HasValue)
-                {
-                    booking.StartTime = booking.StartTime.Value.AddHours(+7);
-                }
-                if (booking.EndTime.HasValue)
-                {
-                    booking.EndTime = booking.EndTime.Value.AddHours(+7);
-                }
-
-                // Set CreatedAt to the current time with a +7-hour offset
-                booking.CreatedAt = DateTime.UtcNow.AddHours(7);
-
-                // Check for overlapping bookings
-                var overlaps = _context.Bookings
-                    .Any(b => b.PodId == booking.PodId &&
-                              b.StartTime < booking.EndTime &&
-                              b.EndTime > booking.StartTime &&
-                              (b.StatusId == 2 || b.StatusId == 4));
-
-                if (overlaps)
-                {
-                    return BadRequest("The selected time slot is already booked.");
-                }
-
-                _context.Bookings.Add(booking);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction("GetBooking", new { id = booking.BookingId }, booking);
+                booking.StartTime = booking.StartTime.Value.AddHours(+7);
             }
-            catch (Exception ex)
+            if (booking.EndTime.HasValue)
             {
-                // Log the error and return an informative message
-                Console.WriteLine(ex); // Use a logging library in production
-                return StatusCode(500, "An error occurred while creating the booking: " + ex.Message);
+                booking.EndTime = booking.EndTime.Value.AddHours(+7);
             }
+            if (booking.CreatedAt.HasValue)
+            {
+                booking.CreatedAt = booking.CreatedAt.Value.AddHours(+7);
+            }
+
+
+
+
+            // Check for overlapping bookings
+            var overlaps = _context.Bookings
+                .Any(b => b.PodId == booking.PodId &&
+                          b.StartTime < booking.EndTime &&
+                          b.EndTime > booking.StartTime &&
+                          (b.StatusId == 2 || b.StatusId == 4));
+
+            if (overlaps)
+            {
+                return BadRequest("The selected time slot is already booked.");
+            }
+
+            _context.Bookings.Add(booking);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetBooking", new { id = booking.BookingId }, booking);
         }
-
-
 
         // DELETE: api/Bookings/5
         [HttpDelete("{id}")]
@@ -177,17 +185,28 @@ namespace PodBooking.Controllers
         // This method checks for bookings that need their status updated to 5 (Finish)
         private async Task UpdateBookingStatuses()
         {
-            var currentTime = DateTime.UtcNow; // Use UTC for consistency
+            var currentTime = DateTime.Now; // Sử dụng UTC cho nhất quán
             var bookingsToUpdate = await _context.Bookings
-                  .Where(b => b.EndTime < currentTime && b.StatusId != 5 && b.StatusId != 3) // Check for past bookings
+                .Where(b =>
+                    (b.EndTime < currentTime && b.StatusId != 5 && b.StatusId != 3) ||  // Điều kiện cập nhật trạng thái thành 'Finish'
+                    (b.StartTime <= currentTime && b.EndTime > currentTime && b.StatusId != 6)) // Điều kiện cập nhật trạng thái thành 'In Progress'
                 .ToListAsync();
 
             foreach (var booking in bookingsToUpdate)
             {
-                booking.StatusId = 5; // Set status to 'Finish'
+                if (booking.EndTime < currentTime && booking.StatusId != 5 && booking.StatusId != 3)
+                {
+                    booking.StatusId = 5; // Đặt trạng thái thành 'Finish'
+                }
+                else if (booking.StartTime <= currentTime && booking.EndTime > currentTime && booking.StatusId != 6)
+                {
+                    booking.StatusId = 6; // Đặt trạng thái thành 'In Progress'
+                }
             }
 
-            await _context.SaveChangesAsync(); // Save changes to the database
+            await _context.SaveChangesAsync(); // Lưu các thay đổi vào database
         }
+
+
     }
 }
